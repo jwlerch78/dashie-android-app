@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+    <!-- Simple solid house icon (placeholder until HA permission obtained) -->
+    <path
+        android:pathData="M120,20L10,110V225C10,232 16,238 23,238H217C224,238 230,232 230,225V110L120,20Z"
+        android:fillColor="#FFFFFF"/>
+</vector>

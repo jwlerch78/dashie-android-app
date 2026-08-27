@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Native sidebar strip: 69dp wide vertical bar with icon buttons at bottom.
+     Matches JS .dashboard-sidebar + .sidebar-control-strip layout.
+     Positioned left edge, 8dp from top/bottom for floating panel effect. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sidebarStripRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    android:clickable="false"
+    android:focusable="false">
+
+    <!-- Touch-dismiss backdrop (only visible in overlay/unpinned mode) -->
+    <View
+        android:id="@+id/sidebarBackdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="false" />
+
+    <!-- The actual strip panel -->
+    <LinearLayout
+        android:id="@+id/sidebarStripPanel"
+        android:layout_width="69dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_sidebar_strip"
+        android:elevation="8dp">
+
+        <!-- ── Scrollable icon column ───────────────────────────────────
+             The ENTIRE icon column (view switcher + pinned controls) lives
+             in one ScrollView so that on short screens (e.g. Echo Show 5,
+             960x480) where all the icons together overflow the panel height,
+             the user can scroll through every icon instead of having the top
+             ones clipped off the top edge.
+
+             fillViewport=true + the weighted Space spacer below preserve the
+             original look when everything FITS: the spacer expands to push the
+             control buttons to the bottom of the panel (view buttons at top).
+             When content OVERFLOWS the viewport the spacer collapses to 0 and
+             the whole column scrolls as a single unit. -->
+        <ScrollView
+            android:id="@+id/sidebarStripScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:overScrollMode="ifContentScrolls">
+
+        <LinearLayout
+            android:id="@+id/sidebarStripScrollContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+        <!-- Top centering spacer: paired with the spacer below the view
+             switcher (both weight=1) so the view buttons sit CENTERED in the
+             space above the pinned controls when everything fits — matching
+             the original center_vertical look. On overflow (short screens)
+             both spacers collapse to 0 and the whole column scrolls. -->
+        <Space
+            android:id="@+id/sidebarStripTopSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- ── View switcher section ────────────────────────────────────
+             View buttons (calendar/chores/rewards/location/HA). Each is GONE
+             until its view is enabled; when fewer than 2 are enabled the
+             whole group is effectively empty and the spacer + controls fill
+             the panel as before. -->
+        <LinearLayout
+            android:id="@+id/sidebarViewSwitcherSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Calendar view button -->
+            <FrameLayout
+                android:id="@+id/sidebarBtnViewCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_sidebar_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/sidebarIconViewCalendar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sidebar_calendar"
+                    android:contentDescription="Calendar" />
+                <View
+                    android:id="@+id/sidebarActiveIndicatorViewCalendar"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:background="@color/dashie_orange"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Chores view button -->
+            <FrameLayout
+                android:id="@+id/sidebarBtnViewChores"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_sidebar_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/sidebarIconViewChores"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sidebar_tasks"
+                    android:contentDescription="Chores" />
+                <View
+                    android:id="@+id/sidebarActiveIndicatorViewChores"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:background="@color/dashie_orange"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Rewards view button -->
+            <FrameLayout
+                android:id="@+id/sidebarBtnViewRewards"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_sidebar_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/sidebarIconViewRewards"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sidebar_star"
+                    android:contentDescription="Rewards" />
+                <View
+                    android:id="@+id/sidebarActiveIndicatorViewRewards"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:background="@color/dashie_orange"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Location view button -->
+            <FrameLayout
+                android:id="@+id/sidebarBtnViewLocation"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_sidebar_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/sidebarIconViewLocation"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sidebar_location"
+                    android:contentDescription="Location" />
+                <View
+                    android:id="@+id/sidebarActiveIndicatorViewLocation"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:background="@color/dashie_orange"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Home Assistant view button -->
+            <FrameLayout
+                android:id="@+id/sidebarBtnViewHomeAssistant"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_sidebar_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/sidebarIconViewHomeAssistant"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sidebar_home_assistant"
+                    android:contentDescription="Home Assistant" />
+                <!-- Sign-in required warning. Visible only when HA is enabled
+                     but no access token is stored. Click on the parent
+                     FrameLayout dispatches to HaLoginPrompt instead of the
+                     usual view-switch (handled in NativeSidebarController). -->
+                <ImageView
+                    android:id="@+id/sidebarBadgeHaWarning"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_weather_warning"
+                    app:tint="#FFA800"
+                    android:contentDescription="Sign-in required"
+                    android:visibility="gone" />
+                <View
+                    android:id="@+id/sidebarActiveIndicatorViewHomeAssistant"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:background="@color/dashie_orange"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- Bottom centering spacer (pair of the top spacer above): the two
+             equal weight=1 spacers keep the view buttons centered between the
+             top of the panel and the pinned controls when everything fits, and
+             both collapse to 0 once the column overflows and scrolls. -->
+        <Space
+            android:id="@+id/sidebarStripFlexSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Divider between view switcher and kiosk controls -->
+        <View
+            android:id="@+id/sidebarViewSwitcherDivider"
+            android:layout_width="36dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:background="#55FFFFFF"
+            android:visibility="gone" />
+
+        <!-- Music button -->
+        <FrameLayout
+            android:id="@+id/sidebarBtnMusic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/sidebarIconMusic"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_music"
+                android:contentDescription="Music" />
+        </FrameLayout>
+
+        <!-- Camera button -->
+        <FrameLayout
+            android:id="@+id/sidebarBtnCamera"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/sidebarIconCamera"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_videocam"
+                android:contentDescription="Cameras" />
+        </FrameLayout>
+
+        <!-- Volume button -->
+        <FrameLayout
+            android:id="@+id/sidebarBtnVolume"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:id="@+id/sidebarIconVolume"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_volume_up"
+                android:contentDescription="Volume" />
+        </FrameLayout>
+
+        <!-- Brightness button -->
+        <FrameLayout
+            android:id="@+id/sidebarBtnBrightness"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:id="@+id/sidebarIconBrightness"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_brightness"
+                android:contentDescription="Brightness" />
+        </FrameLayout>
+
+        <!-- Hamburger/Menu button -->
+        <FrameLayout
+            android:id="@+id/sidebarBtnHamburger"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:id="@+id/sidebarIconHamburger"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_hamburger"
+                android:contentDescription="Menu" />
+        </FrameLayout>
+
+        </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</FrameLayout>

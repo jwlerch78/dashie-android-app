@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Undo icon (curved arrow) from artwork/icon-undo.svg -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M4,7H15C16.869,7 17.804,7 18.5,7.402C18.956,7.665 19.335,8.044 19.598,8.5C20,9.196 20,10.131 20,12C20,13.869 20,14.804 19.598,15.5C19.335,15.956 18.956,16.335 18.5,16.598C17.804,17 16.869,17 15,17H8M4,7L7,4M4,7L7,10"
+        android:strokeWidth="1.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent" />
+</vector>

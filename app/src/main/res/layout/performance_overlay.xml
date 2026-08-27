@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Performance Overlay - Displays real-time system metrics
+     Matches the iOS-style design from the HTML version -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/perf_overlay_container"
+        android:layout_width="253dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/perf_overlay_background"
+        android:elevation="12dp">
+
+        <!-- Header (draggable) -->
+        <LinearLayout
+            android:id="@+id/perf_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp"
+            android:background="@drawable/perf_overlay_header_background"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/perf_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Performance"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:letterSpacing="-0.01" />
+
+            <!-- Close Button -->
+            <ImageButton
+                android:id="@+id/perf_close"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/perf_button_background"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:contentDescription="Close"
+                android:padding="4dp"
+                android:scaleType="fitCenter"
+                android:tint="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- Body: Metrics -->
+        <LinearLayout
+            android:id="@+id/perf_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- CPU Metric -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="CPU"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#99FFFFFF"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/perf_cpu_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFeatureSettings="tnum" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/perf_cpu_bar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/perf_progress_bar" />
+            </LinearLayout>
+
+            <!-- RAM Metric -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <TextView
+                        android:id="@+id/perf_ram_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="RAM"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#99FFFFFF"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/perf_ram_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFeatureSettings="tnum" />
+                </LinearLayout>
+
+                <!-- Progress bar with threshold tick marks -->
+                <FrameLayout
+                    android:id="@+id/perf_ram_bar_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp">
+
+                    <ProgressBar
+                        android:id="@+id/perf_ram_bar"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_gravity="center_vertical"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/perf_progress_bar" />
+
+                    <!-- Idle threshold tick -->
+                    <View
+                        android:id="@+id/perf_ram_idle_tick"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="#CCFF9500"
+                        android:visibility="gone" />
+
+                    <!-- Critical threshold tick -->
+                    <View
+                        android:id="@+id/perf_ram_critical_tick"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="#CCFF3B30"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- PSS (App Memory) Metric -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="APP MEMORY"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#99FFFFFF"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/perf_pss_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 MB"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFeatureSettings="tnum" />
+                </LinearLayout>
+
+                <!-- Progress bar with threshold tick marks -->
+                <FrameLayout
+                    android:id="@+id/perf_pss_bar_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp">
+
+                    <ProgressBar
+                        android:id="@+id/perf_pss_bar"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_gravity="center_vertical"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/perf_progress_bar" />
+
+                    <!-- Idle threshold tick -->
+                    <View
+                        android:id="@+id/perf_pss_idle_tick"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="#CCFF9500"
+                        android:visibility="gone" />
+
+                    <!-- Critical threshold tick -->
+                    <View
+                        android:id="@+id/perf_pss_critical_tick"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="#CCFF3B30"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Heap % Metric -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <TextView
+                        android:id="@+id/perf_heap_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="HEAP"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#99FFFFFF"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/perf_heap_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:fontFeatureSettings="tnum" />
+                </LinearLayout>
+
+                <!-- Progress bar with threshold tick marks -->
+                <FrameLayout
+                    android:id="@+id/perf_heap_bar_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp">
+
+                    <ProgressBar
+                        android:id="@+id/perf_heap_bar"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_gravity="center_vertical"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/perf_progress_bar" />
+
+                    <!-- Idle threshold tick -->
+                    <View
+                        android:id="@+id/perf_heap_idle_tick"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="#CCFF9500"
+                        android:visibility="gone" />
+
+                    <!-- Critical threshold tick -->
+                    <View
+                        android:id="@+id/perf_heap_critical_tick"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="#CCFF3B30"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

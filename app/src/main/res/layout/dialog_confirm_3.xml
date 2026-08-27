@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Generic 3-button confirm dialog. Mirrors dialog_confirm.xml's title +
+  message + button row styling, but with three equally-weighted buttons:
+  Negative (left, border), Neutral (center, border), Positive (right,
+  orange/primary). Used by the Family-Edit "Save Changes?" prompt and
+  any other 3-way Save / Discard / Cancel flow.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="24dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/dialogMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="@color/text_secondary"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 3-Button Row: Negative | Neutral | Positive -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.widget.Button
+            android:id="@+id/buttonNegative"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:defaultFocusHighlightEnabled="false"
+            android:nextFocusUp="@id/buttonNegative"
+            android:nextFocusDown="@id/buttonNegative"
+            android:layout_marginEnd="6dp" />
+
+        <android.widget.Button
+            android:id="@+id/buttonNeutral"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:defaultFocusHighlightEnabled="false"
+            android:nextFocusUp="@id/buttonNeutral"
+            android:nextFocusDown="@id/buttonNeutral"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp" />
+
+        <android.widget.Button
+            android:id="@+id/buttonPositive"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary"
+            android:defaultFocusHighlightEnabled="false"
+            android:nextFocusUp="@id/buttonPositive"
+            android:nextFocusDown="@id/buttonPositive"
+            android:layout_marginStart="6dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

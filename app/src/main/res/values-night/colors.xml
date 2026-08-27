@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme Colors for Sidebar -->
+    <color name="sidebar_background">#1C1C1E</color>
+    <color name="sidebar_header_background">#2C2C2E</color>
+    <color name="sidebar_divider">#3A3A3C</color>
+    <color name="sidebar_divider_light">#48484A</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#ABABAB</color>
+    <color name="text_hint">#8E8E93</color>
+    <color name="text_disabled">#636366</color>
+    <color name="icon_tint">#ABABAB</color>
+    <color name="backdrop_overlay">#80000000</color>
+    <color name="sidebar_pinned_fill">#1A1A1C</color>
+
+    <!-- Setup Screen Colors (Dark) -->
+    <color name="setup_background">#1C1C1E</color>
+    <color name="setup_tagline">#ABABAB</color>
+    <color name="setup_title">#FFFFFF</color>
+    <color name="setup_description">#ABABAB</color>
+    <color name="setup_input_text">#FFFFFF</color>
+    <color name="setup_input_hint">#8E8E93</color>
+    <color name="setup_link">#8E8E93</color>
+    <color name="setup_card_divider">#48484A</color>
+    <color name="setup_dot">#636366</color>
+
+    <!-- Home Assistant Logo (inverted/white for dark mode) -->
+    <color name="ha_logo_tint">#FFFFFF</color>
+
+    <!-- Link Colors -->
+    <color name="link_color">#64B5F6</color>
+
+    <!-- Dialog Colors (Dark) -->
+    <color name="dialog_background">#2C2C2E</color>
+    <color name="trial_expired_background">#3D2A1F</color>
+    <color name="trial_expired_text">#FFB74D</color>
+
+    <!-- Input Field Colors (Dark) -->
+    <color name="input_background">#3A3A3C</color>
+    <color name="input_border">#48484A</color>
+    <color name="input_border_focused">#FF9500</color>
+
+    <!-- Button Colors (Dark) -->
+    <color name="button_border_pressed_bg">#3A3A3C</color>
+    <color name="button_border_pressed_stroke">#48484A</color>
+    <color name="button_border_focused_bg">#2C2C2E</color>
+    <color name="button_border_stroke">#48484A</color>
+
+    <!-- Dashie Brand Colors (Dark mode - visible orange for sliders) -->
+    <color name="dashie_orange_light">#CC7800</color>
+    <color name="dashie_orange_highlight">#40FF9500</color> <!-- 25% opacity orange for d-pad focus -->
+
+    <!-- Primary Button Colors (Dark) -->
+    <color name="button_primary_pressed_bg">#4A3A1F</color>
+
+    <!-- Slider Track Colors (Dark) -->
+    <color name="slider_track_background">#5A5A5C</color>
+
+    <!-- Status Box Background (Dark) -->
+    <color name="status_box_background">#2A2A2A</color>
+</resources>

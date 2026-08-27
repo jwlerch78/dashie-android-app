@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Subtle full-width CTA button for upsell prompts in the control center
+     grid. Matches the visual weight of feature/nav cards (white cell, dark
+     text) rather than a heavy orange bar — keeps the trial nudge from
+     dominating the CC. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/ccCtaButton"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:background="@drawable/bg_cc_card"
+        android:clickable="true"
+        android:focusable="true"
+        tools:text="Start a 30-day free trial" />
+
+</FrameLayout>

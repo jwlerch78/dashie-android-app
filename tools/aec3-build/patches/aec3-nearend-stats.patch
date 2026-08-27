@@ -1,0 +1,143 @@
+diff --git a/webrtc/api/audio/audio_processing_statistics.h b/webrtc/api/audio/audio_processing_statistics.h
+index d6f8b6e..2e0f97b 100644
+--- a/webrtc/api/audio/audio_processing_statistics.h
++++ b/webrtc/api/audio/audio_processing_statistics.h
+@@ -61,6 +61,12 @@ struct RTC_EXPORT AudioProcessingStats {
+   // milliseconds and the value is the instantaneous value at the time of the
+   // call to `GetStatistics()`.
+   std::optional<int32_t> delay_ms;
++
++  // Dashie barge-in: AEC3 DominantNearendDetector state + raw low-freq ratios,
++  // surfaced as a ratio-based double-talk discriminator (see echo_control.h Metrics).
++  std::optional<bool> dominant_nearend;
++  std::optional<double> nearend_enr;   // echo/nearend (low ⇒ near-end dominant)
++  std::optional<double> nearend_snr;   // nearend/noise (high ⇒ real near-end)
+ };
+ 
+ }  // namespace webrtc
+diff --git a/webrtc/api/audio/echo_control.h b/webrtc/api/audio/echo_control.h
+index 74fbc27..cb53d6e 100644
+--- a/webrtc/api/audio/echo_control.h
++++ b/webrtc/api/audio/echo_control.h
+@@ -40,6 +40,10 @@ class EchoControl {
+     double echo_return_loss;
+     double echo_return_loss_enhancement;
+     int delay_ms;
++    // Dashie barge-in: AEC3 DominantNearendDetector state + raw low-freq ratios.
++    bool dominant_nearend = false;
++    float nearend_enr = -1.f;   // echo_sum / nearend_sum (low ⇒ near-end dominant)
++    float nearend_snr = -1.f;   // nearend_sum / noise_sum (high ⇒ real near-end)
+   };
+ 
+   // Collect current metrics from the echo controller.
+diff --git a/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.cc b/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.cc
+index 40073cf..513af4a 100644
+--- a/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.cc
++++ b/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.cc
+@@ -46,6 +46,14 @@ void DominantNearendDetector::Update(
+     const float echo_sum = low_frequency_energy(residual_echo_spectrum[ch]);
+     const float noise_sum = low_frequency_energy(comfort_noise_spectrum[ch]);
+ 
++    // Dashie barge-in: surface channel 0's raw ratios so GetStatistics() carries a
++    // ratio-based double-talk signal (ENR low ⇒ near-end dominant, SNR high ⇒ real
++    // near-end). Guarded against divide-by-zero on a silent denominator.
++    if (ch == 0) {
++      last_enr_ = ne_sum > 0.f ? echo_sum / ne_sum : -1.f;
++      last_snr_ = noise_sum > 0.f ? ne_sum / noise_sum : -1.f;
++    }
++
+     // Detect strong active nearend if the nearend is sufficiently stronger than
+     // the echo and the nearend noise.
+     if ((!initial_state || use_during_initial_phase_) &&
+diff --git a/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.h b/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.h
+index 046d148..ae10a5d 100644
+--- a/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.h
++++ b/webrtc/modules/audio_processing/aec3/dominant_nearend_detector.h
+@@ -37,6 +37,10 @@ class DominantNearendDetector : public NearendDetector {
+                   comfort_noise_spectrum,
+               bool initial_state) override;
+ 
++  // Dashie barge-in: last low-frequency energy ratios from Update() (channel 0).
++  float LastEnr() const override { return last_enr_; }
++  float LastSnr() const override { return last_snr_; }
++
+  private:
+   const float enr_threshold_;
+   const float enr_exit_threshold_;
+@@ -47,6 +51,8 @@ class DominantNearendDetector : public NearendDetector {
+   const size_t num_capture_channels_;
+ 
+   bool nearend_state_ = false;
++  float last_enr_ = -1.f;   // Dashie: echo_sum/ne_sum, channel 0, last Update()
++  float last_snr_ = -1.f;   // Dashie: ne_sum/noise_sum, channel 0, last Update()
+   std::vector<int> trigger_counters_;
+   std::vector<int> hold_counters_;
+ };
+diff --git a/webrtc/modules/audio_processing/aec3/echo_remover.cc b/webrtc/modules/audio_processing/aec3/echo_remover.cc
+index e5c1b4c..c50aa5c 100644
+--- a/webrtc/modules/audio_processing/aec3/echo_remover.cc
++++ b/webrtc/modules/audio_processing/aec3/echo_remover.cc
+@@ -234,6 +234,10 @@ void EchoRemoverImpl::GetMetrics(EchoControl::Metrics* metrics) const {
+   metrics->echo_return_loss = -10.0 * std::log10(aec_state_.ErlTimeDomain());
+   metrics->echo_return_loss_enhancement =
+       Log2TodB(aec_state_.FullBandErleLog2());
++  // Dashie barge-in: ratio-based double-talk signal from the DominantNearendDetector.
++  metrics->dominant_nearend = suppression_gain_.IsDominantNearend();
++  metrics->nearend_enr = suppression_gain_.NearendEnr();
++  metrics->nearend_snr = suppression_gain_.NearendSnr();
+ }
+ 
+ void EchoRemoverImpl::ProcessCapture(
+diff --git a/webrtc/modules/audio_processing/aec3/nearend_detector.h b/webrtc/modules/audio_processing/aec3/nearend_detector.h
+index 0d8a06b..6de647e 100644
+--- a/webrtc/modules/audio_processing/aec3/nearend_detector.h
++++ b/webrtc/modules/audio_processing/aec3/nearend_detector.h
+@@ -26,6 +26,13 @@ class NearendDetector {
+   // Returns whether the current state is the nearend state.
+   virtual bool IsNearendState() const = 0;
+ 
++  // Dashie barge-in: expose the low-frequency energy ratios the detector uses so
++  // they can be surfaced through GetStatistics() as a double-talk discriminator.
++  // ENR = echo_sum / nearend_sum (low ⇒ near-end dominant); SNR = nearend_sum /
++  // noise_sum (high ⇒ real near-end). Default -1 for detectors that don't compute them.
++  virtual float LastEnr() const { return -1.f; }
++  virtual float LastSnr() const { return -1.f; }
++
+   // Updates the state selection based on latest spectral estimates.
+   virtual void Update(
+       rtc::ArrayView<const std::array<float, kFftLengthBy2Plus1>>
+diff --git a/webrtc/modules/audio_processing/aec3/suppression_gain.h b/webrtc/modules/audio_processing/aec3/suppression_gain.h
+index 806334c..a442d1b 100644
+--- a/webrtc/modules/audio_processing/aec3/suppression_gain.h
++++ b/webrtc/modules/audio_processing/aec3/suppression_gain.h
+@@ -57,10 +57,14 @@ class SuppressionGain {
+       float* high_bands_gain,
+       std::array<float, kFftLengthBy2Plus1>* low_band_gain);
+ 
+-  bool IsDominantNearend() {
++  bool IsDominantNearend() const {
+     return dominant_nearend_detector_->IsNearendState();
+   }
+ 
++  // Dashie barge-in: last low-frequency ENR/SNR ratios used by the detector.
++  float NearendEnr() const { return dominant_nearend_detector_->LastEnr(); }
++  float NearendSnr() const { return dominant_nearend_detector_->LastSnr(); }
++
+   // Toggles the usage of the initial state.
+   void SetInitialState(bool state);
+ 
+diff --git a/webrtc/modules/audio_processing/audio_processing_impl.cc b/webrtc/modules/audio_processing/audio_processing_impl.cc
+index a1cba51..885d89e 100644
+--- a/webrtc/modules/audio_processing/audio_processing_impl.cc
++++ b/webrtc/modules/audio_processing/audio_processing_impl.cc
+@@ -1482,6 +1482,10 @@ int AudioProcessingImpl::ProcessCaptureStreamLocked() {
+     capture_.stats.echo_return_loss_enhancement =
+         ec_metrics.echo_return_loss_enhancement;
+     capture_.stats.delay_ms = ec_metrics.delay_ms;
++    // Dashie barge-in: ratio-based double-talk discriminator.
++    capture_.stats.dominant_nearend = ec_metrics.dominant_nearend;
++    capture_.stats.nearend_enr = ec_metrics.nearend_enr;
++    capture_.stats.nearend_snr = ec_metrics.nearend_snr;
+   }
+ 
+   // Pass stats for reporting.

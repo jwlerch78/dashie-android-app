@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Toggle item with label and switch -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/settings_item_min_height"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/settings_item_padding_horizontal"
+    android:paddingEnd="@dimen/settings_item_padding_horizontal"
+    android:paddingTop="@dimen/settings_item_padding_vertical"
+    android:paddingBottom="@dimen/settings_item_padding_vertical"
+    android:focusable="true"
+    android:clickable="true">
+
+    <!-- Label and sublabel (left side) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/settings_text_label"
+            android:textSize="@dimen/settings_label_text_size"
+            tools:text="24-hour Clock" />
+
+        <TextView
+            android:id="@+id/tvSublabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/settings_text_value"
+            android:textSize="@dimen/settings_sublabel_text_size"
+            android:visibility="gone"
+            tools:text="Sublabel text"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <!-- Toggle switch (right side) — SwitchCompat is much lighter than SwitchMaterial -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/toggleSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/settings_toggle_height"
+        android:minHeight="0dp"
+        android:clickable="false"
+        android:focusable="false"
+        app:trackTint="@color/settings_toggle_track_selector"
+        app:thumbTint="@color/settings_toggle_thumb" />
+
+</LinearLayout>

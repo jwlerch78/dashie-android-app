@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Orange background -->
+    <item android:drawable="@color/orange" />
+
+    <!-- Logo centered - using smaller white transparent icon for pre-Android 12 -->
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/splash_icon_small" />
+    </item>
+</layer-list>

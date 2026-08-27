@@ -1,0 +1,16 @@
+<!-- Cloud + calendar for the daily weather rotator view icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Cloud (upper-left silhouette) -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M6.5,12.5 C4.5,12.5 3,11 3,9 C3,7 4.5,5.5 6.5,5.5 C7,3.5 8.5,2 11,2 C13,2 14.5,3.5 15,5.5 C16.5,5.5 18,7 18,8.5 C18,10 16.5,11.5 15,11.5 L7,11.5 C6.8,11.9 6.7,12.2 6.5,12.5 Z"/>
+    <!-- Calendar body + header bar (lower-right) -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M21,13 L13,13 C12.45,13 12,13.45 12,14 L12,22 C12,22.55 12.45,23 13,23 L21,23 C21.55,23 22,22.55 22,22 L22,14 C22,13.45 21.55,13 21,13 Z M21,22 L13,22 L13,16 L21,16 L21,22 Z M21,15 L13,15 L13,14 L21,14 L21,15 Z"/>
+    <!-- Date dots inside calendar grid -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M14.5,18 L15.5,18 L15.5,19 L14.5,19 Z M16.5,18 L17.5,18 L17.5,19 L16.5,19 Z M18.5,18 L19.5,18 L19.5,19 L18.5,19 Z M14.5,20 L15.5,20 L15.5,21 L14.5,21 Z M16.5,20 L17.5,20 L17.5,21 L16.5,21 Z M18.5,20 L19.5,20 L19.5,21 L18.5,21 Z"/>
+</vector>

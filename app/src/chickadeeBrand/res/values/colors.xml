@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Chickadee brand colours — deliberately almost EMPTY since 2026-08-02.
+
+  ## The pivot: one palette, both brands (John)
+
+  Chickadee's brand colour is now the Dashie orange. The right way to express "these two brands
+  share a palette" is **no override at all**, not a second copy of the same hex: an override that
+  must stay byte-equal to main/ is precisely the hand-mirror standing rule 1 exists to stop, and
+  it would drift the first time someone tunes the orange in one place.
+
+  So the whole palette block that used to live here is DELETED rather than re-valued:
+
+    chickadee_blue · orange · dashie_orange{,_light,_dark,_highlight}
+    brand_button{,_pressed,_focused} · settings_focus_highlight · chickadee_focus_highlight
+
+  Every one of those names still exists in `main/res/values/colors_settings.xml` and
+  `colors.xml`, and every consumer still reads them through the same seam. **The seams are the
+  thing that survived** — `@color/brand_button`, the `orange` redirect point, the
+  `dashie_full_logo` override machinery. If the brands ever diverge again, re-adding this file
+  is a one-file change, which is the property the indirection was bought for.
+
+  ⚠️ Two findings from earlier the same day RESOLVE BY DESIGN and their fixes are gone with the
+  block above: the orange Control Center press-animation, and the "Chickadee string with
+  Dashie-orange buttons" mixed state. Both were bugs only while the brands had different
+  palettes; they are now simply correct. The `values-night/colors.xml` that existed solely to
+  win the dark-mode qualifier for `settings_focus_highlight` is deleted for the same reason.
+
+  ## What is still here, and why
+
+  `ic_launcher_background` is about the MARK, not the palette. The orange art landed 2026-08-02
+  and the plate stays WHITE: the new mark is an orange waveform-bird on transparent, so an orange
+  plate would leave it invisible — the same reason the previous blue-crescent mark needed white,
+  arrived at from the opposite direction. The adaptive foreground is the mark alone on
+  transparent; background + foreground composite to mark-on-white.
+-->
+<resources>
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

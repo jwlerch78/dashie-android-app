@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="20dp">
+
+    <!-- Title (fixed at top) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Response Handling"
+        android:textSize="18sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="How voice responses are presented"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <RadioGroup
+            android:id="@+id/radioGroupResponseHandling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radioReadAndDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Read &amp; Display"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/dashie_orange"
+                android:paddingStart="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Speak response and show card"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:paddingStart="40dp"
+                android:layout_marginBottom="8dp" />
+
+            <RadioButton
+                android:id="@+id/radioReadOnly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Read Only"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/dashie_orange"
+                android:paddingStart="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Speak response only"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:paddingStart="40dp"
+                android:layout_marginBottom="8dp" />
+
+            <RadioButton
+                android:id="@+id/radioDisplayOnly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Display Only"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/dashie_orange"
+                android:paddingStart="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show card without speaking"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:paddingStart="40dp"
+                android:layout_marginBottom="8dp" />
+
+            <RadioButton
+                android:id="@+id/radioNone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/dashie_orange"
+                android:paddingStart="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Silent, no feedback"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:paddingStart="40dp" />
+
+        </RadioGroup>
+
+    </ScrollView>
+
+    <!-- Button row (fixed at bottom) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="24dp">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Save"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

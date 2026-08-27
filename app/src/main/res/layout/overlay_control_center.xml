@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Control Center Overlay — full-screen dark overlay with centered container.
+     Matches JS cc-overlay CSS: 90% black backdrop, 80% width / max 690dp container. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ccOverlayRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E6000000"
+    android:visibility="gone"
+    android:clickable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false">
+
+    <!-- Centered container — matches CSS: 80vw / max 690px, 92vh / max 680px -->
+    <LinearLayout
+        android:id="@+id/ccContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/bg_cc_container"
+        android:elevation="20dp"
+        android:clipChildren="true"
+        android:clipToPadding="true">
+
+        <!-- Nav bar — matches CSS settings-modal__nav-bar -->
+        <RelativeLayout
+            android:id="@+id/ccNavBar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <!-- Close button — left side -->
+            <TextView
+                android:id="@+id/ccCloseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical"
+                android:text="Close"
+                android:textColor="@color/settings_accent"
+                android:textSize="16sp"
+                android:clickable="true"
+                android:focusable="false"
+                android:background="?attr/selectableItemBackground" />
+
+            <!-- Title — centered -->
+            <TextView
+                android:id="@+id/ccTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="Control Center"
+                android:textColor="@color/settings_text_label"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <!-- Separator line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/settings_border" />
+
+        <!-- Scrollable content area -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ccRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="4dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+
+        <!-- Separator above footer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/settings_border" />
+
+        <!-- STT model install strip — visible ONLY while a model install is in
+             flight (SttInstallProgress). This is where progress lives when the
+             download dialog is hidden or settings is closed; Cancel here is the
+             same cancel as the dialog's. Wired in ControlCenterOverlay. -->
+        <LinearLayout
+            android:id="@+id/ccInstallStrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/settings_container_bg"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/ccInstallStripText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/settings_text_value"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <Button
+                android:id="@+id/ccInstallStripCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="Cancel"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/ccInstallStripDivider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/settings_border"
+            android:visibility="gone" />
+
+        <!-- Footer bar — device info (left, left-justified) + Hide-inactive
+             toggle (right). Solid background so cards scroll behind it. -->
+        <LinearLayout
+            android:id="@+id/ccFooterBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/settings_container_bg"
+            android:paddingTop="4dp"
+            android:paddingBottom="6dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:id="@+id/ccFooter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/settings_text_value"
+                android:textSize="13sp" />
+
+            <!-- Hide-inactive toggle — tap the whole group to flip -->
+            <LinearLayout
+                android:id="@+id/ccHideInactiveToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/ccHideInactiveLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hide inactive"
+                    android:textColor="@color/settings_text_value"
+                    android:textSize="13sp"
+                    android:paddingEnd="6dp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/ccHideInactiveSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:trackTint="@color/settings_toggle_track_selector"
+                    app:thumbTint="@color/settings_toggle_thumb" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

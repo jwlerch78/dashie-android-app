@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:paddingTop="24dp"
+    android:paddingBottom="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Threshold"
+        android:textSize="20sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- RAM % Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RAM %"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginBottom="4dp" />
+
+    <RadioGroup
+        android:id="@+id/ramModeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+
+        <RadioButton
+            android:id="@+id/ramRadioDisabled"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Disabled"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:buttonTint="@color/dashie_orange" />
+
+        <RadioButton
+            android:id="@+id/ramRadioDefault"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Default (82%)"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:buttonTint="@color/dashie_orange" />
+
+        <RadioButton
+            android:id="@+id/ramRadioCustom"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Custom"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:buttonTint="@color/dashie_orange" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/ramSliderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/ramSliderValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="85%"
+            android:textSize="18sp"
+            android:textColor="@color/dashie_orange"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="4dp" />
+
+        <SeekBar
+            android:id="@+id/ramSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="50"
+            android:max="99"
+            android:progress="85"
+            android:progressTint="@color/dashie_orange"
+            android:thumbTint="@color/dashie_orange" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="50%"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="99%"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="end" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
+
+    <!-- Heap % Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Heap %"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginBottom="4dp" />
+
+    <RadioGroup
+        android:id="@+id/heapModeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+
+        <RadioButton
+            android:id="@+id/heapRadioDisabled"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Disabled"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:buttonTint="@color/dashie_orange" />
+
+        <RadioButton
+            android:id="@+id/heapRadioDefault"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Default (80%)"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:buttonTint="@color/dashie_orange" />
+
+        <RadioButton
+            android:id="@+id/heapRadioCustom"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Custom"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:buttonTint="@color/dashie_orange" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/heapSliderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/heapSliderValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="80%"
+            android:textSize="18sp"
+            android:textColor="@color/dashie_orange"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="4dp" />
+
+        <SeekBar
+            android:id="@+id/heapSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="50"
+            android:max="99"
+            android:progress="80"
+            android:progressTint="@color/dashie_orange"
+            android:thumbTint="@color/dashie_orange" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="50%"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="99%"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="end" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Button Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Save"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary" />
+    </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

@@ -1,0 +1,83 @@
+{
+  "formatVersion" : "1.1",
+  "component" : {
+    "group" : "com.github.pedroSG94",
+    "module" : "RootEncoder",
+    "version" : "2.6.1",
+    "attributes" : {
+      "org.gradle.status" : "release"
+    }
+  },
+  "createdBy" : {
+    "gradle" : {
+      "version" : "8.10.1"
+    }
+  },
+  "variants" : [ {
+    "name" : "releaseVariantReleaseApiPublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-api"
+    },
+    "dependencies" : [ {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "common",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "rtsp-2.6.1.aar",
+      "url" : "rtsp-2.6.1.aar",
+      "size" : 107338,
+      "sha512" : "fa786f88240fa5b4e2fbe8105ffd1f4a398ba3b0f9bac709ad0dcbe403fd1325af3f02d31f9b822b778c5345f789be175f961391f4db2fcdf249c7d1aa1bc8bf",
+      "sha256" : "81a77797f7333508726630ad096e3c31027500258c09a1a6ce70c7d7d742d2b3",
+      "sha1" : "8b36397bcdf957c2456731d705add1ad34d043e8",
+      "md5" : "5ab1bc51420e771940e7b66f61244df6"
+    } ]
+  }, {
+    "name" : "releaseVariantReleaseRuntimePublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-runtime"
+    },
+    "dependencies" : [ {
+      "group" : "org.jetbrains.kotlinx",
+      "module" : "kotlinx-coroutines-android",
+      "version" : {
+        "requires" : "1.10.2"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "common",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "rtsp-2.6.1.aar",
+      "url" : "rtsp-2.6.1.aar",
+      "size" : 107338,
+      "sha512" : "fa786f88240fa5b4e2fbe8105ffd1f4a398ba3b0f9bac709ad0dcbe403fd1325af3f02d31f9b822b778c5345f789be175f961391f4db2fcdf249c7d1aa1bc8bf",
+      "sha256" : "81a77797f7333508726630ad096e3c31027500258c09a1a6ce70c7d7d742d2b3",
+      "sha1" : "8b36397bcdf957c2456731d705add1ad34d043e8",
+      "md5" : "5ab1bc51420e771940e7b66f61244df6"
+    } ]
+  } ]
+}

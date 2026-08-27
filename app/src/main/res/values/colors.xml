@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="orange">#F49B24</color>
+
+    <!-- Dashie Brand Colors -->
+    <color name="dashie_orange">#FF9500</color>
+    <color name="dashie_orange_light">#FFD9A8</color>
+    <color name="dashie_orange_dark">#E08600</color>
+    <color name="dashie_orange_highlight">#40FF9500</color> <!-- 25% opacity orange for d-pad focus -->
+
+    <!--
+      Primary-button states, consumed by drawable/button_orange.xml. Separate from the
+      dashie_orange_* palette above ON PURPOSE: these three are "whatever this brand's primary
+      button looks like", so the chickadee* flavors override exactly these and nothing else.
+      Values are the hexes button_orange.xml carried inline before 2026-08-01 — Dashie's
+      appearance is unchanged.
+    -->
+    <color name="brand_button">#FF9500</color>
+    <color name="brand_button_pressed">#CC7700</color>
+    <color name="brand_button_focused">#FFAA33</color>
+
+    <!-- Light Theme Colors -->
+    <color name="sidebar_background">#FFFFFF</color>
+    <color name="sidebar_header_background">#FCFCFF</color>
+    <color name="sidebar_divider">#E0E0E0</color>
+    <color name="sidebar_divider_light">#EEEEEE</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_disabled">#BDBDBD</color>
+    <color name="icon_tint">#616161</color>
+    <color name="backdrop_overlay">#80000000</color>
+    <color name="sidebar_pinned_fill">#F0F0F0</color>
+
+    <!-- Setup Screen Colors (Light) -->
+    <color name="setup_background">#FCFCFF</color>
+    <color name="setup_tagline">#616161</color>
+    <color name="setup_title">#424242</color>
+    <color name="setup_description">#616161</color>
+    <color name="setup_input_text">#424242</color>
+    <color name="setup_input_hint">#9E9E9E</color>
+    <color name="setup_link">#9E9E9E</color>
+    <color name="setup_card_divider">#EEEEEE</color>
+    <color name="setup_dot">#CCCCCC</color>
+
+    <!-- Home Assistant Logo -->
+    <color name="ha_logo_tint">#18BCF2</color>
+
+    <!-- Link Colors -->
+    <color name="link_color">#2196F3</color>
+
+    <!-- Status Colors -->
+    <color name="error_red">#F44336</color>
+    <color name="warning_orange">#FF9800</color>
+    <color name="success_green">#4CAF50</color>
+
+    <!-- Dialog Colors (Light) -->
+    <color name="dialog_background">#FFFFFF</color>
+    <color name="trial_expired_background">#FFF3E0</color>
+    <color name="trial_expired_text">#E65100</color>
+
+    <!-- Input Field Colors (Light) -->
+    <color name="input_background">#FFFFFF</color>
+    <color name="input_border">#E0E0E0</color>
+    <color name="input_border_focused">#FF9500</color>
+
+    <!-- Button Colors (Light) -->
+    <color name="button_border_pressed_bg">#E0E0E0</color>
+    <color name="button_border_pressed_stroke">#BDBDBD</color>
+    <color name="button_border_focused_bg">#F5F5F5</color>
+    <color name="button_border_stroke">#E0E0E0</color>
+
+    <!-- Primary Button Colors (Light) -->
+    <color name="button_primary_pressed_bg">#FFE0B2</color>
+
+    <!-- Slider Track Colors (Light) -->
+    <color name="slider_track_background">#E0E0E0</color>
+
+    <!-- Sensor Box Colors (Light) -->
+    <color name="sensor_box_background">#F5F5F5</color>
+
+    <!-- Status Box Background (Light) -->
+    <color name="status_box_background">#F5F5F5</color>
+
+</resources>

@@ -1,0 +1,336 @@
+/**
+ * Dashie Lite - Timer Card Styles
+ * Synced with Dashie Standard timer-overlay.css for consistent look
+ *
+ * Viewport scaling: The timer overlay containers use transform: scale()
+ * set by JavaScript based on screen size. Reference resolution is 1368x768.
+ * Larger screens get larger timers proportionally.
+ */
+
+/* Timer Card (Normal/Expanded) */
+.timer-card {
+  width: 390px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  animation: timer-card-enter 0.25s ease-out;
+  pointer-events: auto;
+}
+
+@keyframes timer-card-enter {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.timer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+.timer-card--removing {
+  animation: timer-card-exit 0.2s ease-out forwards;
+}
+
+@keyframes timer-card-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+  }
+}
+
+/* Timer Card Header */
+.timer-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 16px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.timer-card__header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.timer-card__label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.timer-card__name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timer-card__duration {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-transform: lowercase;
+  letter-spacing: 0;
+}
+
+/* Timer Description (optional purpose, e.g., "Pasta", "Sprinklers") */
+.timer-card__description {
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timer-card__controls {
+  display: flex;
+  gap: 2px;
+}
+
+/* Timer Card Buttons */
+.timer-card__btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  transition: background 0.15s ease, color 0.15s ease;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;
+}
+
+.timer-card__btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.timer-card__btn:active {
+  background: var(--border-color);
+}
+
+.timer-card__btn--close:hover {
+  background: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+}
+
+/* Timer Card Body */
+.timer-card__body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  gap: 16px;
+}
+
+.timer-card__time {
+  font-size: 54px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.timer-card__body-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Body control buttons - consistent sizing */
+.timer-card__btn--playpause,
+.timer-card__body-controls .timer-card__btn--close {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.timer-card__btn--playpause:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-primary, #3b82f6);
+  border-color: var(--accent-primary, #3b82f6);
+}
+
+.timer-card__body-controls .timer-card__btn--close:hover {
+  background: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+/* Timer Card States */
+
+/* Paused State */
+.timer-card--paused {
+  opacity: 0.85;
+}
+
+.timer-card--paused .timer-card__time {
+  animation: timer-pulse 2s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Completed State */
+.timer-card--completed {
+  border: 2px solid var(--warning, #f59e0b);
+}
+
+.timer-card--completed .timer-card__time {
+  color: var(--warning, #f59e0b);
+  animation: timer-digits-flash 0.6s ease-in-out infinite;
+}
+
+@keyframes timer-digits-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Minimized Timer */
+.timer-mini {
+  position: relative;
+  padding: 10px 18px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+  animation: timer-mini-enter 0.2s ease-out;
+  pointer-events: auto;
+}
+
+@keyframes timer-mini-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.timer-mini:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.timer-mini:active {
+  transform: scale(1.02);
+}
+
+.timer-mini--removing {
+  animation: timer-mini-exit 0.2s ease-out forwards;
+}
+
+@keyframes timer-mini-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+}
+
+.timer-mini__time {
+  font-size: 27px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* Timer Slot Badge - shows timer number when multiple timers exist */
+.timer-mini__badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 16px;
+  height: 16px;
+  background: var(--accent-primary, #3b82f6);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--bg-secondary);
+  pointer-events: none;
+}
+
+/* Minimized Timer States */
+.timer-mini--paused {
+  opacity: 0.7;
+}
+
+.timer-mini--paused .timer-mini__time {
+  animation: timer-pulse 2s ease-in-out infinite;
+}
+
+.timer-mini--completed {
+  border: 2px solid var(--warning, #f59e0b);
+}
+
+.timer-mini--completed .timer-mini__time {
+  color: var(--warning, #f59e0b);
+  animation: timer-digits-flash 0.6s ease-in-out infinite;
+}
+
+/* Focus States for Accessibility */
+.timer-card__btn:focus-visible {
+  outline: 2px solid var(--accent-primary, #3b82f6);
+  outline-offset: 2px;
+}
+
+.timer-mini:focus-visible {
+  outline: 2px solid var(--accent-primary, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .timer-card {
+    width: 240px;
+  }
+
+  .timer-card__time {
+    font-size: 34px;
+  }
+
+  .timer-card__btn--playpause,
+  .timer-card__body-controls .timer-card__btn--close {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -1,0 +1,38 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/microfrontend/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# TFLite static libraries (too large for GitHub - 129MB each)
+# Download separately or build from source
+app/src/main/cpp/tflite/
+
+# Signing keystores must never be committed. The Play Store upload key
+# lives at ~/keystores/dashie-upload.jks and credentials in
+# ~/.gradle/gradle.properties — see CLAUDE.md / build.gradle.kts.
+*.jks
+*.keystore
+
+# Speaker-ID model asset — fetched by scripts/fetch-speakerid-model.sh, not committed
+app/src/speakeridAssets/assets/models/speakerid/*.onnx
+
+# Kotlin incremental-compile error logs (build artifact, IDE/gradle-generated)
+.kotlin/
+
+# sherpa-onnx STT engine + models — fetched by scripts/fetch-stt-models.sh, not committed
+app/src/sttEngine/
+# The silero VAD, same script, separate source set because it ships in EVERY flavor
+# (see the srcDir loop in app/build.gradle.kts). Also fetched, also not committed.
+app/src/sttVad/

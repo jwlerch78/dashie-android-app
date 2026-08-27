@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="24dp">
+
+    <!-- Title (fixed at top) -->
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:textSize="20sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/dialogMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Are you sure?"
+            android:textSize="17sp"
+            android:textColor="@color/text_secondary"
+            android:lineSpacingExtra="4dp" />
+
+    </ScrollView>
+
+    <!-- Buttons Row (fixed at bottom) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp">
+
+        <!-- Cancel Button (android.widget.Button to bypass MaterialButton background override) -->
+        <android.widget.Button
+            android:id="@+id/buttonNegative"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:defaultFocusHighlightEnabled="false"
+            android:nextFocusUp="@id/buttonNegative"
+            android:nextFocusDown="@id/buttonNegative"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Confirm Button (android.widget.Button to bypass MaterialButton background override) -->
+        <android.widget.Button
+            android:id="@+id/buttonPositive"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="OK"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary"
+            android:defaultFocusHighlightEnabled="false"
+            android:nextFocusUp="@id/buttonPositive"
+            android:nextFocusDown="@id/buttonPositive"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+    <!-- Optional link-style action below the buttons (e.g. "Don't ask again").
+         Hidden by default; callers set visibility + click handler. Plain text
+         instead of a checkbox — theme checkbox tinting renders the check mark
+         invisible on some builds (Echo Show 5 Lineage). -->
+    <TextView
+        android:id="@+id/dialogLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:padding="6dp"
+        android:gravity="center"
+        android:text="Don't ask again"
+        android:textSize="14sp"
+        android:textColor="@color/dashie_orange"
+        android:background="?android:attr/selectableItemBackground"
+        android:visibility="gone" />
+
+</LinearLayout>

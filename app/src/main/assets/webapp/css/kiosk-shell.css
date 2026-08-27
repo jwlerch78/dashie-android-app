@@ -1,0 +1,57 @@
+/**
+ * Kiosk Shell Page Styles
+ * Top-level page layout: sidebar (60px) + HA iframe (remaining width).
+ */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--dm-bg-primary, #1a1a1a);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#ha-content,
+#custom-content {
+  position: fixed;
+  left: calc(60px * var(--shell-scale, 1));
+  top: 0;
+  width: calc((100vw - 60px * var(--shell-scale, 1)) / var(--dashboard-zoom, 1));
+  height: calc(100vh / var(--dashboard-zoom, 1));
+  border: none;
+  background: transparent;
+  zoom: var(--dashboard-zoom, 1);
+  transform-origin: top left;
+}
+
+/* Sidebar hidden state — uses visibility:hidden to preserve backdrop-filter compositing */
+body.sidebar-hidden .dashboard-sidebar,
+body.sidebar-hidden .dm-popout-container,
+body.sidebar-hidden .dm-backdrop {
+  visibility: hidden;
+  pointer-events: none;
+}
+body.sidebar-hidden #ha-content,
+body.sidebar-hidden #custom-content {
+  left: 0;
+  width: calc(100vw / var(--dashboard-zoom, 1));
+}
+
+/* Sidebar overlay state — sidebar visible as floating overlay, HA stays full-width.
+   Used when dash bar is unpinned and revealed by swipe. */
+body.sidebar-overlay .dashboard-sidebar,
+body.sidebar-overlay .dm-popout-container,
+body.sidebar-overlay .dm-backdrop {
+  visibility: visible;
+  pointer-events: auto;
+}
+body.sidebar-overlay #ha-content,
+body.sidebar-overlay #custom-content {
+  left: 0;
+  width: calc(100vw / var(--dashboard-zoom, 1));
+}

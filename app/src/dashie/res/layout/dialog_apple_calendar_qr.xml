@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Apple Calendar add prompt. Shown on TVs (always) and tablets (with an
+  escape hatch) when the user picks "Add Apple Calendar". Apple's 16-char
+  app-specific password is painful to enter on a d-pad and tedious on a
+  tablet on-screen keyboard, so we steer them to dashieapp.com/apple on a
+  phone or PC.
+
+  Visual styling matches dialog_photo_upload_qr.xml so QR-based flows feel
+  consistent across the app.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_background"
+        android:padding="26dp"
+        android:gravity="center">
+
+        <!-- Title row: calendar icon + title text -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_sidebar_calendar"
+                android:contentDescription="Calendar"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Apple Calendar"
+                android:textSize="22sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Explanation -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apple requires a 16-character app-specific password. The easiest way is from your phone or computer:"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- QR Code -->
+        <ImageView
+            android:id="@+id/appleQrImage"
+            android:layout_width="165dp"
+            android:layout_height="165dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="Apple Calendar setup QR Code"
+            android:scaleType="fitCenter" />
+
+        <!-- "Scan or visit dashieapp.com/apple" — orange URL -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scan or visit "
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/appleQrUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dashieapp.com/apple"
+                android:textSize="14sp"
+                android:textColor="#FF9500"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Done button — outlined orange pill -->
+        <Button
+            android:id="@+id/appleQrDoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="130dp"
+            android:paddingHorizontal="26dp"
+            android:paddingVertical="10dp"
+            android:text="Done"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_pill_orange" />
+
+        <!-- "Continue here anyway" — only visible on tablets -->
+        <Button
+            android:id="@+id/appleQrProceedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="6dp"
+            android:text="Continue here anyway"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@android:color/transparent"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>

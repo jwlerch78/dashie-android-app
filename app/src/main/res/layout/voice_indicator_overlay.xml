@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Voice Indicator Overlay for Dashie Lite
+     Matches standard Dashie voice UI:
+     - Full-width orange gradient line when listening
+     - Three bouncing orange dots when processing (thinking)
+     - Toast popup for STT confirmation -->
+<!-- elevation 230dp: must sit above screenDimOverlay (200dp) and the
+     screensaver overlay panel (210dp) so voice feedback is visible during
+     the screensaver. Wake word does not dismiss the screensaver. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/voiceIndicatorOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="230dp"
+    android:visibility="gone">
+
+    <!-- Semi-transparent backdrop (only shown during processing/speaking) -->
+    <View
+        android:id="@+id/voiceBackdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#59000000"
+        android:alpha="0"
+        android:visibility="gone" />
+
+    <!-- Orange Listening Line - full width, pinned to the very bottom of the screen (DLG-6:
+         the follow-up "still listening" indicator, matching conversation-mode's bottom line).
+         Elevation 20dp so it draws over the dim backdrop / thinking chrome — but BELOW the
+         result card (24dp), so a completed-command confirmation shows above this bar. -->
+    <View
+        android:id="@+id/listeningLine"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/listening_line_gradient"
+        android:elevation="20dp"
+        android:visibility="gone" />
+
+    <!-- Thinking Indicator - Centered, shows during processing.
+         FrameLayout wrapper so the cancel (x) button can sit in the top-right
+         corner of the card, matching the result card pattern. The card hugs
+         its content (wrap_content) and is centered by layout_gravity. -->
+    <FrameLayout
+        android:id="@+id/thinkingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="8dp"
+        android:visibility="gone">
+
+        <!-- Card content -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingHorizontal="36dp"
+            android:paddingVertical="32dp"
+            android:minWidth="220dp"
+            android:background="@drawable/result_card_background">
+
+            <!-- Three dots container -->
+            <LinearLayout
+                android:id="@+id/thinkingDotsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <View
+                    android:id="@+id/thinkingDot1"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/thinking_dot" />
+
+                <View
+                    android:id="@+id/thinkingDot2"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/thinking_dot" />
+
+                <View
+                    android:id="@+id/thinkingDot3"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/thinking_dot" />
+
+            </LinearLayout>
+
+            <!-- Thinking text - white with shadow for visibility in both modes -->
+            <TextView
+                android:id="@+id/thinkingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Thinking"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:shadowColor="#000000"
+                android:shadowRadius="3"
+                android:shadowDx="1"
+                android:shadowDy="1" />
+
+        </LinearLayout>
+
+        <!-- Cancel button (x) in top right corner - aborts a hung operation -->
+        <ImageView
+            android:id="@+id/thinkingCloseButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_close"
+            android:tint="#FFFFFF"
+            android:background="@drawable/close_button_background"
+            android:elevation="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Cancel" />
+
+    </FrameLayout>
+
+    <!-- Result Card - Toast-style at bottom showing response and command -->
+    <!-- This is shown independently and stays for 5 seconds regardless of state -->
+    <!-- elevation 24dp: the completed-command confirmation must draw ABOVE the voice overlay
+         chrome — the DLG-6 listening line (20dp) and the conversation panel (16dp) — so a
+         command's confirmation isn't hidden behind the bottom bar / dialog panel. -->
+    <FrameLayout
+        android:id="@+id/resultCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:elevation="24dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/resultCardContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="20dp"
+            android:paddingEnd="48dp"
+            android:background="@drawable/result_card_background"
+            android:elevation="12dp"
+            android:minWidth="300dp"
+            android:maxWidth="600dp"
+            android:gravity="center_horizontal">
+
+            <!-- Response row: HA logo on left, response text on right -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Home Assistant logo -->
+                <ImageView
+                    android:id="@+id/resultHaIcon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/icon_homeassistant_blue"
+                    android:contentDescription="Home Assistant" />
+
+                <!-- Response text (what HA said) - larger.
+                     maxWidth caps the line length so long responses wrap to
+                     maxLines instead of stretching the card (the card itself
+                     is now wrap_content). Scaled for large tablets in code. -->
+                <TextView
+                    android:id="@+id/resultResponseText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:maxWidth="470dp"
+                    android:maxLines="4"
+                    android:ellipsize="end"
+                    android:shadowColor="#000000"
+                    android:shadowRadius="2"
+                    android:shadowDx="1"
+                    android:shadowDy="1" />
+
+            </LinearLayout>
+
+            <!-- Command text (what user said) - smaller, centered below response -->
+            <TextView
+                android:id="@+id/resultCommandText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:maxWidth="520dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:shadowColor="#000000"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1" />
+
+        </LinearLayout>
+
+        <!-- Close button (x) in top right corner -->
+        <ImageView
+            android:id="@+id/resultCloseButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_close"
+            android:tint="#FFFFFF"
+            android:background="@drawable/close_button_background"
+            android:elevation="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Close" />
+
+    </FrameLayout>
+
+    <!-- Sidebar Panel: right-aligned panel for cloud AI responses.
+         Matches JS voice-overlay sidebar layout:
+         User message = right-aligned rounded bubble (white bg, dark text)
+         Voiced text = large bold white centered
+         Additional text = smaller centered below
+         Metadata bar = model name + cost at bottom -->
+    <FrameLayout
+        android:id="@+id/sidebarPanel"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@drawable/sidebar_panel_background"
+        android:elevation="16dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Close button row -->
+            <ImageView
+                android:id="@+id/sidebarCloseButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end"
+                android:padding="4dp"
+                android:src="@drawable/ic_close"
+                android:tint="#CCCCCC"
+                android:background="@drawable/close_button_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Close" />
+
+            <!-- Conversation-mode status row (top): "Thinking…" + dots. Listening is
+                 shown by the top-level orange line instead; this row is the thinking
+                 affordance, pinned ABOVE the transcript. -->
+            <LinearLayout
+                android:id="@+id/sidebarConversationStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+
+                <!-- Sizes match the cascade sidebar thinking indicator (16sp text,
+                     12dp dots); scaled by device-boost + full-screen in
+                     VoiceIndicatorViews so the two affordances stay in lockstep.
+                     Text on top, the 3 animated dots in a row BELOW it (the flashing
+                     dots read as their own affordance under the label). -->
+                <TextView
+                    android:id="@+id/sidebarConversationStatusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Thinking"
+                    android:textColor="#CCCCCC"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <View
+                        android:id="@+id/sidebarConvDot1"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/thinking_dot" />
+                    <View
+                        android:id="@+id/sidebarConvDot2"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/thinking_dot" />
+                    <View
+                        android:id="@+id/sidebarConvDot3"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:background="@drawable/thinking_dot" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Realtime conversation-mode transcript: a downward-growing stack of
+                 turns (newest white at top, older dimmed). Populated programmatically
+                 by VoiceConversationView; hidden for the cascade single-turn path. -->
+            <ScrollView
+                android:id="@+id/sidebarConversationScroll"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:fadingEdge="vertical"
+                android:fadingEdgeLength="24dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/sidebarConversationTurns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="8dp" />
+
+            </ScrollView>
+
+            <!-- User message: LEFT-aligned rounded bubble. Pinned to start so the
+                 bubble's left edge stays at the panel's x=0 in BOTH full-screen
+                 states — full-width fill AND the collapsed left-2/3 when the
+                 artifact (visual-aid) panel is showing — so it doesn't jump
+                 sideways when a tool card pops in on the right. -->
+            <TextView
+                android:id="@+id/sidebarUserMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/sidebar_user_message_background"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="13sp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:visibility="gone" />
+
+            <!-- Thinking indicator (sidebar variant): text above dots, centered -->
+            <LinearLayout
+                android:id="@+id/sidebarThinking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/sidebarThinkingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:text="Thinking"
+                    android:textColor="#CCCCCC"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <View
+                        android:id="@+id/sidebarThinkingDot1"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/thinking_dot" />
+                    <View
+                        android:id="@+id/sidebarThinkingDot2"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/thinking_dot" />
+                    <View
+                        android:id="@+id/sidebarThinkingDot3"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:background="@drawable/thinking_dot" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- AI response area (scrollable) -->
+            <ScrollView
+                android:id="@+id/sidebarResponseScroll"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:fadingEdge="vertical"
+                android:fadingEdgeLength="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <!-- Voiced text: large bold white centered (matches JS .voice-overlay__voiced-text) -->
+                    <TextView
+                        android:id="@+id/sidebarResponseText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#FFFFFF"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.4"
+                        android:layout_marginBottom="16dp"
+                        android:visibility="gone" />
+
+                    <!-- Additional text: smaller centered below (matches JS .voice-overlay__ai-message) -->
+                    <TextView
+                        android:id="@+id/sidebarAdditionalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#CCCCCC"
+                        android:textSize="11sp"
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.4"
+                        android:visibility="gone" />
+
+                    <!-- Calendar event cards container (populated dynamically) -->
+                    <LinearLayout
+                        android:id="@+id/sidebarCalendarEvents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone" />
+
+                    <!-- Sports score card container (populated dynamically) -->
+                    <LinearLayout
+                        android:id="@+id/sidebarSportsCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <!-- Metadata bar at bottom (matches JS .voice-overlay__metadata-section) -->
+            <LinearLayout
+                android:id="@+id/sidebarMetadata"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/close_button_background"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="6dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/sidebarMetadataModel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/sidebarMetadataCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#99FFFFFF"
+                    android:textSize="8sp"
+                    android:fontFamily="monospace" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- FB27: "Credits low" badge — centered on the sidebar panel, near the bottom (John
+             2026-07-06). A child of the panel so it centers within it in both sidebar and
+             full-screen conversation modes. Toggled by VoiceIndicatorController. -->
+        <TextView
+            android:id="@+id/creditLowBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="44dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="7dp"
+            android:background="@drawable/credit_low_badge_bg"
+            android:text="Credits low"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:elevation="18dp"
+            android:visibility="gone" />
+
+        <!-- Conversation follow-up listen line: orange bar at the bottom of the PANEL (not
+             full-width across the screen). Thickness matches the bottom-of-screen listening
+             line (11dp) so the same indicator reads consistently wherever it appears. -->
+        <View
+            android:id="@+id/sidebarConversationListenLine"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/listening_line_gradient"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <!-- Artifact panel: right-1/3 column shown in FULL-SCREEN conversation mode for any
+         tool card (sports / image / calendar cards / agenda). The conversation panel
+         collapses to the left 2/3 (sidebarPanel) and cards stack here (newest on top),
+         vertically centered + scrollable. Width + the 2/3-collapse are set
+         programmatically in VoiceIndicatorViews.setArtifactTwoColumn(). Hidden by default;
+         sidebar mode renders cards inline / uses the centered popup instead. -->
+    <FrameLayout
+        android:id="@+id/voiceArtifactPanel"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@drawable/voice_artifact_panel_background"
+        android:elevation="16dp"
+        android:visibility="gone">
+
+        <!-- Artifact body: any full-screen tool card (sports / image / calendar) stacks
+             here, newest on top. Vertically centered in the FULL panel height when short
+             (fillViewport + center_vertical), scrollable when several accumulate. The
+             ScrollView fills the whole panel; the ✕ floats on top so it doesn't shift the
+             centered content downward. -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="24dp">
+
+            <LinearLayout
+                android:id="@+id/voiceArtifactBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp" />
+
+        </ScrollView>
+
+        <!-- Close (x) — the single close affordance for the whole voice interface in
+             two-column mode. Floats top-right over the body; larger tap target / glyph. -->
+        <ImageView
+            android:id="@+id/voiceArtifactClose"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_close"
+            android:tint="#CCCCCC"
+            android:background="@drawable/close_button_background"
+            android:elevation="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Close" />
+
+    </FrameLayout>
+
+    <!-- Error Indicator: card with red icon + white text, matches resultCard styling -->
+    <LinearLayout
+        android:id="@+id/errorIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="20dp"
+        android:background="@drawable/result_card_background"
+        android:elevation="12dp"
+        android:minWidth="300dp"
+        android:maxWidth="600dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/errorIcon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_error"
+            android:tint="#E53935"
+            android:contentDescription="Error" />
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="An error occurred"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="start|center_vertical"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:shadowColor="#000000"
+            android:shadowRadius="2"
+            android:shadowDx="1"
+            android:shadowDy="1" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

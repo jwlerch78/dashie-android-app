@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simplified lock dialog - just choose unlock mechanism and lock -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="20dp">
+
+    <!-- Title (fixed at top) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_lock"
+            android:contentDescription="Lock"
+            android:layout_marginEnd="8dp"
+            app:tint="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/dialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lock App"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Description -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Locking prevents app exit and hides settings menu."
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Unlock Mechanism Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Unlock Method"
+                android:textSize="13sp"
+                android:textColor="@color/text_hint"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupUnlockMechanism"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radioUnlockAnyone"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Anyone can unlock"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"
+                    android:buttonTint="@color/dashie_orange"
+                    android:paddingStart="8dp" />
+
+                <RadioButton
+                    android:id="@+id/radioUnlockPin"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="PIN required"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"
+                    android:buttonTint="@color/dashie_orange"
+                    android:paddingStart="8dp" />
+
+            </RadioGroup>
+
+            <!-- PIN status row (always visible - shows current PIN state and button to set/change) -->
+            <LinearLayout
+                android:id="@+id/pinStatusRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/textPinStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="No PIN set"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary" />
+
+                <Button
+                    android:id="@+id/buttonSetChangePin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:minWidth="80dp"
+                    android:text="Set PIN"
+                    android:textSize="12sp"
+                    android:textColor="@color/dashie_orange"
+                    android:textAllCaps="false"
+                    android:background="@drawable/button_border"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp" />
+
+            </LinearLayout>
+
+            <!-- API note -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="App can always be unlocked via API"
+                android:textSize="11sp"
+                android:textColor="@color/text_hint"
+                android:layout_marginTop="12dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Button row (fixed at bottom) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonLock"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Lock"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

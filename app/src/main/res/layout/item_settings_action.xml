@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Action button item (no chevron, can be danger styled) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/settings_item_min_height"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/settings_item_padding_horizontal"
+    android:paddingEnd="@dimen/settings_item_padding_horizontal"
+    android:paddingTop="@dimen/settings_item_padding_vertical"
+    android:paddingBottom="@dimen/settings_item_padding_vertical"
+    android:focusable="true"
+    android:clickable="true">
+
+    <!-- Label (centered or left-aligned based on style) -->
+    <TextView
+        android:id="@+id/tvLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/settings_accent"
+        android:textSize="@dimen/settings_label_text_size"
+        tools:text="Clear Cache" />
+
+</LinearLayout>

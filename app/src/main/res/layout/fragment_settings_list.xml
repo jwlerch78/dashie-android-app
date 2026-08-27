@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/settings_screen_bg">
+
+    <!-- Nav bar (included in fragment for flexibility) -->
+    <include layout="@layout/layout_settings_nav_bar" />
+
+    <!-- Divider below nav bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_separator_height"
+        android:background="@color/settings_separator" />
+
+    <!-- Scrollable settings list with grouped sections -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/settingsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="@dimen/settings_section_margin_vertical"
+        android:paddingBottom="@dimen/settings_section_margin_horizontal"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        tools:listitem="@layout/item_settings_menu" />
+
+</LinearLayout>

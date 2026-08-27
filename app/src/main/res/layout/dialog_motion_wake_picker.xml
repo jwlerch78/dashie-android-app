@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="20dp">
+
+    <!-- Title (fixed at top) -->
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Wake Mode"
+        android:textSize="18sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <!-- Outer container: vertical to stack radio/threshold row and graph -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Content row: Options on left, Camera/threshold on right -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Options column -->
+                <RadioGroup
+                    android:id="@+id/radioGroupMotionWake"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical" />
+
+                <!-- Right column: camera preview + face indicator + threshold controls -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_marginStart="16dp">
+
+                    <!-- Top row: distance selector + preview + threshold controls -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Face distance selector (left of preview, only for Face mode) -->
+                        <LinearLayout
+                            android:id="@+id/distanceContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="140dp"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:layout_marginEnd="12dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Distance"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_secondary"
+                                android:gravity="center"
+                                android:paddingBottom="6dp" />
+
+                            <!-- Distance buttons container (populated programmatically, vertical) -->
+                            <LinearLayout
+                                android:id="@+id/distanceButtonRow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                        <!-- Preview column: camera preview + face indicator stacked -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal">
+
+                            <!-- Camera Preview container with loading indicator -->
+                            <FrameLayout
+                                android:id="@+id/cameraPreviewContainer"
+                                android:layout_width="105dp"
+                                android:layout_height="140dp"
+                                android:visibility="gone"
+                                android:background="@color/sidebar_background">
+
+                                <!-- Camera Preview image -->
+                                <ImageView
+                                    android:id="@+id/imageCameraPreview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop"
+                                    android:visibility="gone"
+                                    android:contentDescription="Camera preview" />
+
+                                <!-- Loading indicator (shown while RTSP starts) -->
+                                <TextView
+                                    android:id="@+id/textLoadingPreview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="Loading\npreview..."
+                                    android:textSize="11sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:gravity="center"
+                                    android:visibility="visible" />
+
+                            </FrameLayout>
+
+                            <!-- Face detection indicator (centered under preview) -->
+                            <TextView
+                                android:id="@+id/textFaceIndicator"
+                                android:layout_width="105dp"
+                                android:layout_height="wrap_content"
+                                android:text="No Face"
+                                android:textSize="14sp"
+                                android:textColor="#888888"
+                                android:gravity="center"
+                                android:paddingTop="6dp"
+                                android:paddingBottom="4dp"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+
+                        <!-- Threshold controls (only visible for Motion Camera mode) -->
+                        <LinearLayout
+                            android:id="@+id/thresholdContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:visibility="gone"
+                            android:layout_marginStart="8dp">
+
+                            <!-- Vertical slider (rotated SeekBar) -->
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="140dp">
+
+                                <!-- SeekBar: 0-99 maps to 0.2%-20.0% in 0.2% steps -->
+                                <!-- progress 0 = 2 tenths (0.2%), progress 99 = 200 tenths (20.0%) -->
+                                <SeekBar
+                                    android:id="@+id/seekBarThreshold"
+                                    android:layout_width="140dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center"
+                                    android:rotation="270"
+                                    android:max="99"
+                                    android:progress="24"
+                                    android:progressTint="@color/dashie_orange"
+                                    android:thumbTint="@color/dashie_orange" />
+
+                            </FrameLayout>
+
+                            <!-- +/- buttons and value display column -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center_horizontal"
+                                android:layout_marginStart="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Threshold"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginBottom="8dp" />
+
+                                <!-- + button (increases threshold = less sensitive) -->
+                                <ImageView
+                                    android:id="@+id/buttonThresholdPlus"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:src="@drawable/ic_add"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Increase threshold"
+                                    android:padding="6dp"
+                                    android:tint="@color/dashie_orange"
+                                    android:focusable="true" />
+
+                                <!-- Threshold value display -->
+                                <TextView
+                                    android:id="@+id/textThresholdValue"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="5.0%"
+                                    android:textSize="16sp"
+                                    android:textColor="@color/text_primary"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="8dp" />
+
+                                <!-- - button (decreases threshold = more sensitive) -->
+                                <ImageView
+                                    android:id="@+id/buttonThresholdMinus"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:src="@drawable/ic_remove"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Decrease threshold"
+                                    android:padding="6dp"
+                                    android:tint="@color/dashie_orange"
+                                    android:focusable="true" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Motion score graph (below radio group and threshold controls) -->
+            <com.dashieapp.Dashie.halite.sidebar.MotionGraphView
+                android:id="@+id/motionGraphView"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:background="@color/sidebar_background" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Button row (fixed at bottom) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Save"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

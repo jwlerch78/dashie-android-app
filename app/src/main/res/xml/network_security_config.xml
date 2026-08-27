@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow cleartext (HTTP) traffic for local Home Assistant instances -->
+    <!-- This is required because most HA setups use http:// on local network -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Specifically allow common local HA domains/IPs -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">homeassistant.local</domain>
+        <domain includeSubdomains="true">hassio.local</domain>
+        <domain includeSubdomains="true">home-assistant.local</domain>
+        <!-- Allow all local network IPs -->
+        <domain includeSubdomains="true">192.168.0.0</domain>
+        <domain includeSubdomains="true">10.0.0.0</domain>
+        <domain includeSubdomains="true">172.16.0.0</domain>
+    </domain-config>
+</network-security-config>

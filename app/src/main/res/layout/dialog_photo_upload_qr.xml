@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Photo upload pairing QR dialog. Visual styling matches the JS
+  auth-pairing screen ("Sign in to Dashie with Google") so QR-based
+  flows feel consistent across web + native.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_background"
+        android:padding="26dp"
+        android:gravity="center">
+
+        <!-- Title row: photo icon + title text -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="19dp">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_photos"
+                android:contentDescription="Photos"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:id="@+id/photoUploadDialogTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Loading state — visible until the pairing code arrives. Sized to
+             roughly match the eventual QR + code box so the dialog doesn't
+             jump on swap. -->
+        <TextView
+            android:id="@+id/photoUploadLoading"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:gravity="center"
+            android:text="Generating code…"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary" />
+
+        <!-- QR Code (hidden until ready) -->
+        <ImageView
+            android:id="@+id/photoUploadQrImage"
+            android:layout_width="165dp"
+            android:layout_height="165dp"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="Photo upload QR Code"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <!-- "or go to dashieapp.com/console to upload through the Dashie Console"
+             — single TextView so it can wrap; URL portion is styled orange-bold
+             via SpannableString in PhotoWidgetController. -->
+        <TextView
+            android:id="@+id/photoUploadUrlRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:lineSpacingExtra="2dp"
+            android:visibility="gone" />
+
+        <!-- Code display box — light gray rounded card with the big
+             pairing code, mirroring the calendar/auth pairing screen. -->
+        <LinearLayout
+            android:id="@+id/photoUploadCodeBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/code_display_box"
+            android:padding="16dp"
+            android:gravity="center"
+            android:layout_marginBottom="13dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="and enter this code:"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:id="@+id/photoUploadCodeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XXXX-XXXX"
+                android:textSize="32sp"
+                android:textColor="#FF9500"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.25" />
+        </LinearLayout>
+
+        <!-- Expiry/status text -->
+        <TextView
+            android:id="@+id/photoUploadInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Code expires in 5 min"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- Done button — outlined orange pill -->
+        <Button
+            android:id="@+id/photoUploadDoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="130dp"
+            android:paddingHorizontal="26dp"
+            android:paddingVertical="10dp"
+            android:text="Done"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_pill_orange" />
+
+    </LinearLayout>
+
+</ScrollView>

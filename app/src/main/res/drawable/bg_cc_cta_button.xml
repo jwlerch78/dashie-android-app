@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CTA button background: Dashie orange with rounded corners and ripple -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#40FFFFFF">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/dashie_orange" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+</ripple>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Connect to Mobile dialog — TV-side QR launcher for the public Console.
+     User scans QR on phone → lands on dashieapp.com/hub → signs in normally.
+     Cloned from dialog_purchase_voice.xml, simplified (no buttons beyond
+     Cancel — there's no TV browser surface that makes sense here). -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_background"
+        android:padding="24dp"
+        android:gravity="center">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/dialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manage Dashie Account"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/dialogSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scan with your phone to manage your account"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- QR Code -->
+        <ImageView
+            android:id="@+id/imageQrCode"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="Account QR Code"
+            android:scaleType="fitCenter" />
+
+        <!-- URL Caption (plain-text fallback if QR can't be scanned) -->
+        <TextView
+            android:id="@+id/textUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dashieapp.com"
+            android:textSize="13sp"
+            android:textColor="@color/link_color"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Cancel Button (focused by default — only action on TV remote) -->
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border" />
+
+    </LinearLayout>
+
+</ScrollView>

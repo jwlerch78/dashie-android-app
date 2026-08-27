@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sideload-flavor-only manifest additions.
+
+    The `sideload` flavor is a prod-server build with the APK self-update
+    backend, used to test a production build on Fire devices via sideload
+    before an Amazon Appstore submission. REQUEST_INSTALL_PACKAGES and the
+    install-result receiver are flavor-scoped here so the store builds
+    (prod / amazon) never carry them.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <application>
+
+        <!-- Receives the PackageInstaller commit status for sideload APK installs -->
+        <receiver
+            android:name=".halite.update.ApkInstallResultReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dashieapp.Dashie.halite.update.INSTALL_STATUS" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

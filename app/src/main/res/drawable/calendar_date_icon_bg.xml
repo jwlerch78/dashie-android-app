@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Calendar date badge background: light rounded rect matching JS .calendar-event-display__date-icon -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#F8F9FA" />
+    <stroke android:width="2dp" android:color="#E9ECEF" />
+    <corners android:radius="10dp" />
+</shape>

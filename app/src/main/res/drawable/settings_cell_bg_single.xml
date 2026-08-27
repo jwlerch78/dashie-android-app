@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cell background for single item sections (all corners rounded) -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused state (D-pad navigation) -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/settings_cell_bg" />
+            <corners android:radius="@dimen/settings_section_corner_radius" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/settings_accent" />
+        </shape>
+    </item>
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/settings_focus_highlight" />
+            <corners android:radius="@dimen/settings_section_corner_radius" />
+        </shape>
+    </item>
+    <!-- Default state -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/settings_cell_bg" />
+            <corners android:radius="@dimen/settings_section_corner_radius" />
+        </shape>
+    </item>
+</selector>

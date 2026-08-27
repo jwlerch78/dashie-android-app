@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dark-glass pill with amber border. Matches CalendarReauthPill's
+  styling so the two warning-style indicators feel consistent.
+  Background is ~50% black; border is ~40% amber for low-key contrast.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#B014161C" />
+            <corners android:radius="20dp" />
+            <stroke android:width="2dp" android:color="#FFA800" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#8014161C" />
+            <corners android:radius="20dp" />
+            <stroke android:width="1dp" android:color="#66FFA800" />
+        </shape>
+    </item>
+</selector>

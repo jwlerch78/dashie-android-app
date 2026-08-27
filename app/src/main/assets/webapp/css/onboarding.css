@@ -1,0 +1,1026 @@
+/**
+ * Onboarding Overlay Styles
+ * Full-screen overlay for first-launch setup flow.
+ * Uses variables.css tokens for dark/light theme support.
+ */
+
+/* ============================================
+   Container
+   ============================================ */
+
+.onboarding-overlay {
+  /* Override the active theme palette so the setup flow stays plain
+     dark/light (per product rule: don't theme setup screens). These local
+     vars shadow body.theme-* for all descendants — same pattern as
+     #oauth-login-screen in login.css and #hybrid-device-flow-overlay. */
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2c2c2e;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-tertiary: #999999;
+  --accent-primary: #FF9500;
+  /* Input surface + border must track THIS overlay's light/dark palette, not
+     the global :root.theme-* class set by the JS theme system. The overlay's
+     palette is driven by prefers-color-scheme (below); --settings-bg-input is
+     not. On a device whose system is dark (prefers-color-scheme: dark → this
+     overlay paints dark with white --text-primary) but whose JS theme class is
+     light, the input pulled --settings-bg-input=#fff from :root.theme-light →
+     white text on a white input. (Onn Google TV, system Night=auto, 2026-05-28.) */
+  --settings-bg-input: #2A2A2A;
+  --border-color: #48484A;
+
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  background: var(--bg-primary, #0f0f0f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  color: var(--text-primary, #fff);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Light variant follows Dashie's OWN theme, not the OS. We do NOT use
+   @media (prefers-color-scheme: light) because Android WebView reads that
+   from the SYSTEM dark mode, which often diverges from Dashie's theme (see
+   the matching note in login/index.html). Two light signals:
+     - .onboarding-overlay.light — set in JS (kiosk onboarding-controller
+       reads the active theme) so the overlay matches the kiosk theme.
+     - html.loading-light .onboarding-overlay — the login page's head-script
+       sets html.loading-light from localStorage 'dashie-theme'; this covers
+       the create-account overlay that reuses these classes on the web. */
+.onboarding-overlay.light,
+html.loading-light .onboarding-overlay {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f7;
+  --bg-tertiary: #efeff4;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --settings-bg-input: #ffffff;
+  --border-color: rgba(60, 60, 67, 0.29);
+}
+
+.onboarding-overlay.visible {
+  opacity: 1;
+}
+
+.onboarding-card {
+  width: 80vw;
+  max-width: 690px;
+  max-height: min(680px, 85vh);
+  overflow-y: auto;
+  background: var(--bg-secondary, #1C1C1E);
+  border-radius: var(--radius-lg, 16px);
+  padding: 40px 36px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+/* Welcome screen uses full-height layout like iOS FamilyAuth */
+.onboarding-card--welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: 90vh;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.onboarding-welcome-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Center content vertically when it fits, but keep top accessible when it overflows */
+.onboarding-welcome-main::before,
+.onboarding-welcome-main::after {
+  content: '';
+  flex: 1;
+}
+
+/* Close button (X) in top-right of card */
+.onboarding-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color, #48484A);
+  background: var(--bg-tertiary, #2C2C2E);
+  color: var(--text-secondary, #8E8E93);
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  padding: 0;
+  z-index: 1;
+}
+
+.onboarding-close-btn:hover {
+  color: var(--text-primary, #fff);
+  border-color: var(--text-secondary, #8E8E93);
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+.onboarding-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.onboarding-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 28px;
+  line-height: 1.4;
+}
+
+.onboarding-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 20px 0 8px;
+}
+
+/* ============================================
+   Welcome Screen — Logo, Scan, Path Buttons
+   ============================================ */
+
+.onboarding-logo {
+  display: block;
+  width: 140px;
+  height: auto;
+  margin: 0 auto 4px auto;
+  flex-shrink: 0;
+}
+
+/* The welcome card only (John, 2026-08-05): the "Welcome to <brand>!" heading is gone and the
+   mark carries the greeting, so it renders at 2x. Scoped to a modifier rather than widening
+   .onboarding-logo, because the loading card uses the same element and still wants 140px.
+   max-width keeps it honest on a narrow phone, where 280px could otherwise overflow the card. */
+.onboarding-logo--hero {
+  width: 280px;
+  max-width: 80%;
+  margin-bottom: 8px;
+}
+
+.onboarding-scan-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md, 12px);
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  min-height: 40px;
+}
+
+/* Scan found box — solid shading matching the detected badge style */
+.onboarding-scan-found-box {
+  margin-top: 16px;
+  background: rgba(66, 66, 66, 0.95);
+  border: none;
+  color: #fff;
+}
+
+/* The scan result shown BESIDE a configured box — deliberately quieter than
+   the configured line above it. It is information, not an instruction: the
+   whole defect this styling exists for was a guess rendered with the weight
+   of a setting (T cont.55). */
+.onboarding-scan-alt {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--text-tertiary, #999);
+}
+
+/* Same reasoning on the config screen: when the badge contradicts the URL
+   field, it must not read like a confirmation. */
+.onboarding-detected-badge--mismatch {
+  background: rgba(255, 149, 0, 0.18);
+  color: var(--accent-primary, #FF9500);
+  white-space: normal;
+}
+
+.onboarding-scan-found {
+  font-size: 15px;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.5;
+  margin: 0 0 24px;
+}
+
+.onboarding-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--text-tertiary);
+  border-top-color: var(--accent-primary, #FF9500);
+  border-radius: 50%;
+  animation: onboarding-spin 0.8s linear infinite;
+}
+
+@keyframes onboarding-spin {
+  to { transform: rotate(360deg); }
+}
+
+.onboarding-path-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 40px;
+  margin-bottom: 16px;
+}
+
+/* "or" divider (matches iOS FamilyAuth) */
+.onboarding-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-tertiary, #8E8E93);
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.onboarding-divider::before,
+.onboarding-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color, #48484A);
+}
+
+/* Path buttons */
+.onboarding-path-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: var(--bg-tertiary);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md, 12px);
+  color: var(--text-primary);
+  font-size: 15px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, opacity 0.2s;
+  text-align: left;
+}
+
+.onboarding-path-btn:hover,
+.onboarding-path-btn:focus {
+  border-color: var(--accent-primary, #FF9500);
+  outline: none;
+}
+
+.onboarding-path-btn.primary {
+  border-color: transparent;
+  background: var(--bg-tertiary);
+}
+
+/* Secondary path button is slightly muted */
+.onboarding-path-btn.secondary {
+  opacity: 0.7;
+  border-color: transparent;
+}
+
+.onboarding-path-btn.secondary:hover,
+.onboarding-path-btn.secondary:focus {
+  opacity: 1;
+  border-color: var(--border-color, #48484A);
+}
+
+/* Disabled path button (coming soon) */
+.onboarding-path-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.onboarding-path-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboarding-path-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.onboarding-path-icon--grid {
+  color: #FF9500;
+}
+
+.onboarding-path-icon--grid svg {
+  width: 28px;
+  height: 28px;
+}
+
+.onboarding-path-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.onboarding-path-label {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.onboarding-path-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+/* Footer with legal links — flex-shrink: 0 keeps it at bottom, min gap prevents overlap */
+.onboarding-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color, #48484A);
+  text-align: center;
+}
+
+.onboarding-legal-links {
+  font-size: 13px;
+  color: var(--text-tertiary, #8E8E93);
+}
+
+.onboarding-legal-links a {
+  color: var(--text-tertiary, #8E8E93);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.onboarding-legal-links a:hover {
+  color: var(--accent-primary, #FF9500);
+}
+
+.onboarding-legal-sep {
+  margin: 0 8px;
+}
+
+/* ============================================
+   HA Config Screen — Logo, Form Fields
+   ============================================ */
+
+.onboarding-ha-logo {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.onboarding-ha-logo svg {
+  width: 64px;
+  height: 64px;
+}
+
+/* Inline header: logo left of title */
+.onboarding-ha-config-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.onboarding-ha-logo-inline svg {
+  width: 48px;
+  height: 48px;
+}
+
+/* Detected URL badge (matches HA settings page toast style) */
+.onboarding-detected-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(66, 66, 66, 0.95);
+  border-radius: 6px;
+  font-size: 11px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: normal;
+  max-width: 250px;
+  vertical-align: middle;
+}
+
+/* Auto-Build URL toggle row with detected badge */
+.onboarding-auto-build-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color, #48484A);
+  margin-bottom: 14px;
+}
+
+.onboarding-auto-build-row .onboarding-toggle-label {
+  white-space: nowrap;
+}
+
+.onboarding-auto-build-row .onboarding-detected-badge {
+  flex: 1;
+  min-width: 0;
+}
+
+.onboarding-auto-build-row .onboarding-toggle {
+  flex-shrink: 0;
+}
+
+/* Side-by-side URL inputs (70/30 split) */
+.onboarding-url-row {
+  display: flex;
+  gap: 12px;
+}
+
+.onboarding-url-row .onboarding-url-base {
+  flex: 7;
+  min-width: 0;
+}
+
+.onboarding-url-row .onboarding-url-path {
+  flex: 3;
+  min-width: 0;
+}
+
+/* Label row with detected badge inline */
+.onboarding-form-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.onboarding-form-label-row .onboarding-form-label {
+  margin-bottom: 0;
+}
+
+.onboarding-form-group {
+  margin-bottom: 14px;
+}
+
+.onboarding-form-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.onboarding-form-hint {
+  font-size: 12px;
+  color: var(--text-tertiary, #8E8E93);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.onboarding-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--settings-bg-input, #2A2A2A);
+  border: 1px solid var(--border-color, #48484A);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.onboarding-input:focus {
+  border-color: var(--accent-primary, #FF9500);
+}
+
+.onboarding-input::placeholder {
+  color: var(--text-disabled, #636366);
+}
+
+/* Toggle row */
+.onboarding-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color, #48484A);
+}
+
+.onboarding-toggle-row:last-child {
+  border-bottom: none;
+}
+
+.onboarding-toggle-label {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+/* Toggle switch (iOS-style) */
+.onboarding-toggle {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--settings-toggle-bg, #444);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  flex-shrink: 0;
+}
+
+.onboarding-toggle:checked {
+  background: var(--accent-primary, #FF9500);
+}
+
+.onboarding-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background: var(--settings-toggle-knob, #fff);
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.onboarding-toggle:checked::after {
+  transform: translateX(20px);
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+/* Button row for left/right layout (Back + Connect) */
+.onboarding-btn-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.onboarding-btn-primary {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--accent-primary, #FF9500);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md, 12px);
+  cursor: pointer;
+  margin-top: 24px;
+  transition: opacity 0.2s;
+  font-family: inherit;
+}
+
+/* When inside a button row, don't stack full width */
+.onboarding-btn-row .onboarding-btn-primary {
+  width: auto;
+  flex: 1;
+  margin-top: 0;
+}
+
+.onboarding-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.onboarding-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Back button (visible outline style for button row) */
+.onboarding-btn-back {
+  flex: 1;
+  padding: 14px 24px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid var(--border-color, #48484A);
+  border-radius: var(--radius-md, 12px);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: inherit;
+}
+
+.onboarding-btn-back:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+
+.onboarding-btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: center;
+  font-family: inherit;
+}
+
+.onboarding-btn-secondary:hover {
+  color: var(--text-primary);
+}
+
+/* Alt-path link below the HA config Back/Connect row — the custom-URL escape
+   hatch (moved off the welcome chooser 2026-08-17). Quiet by design: a text
+   link, not a third button competing with Back/Connect. */
+.onboarding-alt-path {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: var(--accent-primary, #FF9500);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+
+.onboarding-alt-path:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+/* ============================================
+   Permissions Screen
+   ============================================ */
+
+.onboarding-perm-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.onboarding-perm-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-color, #48484A);
+}
+
+.onboarding-perm-item:last-child {
+  border-bottom: none;
+}
+
+.onboarding-perm-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  background: var(--bg-tertiary);
+}
+
+.onboarding-perm-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.onboarding-perm-name {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.onboarding-perm-desc {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.onboarding-perm-status {
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.onboarding-perm-status.granted {
+  color: var(--success, #22c55e);
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.onboarding-perm-status.pending {
+  color: var(--accent-primary, #FF9500);
+  background: rgba(255, 149, 0, 0.12);
+  cursor: pointer;
+}
+
+.onboarding-perm-status.pending:hover {
+  background: rgba(255, 149, 0, 0.2);
+}
+
+/* Opt-out checkboxes */
+.onboarding-optout-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.onboarding-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent-primary, #FF9500);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.onboarding-optout-text {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.onboarding-optout-desc {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+/* ============================================
+   Data Collection Screen
+   ============================================ */
+
+.onboarding-data-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.onboarding-data-links a {
+  color: var(--accent-primary, #FF9500);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.onboarding-data-links a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.onboarding-data-links-sep {
+  color: var(--text-tertiary, #8E8E93);
+  font-size: 12px;
+}
+
+/* Data usage info sections */
+.onboarding-data-info-section {
+  margin-bottom: 20px;
+}
+
+.onboarding-data-info-heading {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin-bottom: 6px;
+}
+
+.onboarding-data-info-text {
+  font-size: 14px;
+  color: var(--text-secondary, #8E8E93);
+  line-height: 1.6;
+}
+
+/* ============================================
+   Permission Prompt Screen
+   ============================================ */
+
+.onboarding-perm-summary {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.onboarding-perm-summary li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color, #48484A);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.onboarding-perm-summary li:last-child {
+  border-bottom: none;
+}
+
+/* ============================================
+   Get Started Screen
+   ============================================ */
+
+.onboarding-swipe-hint {
+  text-align: center;
+  margin: 20px 0 28px;
+}
+
+.onboarding-swipe-arrow {
+  display: inline-block;
+  font-size: 48px;
+  animation: onboarding-swipe 1.5s ease-in-out infinite;
+  color: var(--accent-primary, #FF9500);
+}
+
+@keyframes onboarding-swipe {
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(-20px); opacity: 1; }
+}
+
+.onboarding-tip {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin-top: 12px;
+}
+
+/* ============================================
+   Post-onboarding floating tip overlays
+   ============================================ */
+
+.onboarding-tip-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999998;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.onboarding-tip-overlay.visible {
+  opacity: 1;
+}
+
+.onboarding-tip-card {
+  position: absolute;
+  pointer-events: auto;
+  background: var(--bg-secondary, #1C1C1E);
+  border-radius: var(--radius-lg, 16px);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-lg, 0 8px 32px rgba(0,0,0,0.4));
+  max-width: 494px;
+  /* D.64 — drop fixed width and let max-width + viewport-aware sizing keep
+     the card on-screen. On narrow viewports (Fire TV CSS 960×540) the
+     fixed 494px width plus the JS-driven left offset pushed the card off
+     the right edge and clipped "Go to Control Center". calc(100vw - 380px)
+     reserves ~380px on the left for sidebar (60) + popout (~260) + gap (64). */
+  width: min(494px, calc(100vw - 380px));
+}
+
+/* Position tip card next to the sidebar (left: 70px accounts for 60px sidebar + gap) */
+.onboarding-tip-card--sidebar {
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Position tip card next to the hamburger menu popout — JS overrides left/top at runtime */
+.onboarding-tip-card--menu {
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Left-pointing arrow for tip cards */
+.onboarding-tip-arrow--left {
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--bg-secondary, #1C1C1E);
+}
+
+/* Highlight ring on Control Center menu item (inset avoids overflow clipping) */
+.onboarding-highlight {
+  box-shadow: inset 0 0 0 2px var(--accent-primary, #FF9500) !important;
+  border-radius: 8px;
+}
+
+/* ============================================
+   D-pad focus highlight (onboarding + tips)
+   ============================================ */
+
+.onboarding-dpad-focus {
+  outline: 2px solid var(--accent-primary, #FF9500) !important;
+  outline-offset: 2px;
+}
+
+/* For path buttons, override the border instead of adding outline */
+.onboarding-path-btn.onboarding-dpad-focus {
+  outline: none !important;
+  border-color: var(--accent-primary, #FF9500) !important;
+  opacity: 1 !important;
+}
+
+/* For toggle switches, show outline around the switch */
+.onboarding-toggle.onboarding-dpad-focus {
+  outline: 2px solid var(--accent-primary, #FF9500) !important;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Small screens (Echo Show 5, etc.)
+   ============================================ */
+
+@media (max-height: 500px) {
+  .onboarding-card {
+    padding: 20px 24px;
+    max-height: 90vh;
+  }
+
+  .onboarding-title {
+    font-size: 22px;
+  }
+
+  .onboarding-subtitle {
+    margin-bottom: 16px;
+  }
+
+  .onboarding-btn-row {
+    margin-top: 16px;
+  }
+
+  .onboarding-toggle-row {
+    padding: 8px 0;
+  }
+
+  .onboarding-form-group {
+    margin-bottom: 10px;
+  }
+
+  .onboarding-input {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================
+   Light theme overrides
+   ============================================ */
+
+@media (prefers-color-scheme: light) {
+  .onboarding-detected-badge,
+  .onboarding-scan-found-box {
+    background: rgba(200, 200, 200, 0.95);
+    color: #333;
+  }
+}
+
+:root.theme-light .onboarding-detected-badge,
+:root.theme-light .onboarding-scan-found-box {
+  background: rgba(200, 200, 200, 0.95);
+  color: #333;
+}

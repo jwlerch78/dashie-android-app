@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Text input item. Outer vertical so an optional hint (sublabel) sits
+     below the horizontal label+input row. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/settings_item_padding_horizontal"
+    android:paddingEnd="@dimen/settings_item_padding_horizontal"
+    android:paddingTop="@dimen/settings_item_padding_vertical"
+    android:paddingBottom="@dimen/settings_item_padding_vertical"
+    android:focusable="true"
+    android:clickable="false">
+
+    <!-- Row 1: label + editText (+ optional password toggle) -->
+    <LinearLayout
+        android:id="@+id/textInputRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/settings_text_label"
+            android:textSize="@dimen/settings_label_text_size"
+            android:layout_marginEnd="12dp"
+            tools:text="Server URL" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_background"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:textColor="@color/settings_text_label"
+            android:textColorHint="@color/settings_text_info"
+            android:textSize="@dimen/settings_value_text_size"
+            android:gravity="end|center_vertical"
+            android:inputType="text"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
+            tools:hint="https://example.com" />
+
+        <!-- Show/hide toggle for password fields. Hidden unless inputType is password. -->
+        <ImageView
+            android:id="@+id/ivTogglePassword"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_eye_off"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Show password"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            app:tint="@color/settings_text_info" />
+
+    </LinearLayout>
+
+    <!-- Row 2: optional hint / sublabel (GONE unless set by bind()). Right-
+         justified so it visually aligns under the input field (which also
+         sits on the right side of the label/input row). -->
+    <TextView
+        android:id="@+id/tvSublabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="end"
+        android:textColor="@color/settings_text_info"
+        android:textSize="@dimen/settings_sublabel_text_size"
+        android:visibility="gone"
+        tools:text="Enter a zip code, or a city and country"
+        tools:visibility="visible" />
+
+</LinearLayout>

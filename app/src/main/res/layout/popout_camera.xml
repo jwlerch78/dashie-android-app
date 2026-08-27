@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Camera popout: video feed controls + stream list at 1.5x scale.
+     Matches JS camera-popout layout with icon+label action buttons. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="340dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_sidebar_popout"
+    android:padding="20dp">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Video Feeds"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="14dp" />
+
+    <!-- Action buttons row: each is icon circle + label below -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="14dp">
+
+        <!-- Layout toggle (Sidebar/Float) -->
+        <LinearLayout
+            android:id="@+id/cameraBtnLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_popout_circle_btn">
+                <ImageView
+                    android:id="@+id/cameraIconLayout"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sidebar_layout"
+                    android:contentDescription="Layout" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/cameraLabelLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sidebar"
+                android:textColor="#99FFFFFF"
+                android:textSize="11sp"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+
+        <!-- Feeds On/Off toggle -->
+        <LinearLayout
+            android:id="@+id/cameraBtnPause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_popout_circle_btn">
+                <ImageView
+                    android:id="@+id/cameraIconPause"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_video_play"
+                    android:contentDescription="Feeds" />
+                <!-- Diagonal strikethrough line (shown when feeds off) -->
+                <View
+                    android:id="@+id/cameraPauseStrike"
+                    android:layout_width="34dp"
+                    android:layout_height="2dp"
+                    android:layout_gravity="center"
+                    android:background="#FFFFFF"
+                    android:rotation="-45"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/cameraLabelPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feeds On"
+                android:textColor="#99FFFFFF"
+                android:textSize="11sp"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+
+        <!-- Alerts On/Off toggle -->
+        <LinearLayout
+            android:id="@+id/cameraBtnMuteAlerts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_popout_circle_btn">
+                <ImageView
+                    android:id="@+id/cameraIconMuteAlerts"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_alert_bell"
+                    android:contentDescription="Alerts" />
+                <!-- Diagonal strikethrough line (shown when alerts off) -->
+                <View
+                    android:id="@+id/cameraAlertsStrike"
+                    android:layout_width="34dp"
+                    android:layout_height="2dp"
+                    android:layout_gravity="center"
+                    android:background="#FFFFFF"
+                    android:rotation="-45"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/cameraLabelMuteAlerts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alerts On"
+                android:textColor="#99FFFFFF"
+                android:textSize="11sp"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_popout_divider" />
+
+    <!-- Stream list (dynamically populated, scrollable when many feeds) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ScrollView
+            android:id="@+id/cameraStreamListScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="16dp"
+            android:requiresFadingEdge="vertical"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/cameraStreamList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </ScrollView>
+
+        <!-- Scroll-up indicator (shown when scrolled down) -->
+        <ImageView
+            android:id="@+id/cameraScrollUpIndicator"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_chevron_down"
+            android:background="@drawable/bg_popout_circle_btn"
+            android:elevation="4dp"
+            android:alpha="0.85"
+            android:rotation="180"
+            android:visibility="gone"
+            android:contentDescription="Scroll up for more" />
+
+        <!-- Scroll-down indicator (shown when more feeds below) -->
+        <ImageView
+            android:id="@+id/cameraScrollIndicator"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="2dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_chevron_down"
+            android:background="@drawable/bg_popout_circle_btn"
+            android:elevation="4dp"
+            android:alpha="0.85"
+            android:visibility="gone"
+            android:contentDescription="Scroll for more" />
+
+    </FrameLayout>
+
+</LinearLayout>

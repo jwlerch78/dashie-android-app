@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Main app theme for Android P+ (API 28+) with display cutout support -->
+    <!-- Extends into notch/camera hole area to eliminate "unused space at top" -->
+    <style name="Theme.Dashie" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/dashie_orange</item>
+        <item name="colorPrimaryVariant">@color/dashie_orange_dark</item>
+        <item name="colorAccent">@color/dashie_orange</item>
+        <item name="android:colorAccent">@color/dashie_orange</item>
+        <item name="colorControlActivated">@color/dashie_orange</item>
+        <item name="android:colorControlActivated">@color/dashie_orange</item>
+        <item name="colorControlHighlight">@color/dashie_orange_light</item>
+        <item name="android:colorControlHighlight">@color/dashie_orange_light</item>
+        <!-- Allow content to extend into display cutout (notch/camera hole) -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <!-- Dashie Default theme with orange accent and display cutout support -->
+    <style name="Theme.Dashie.Default" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/dashie_orange</item>
+        <item name="colorAccent">@color/dashie_orange</item>
+        <item name="android:colorAccent">@color/dashie_orange</item>
+        <item name="colorControlActivated">@color/dashie_orange</item>
+        <item name="android:colorControlActivated">@color/dashie_orange</item>
+        <item name="colorControlHighlight">@color/dashie_orange_light</item>
+        <item name="android:colorControlHighlight">@color/dashie_orange_light</item>
+        <!-- Allow content to extend into display cutout (notch/camera hole) -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <!-- Splash screen theme with display cutout support -->
+    <style name="Theme.Dashie.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Use drawable as window background - shows immediately -->
+        <item name="android:windowBackground">@drawable/splash_background</item>
+
+        <!-- Prevent overdraw -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <!-- Allow content to extend into display cutout (notch/camera hole) -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <!-- Android 12+ Splash Screen API attributes (for newer devices) -->
+        <item name="android:windowSplashScreenBackground">@color/orange</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
+        <item name="android:windowSplashScreenAnimationDuration">1000</item>
+    </style>
+
+</resources>

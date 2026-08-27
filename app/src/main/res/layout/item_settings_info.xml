@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Info/description text below a section -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tvInfo"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/settings_header_padding_horizontal"
+    android:paddingEnd="@dimen/settings_header_padding_horizontal"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:textColor="@color/settings_text_info"
+    android:textSize="@dimen/settings_info_text_size"
+    tools:text="This is helpful information about the settings above." />

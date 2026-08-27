@@ -1,0 +1,89 @@
+{
+  "formatVersion" : "1.1",
+  "component" : {
+    "group" : "com.github.pedroSG94",
+    "module" : "RootEncoder",
+    "version" : "2.6.1",
+    "attributes" : {
+      "org.gradle.status" : "release"
+    }
+  },
+  "createdBy" : {
+    "gradle" : {
+      "version" : "8.10.1"
+    }
+  },
+  "variants" : [ {
+    "name" : "releaseVariantReleaseApiPublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-api"
+    },
+    "dependencies" : [ {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "common",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "udp-2.6.1.aar",
+      "url" : "udp-2.6.1.aar",
+      "size" : 37970,
+      "sha512" : "8669dfec2f9e415c9d72572df5228995798d38b8266f2e16a7f50c918ce088ee64dd08aca304f956f93647bf8818dd1775bdd075edf3692b6296110b06295855",
+      "sha256" : "11a804013bd0b0aa80b4aa382c610cc2e262cb1e64612fe3af882262b3775c73",
+      "sha1" : "697f2fd37747c6f8ad4244201b148f0b84d3971c",
+      "md5" : "a0f4a6f0733a43a4f2bc902b800c741a"
+    } ]
+  }, {
+    "name" : "releaseVariantReleaseRuntimePublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-runtime"
+    },
+    "dependencies" : [ {
+      "group" : "org.jetbrains.kotlinx",
+      "module" : "kotlinx-coroutines-android",
+      "version" : {
+        "requires" : "1.10.2"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "srt",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "common",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "udp-2.6.1.aar",
+      "url" : "udp-2.6.1.aar",
+      "size" : 37970,
+      "sha512" : "8669dfec2f9e415c9d72572df5228995798d38b8266f2e16a7f50c918ce088ee64dd08aca304f956f93647bf8818dd1775bdd075edf3692b6296110b06295855",
+      "sha256" : "11a804013bd0b0aa80b4aa382c610cc2e262cb1e64612fe3af882262b3775c73",
+      "sha1" : "697f2fd37747c6f8ad4244201b148f0b84d3971c",
+      "md5" : "a0f4a6f0733a43a4f2bc902b800c741a"
+    } ]
+  } ]
+}

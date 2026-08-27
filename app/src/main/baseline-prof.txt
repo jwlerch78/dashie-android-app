@@ -1,0 +1,65 @@
+# Baseline Profile for Dashie Lite
+# Generated to optimize cold start performance on low-memory devices
+#
+# This file lists classes and methods that should be ahead-of-time compiled
+# to reduce cold start time. ProfileInstaller will compile these on first launch.
+
+# Main Activity and startup classes
+HSPLcom/dashieapp/Dashie/MainActivity;-><init>()V
+HSPLcom/dashieapp/Dashie/MainActivity;->onCreate(Landroid/os/Bundle;)V
+HSPLcom/dashieapp/Dashie/MainActivity;->initializeDeferredHaliteComponents()V
+
+# WebView setup - critical for first paint
+Lcom/dashieapp/Dashie/webview/DashieWebView;
+Lcom/dashieapp/Dashie/webview/DashieJSBridge;
+Lcom/dashieapp/Dashie/halite/DashieWebViewClient;
+Lcom/dashieapp/Dashie/halite/DashieWebChromeClient;
+
+# UI Controllers - immersive mode is called multiple times on startup
+HSPLcom/dashieapp/Dashie/ui/ImmersiveModeController;-><init>(Landroid/view/Window;)V
+HSPLcom/dashieapp/Dashie/ui/ImmersiveModeController;->enable(ZZ)V
+
+# Halite preferences - accessed frequently during init
+HSPLcom/dashieapp/Dashie/halite/HalitePreferences;-><init>(Landroid/content/Context;)V
+HSPLcom/dashieapp/Dashie/halite/HalitePreferences;->getHaUrl()Ljava/lang/String;
+HSPLcom/dashieapp/Dashie/halite/HalitePreferences;->isSetupComplete()Z
+
+# Screen controller - manages dimmer and screen state
+Lcom/dashieapp/Dashie/halite/HaliteScreenController;
+Lcom/dashieapp/Dashie/halite/ScreenDimmer;
+
+# Auth manager - needed for login flow
+Lcom/dashieapp/Dashie/halite/HaliteAuthManager;
+
+# Device controls - volume, brightness
+Lcom/dashieapp/Dashie/devicecontrols/DeviceControlsCoordinator;
+Lcom/dashieapp/Dashie/devicecontrols/BrightnessManager;
+Lcom/dashieapp/Dashie/devicecontrols/VolumeManager;
+
+# Sidebar controller - deferred but still used
+Lcom/dashieapp/Dashie/halite/HaliteSidebarController;
+Lcom/dashieapp/Dashie/halite/HaliteSidebarCallbacks;
+Lcom/dashieapp/Dashie/halite/SidebarSettingsHelper;
+
+# Telemetry bridge - intercepts HTML
+Lcom/dashieapp/Dashie/halite/DashboardTelemetryBridge;
+
+# Voice controller components
+Lcom/dashieapp/Dashie/halite/voice/HaliteVoiceController;
+Lcom/dashieapp/Dashie/halite/VoiceLicenseManager;
+
+# Fully Kiosk API
+Lcom/dashieapp/Dashie/api/DashieServiceManager;
+Lcom/dashieapp/Dashie/api/DashieApiService;
+
+# SSDP discovery
+Lcom/dashieapp/Dashie/halite/ssdp/DashieSsdpService;
+
+# Coroutines - heavily used
+Lkotlinx/coroutines/**;
+
+# Android WebView classes
+Landroid/webkit/WebView;
+Landroid/webkit/WebSettings;
+Landroid/webkit/WebViewClient;
+Landroid/webkit/CookieManager;

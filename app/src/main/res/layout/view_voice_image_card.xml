@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Image result card for the voice sidebar / conversation transcript.
+     [        image (centerCrop)        ]
+     caption (description)
+     attribution (source) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/voice_sports_card_bg"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- fitCenter (not centerCrop) so the WHOLE photo is visible, never clipped.
+         adjustViewBounds + wrap_content height (capped by maxHeight) sizes the box
+         to the image's aspect ratio. maxHeight is scaled up in full-screen. -->
+    <ImageView
+        android:id="@+id/imageCardImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="220dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null" />
+
+    <!-- Caption (the image description / title); hidden when absent -->
+    <TextView
+        android:id="@+id/imageCardCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <!-- Attribution (source / photographer); hidden when absent -->
+    <TextView
+        android:id="@+id/imageCardAttribution"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#9AA0A6"
+        android:textSize="11sp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginTop="4dp"
+        android:visibility="gone" />
+</LinearLayout>

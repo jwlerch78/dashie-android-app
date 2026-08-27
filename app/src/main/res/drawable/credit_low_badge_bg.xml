@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FB27: subtle "credits low" badge — lighter, semi-transparent orange, rounded (John 2026-07-06). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#CCFFB74D" />
+    <corners android:radius="13dp" />
+</shape>

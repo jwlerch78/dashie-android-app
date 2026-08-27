@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cloud activation dialog (kiosk cloud/voice onboarding, phase 1).
+
+  House style cloned from dialog_credit_prompt.xml / dialog_confirm.xml so all
+  the purchase-adjacent flows feel consistent. Shared by CloudActivationDialog
+  (the "Cloud/Hybrid needs an account/credits" popups) and ConsoleSetupDialog
+  (the "set up the Dashie Console" instructions + install QR), via
+  CloudDialogScaffold.
+
+  Buttons are added programmatically into buttonContainer (vertical stack — the
+  labels are long, e.g. "Create a Dashie account with Google"). The qrSection is
+  hidden until CloudDialogScaffold.showQr() reveals it (add-credits reveal /
+  console install QR).
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_background"
+        android:padding="24dp"
+        android:gravity="center">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/dialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cloud Voice &amp; AI"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Message (set programmatically) -->
+        <TextView
+            android:id="@+id/dialogMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Optional blue URL directly under the message (e.g. the add-on repo URL
+             the user types into Home Assistant). Hidden unless setPrimaryUrl(). -->
+        <TextView
+            android:id="@+id/textPrimaryUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/link_color"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone" />
+
+        <!-- QR section (revealed on demand: add-credits reveal / console tutorial) -->
+        <LinearLayout
+            android:id="@+id/qrSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:visibility="gone">
+
+            <!-- Optional lead-in above the QR (e.g. "For detailed instructions…"). -->
+            <TextView
+                android:id="@+id/textQrIntro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:paddingHorizontal="8dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imageQrCode"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="QR Code"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/textQrUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/link_color"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textQrCaption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:paddingHorizontal="8dp" />
+
+        </LinearLayout>
+
+        <!-- Buttons (added programmatically, vertical stack) -->
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

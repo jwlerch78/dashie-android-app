@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Dashie Orange when ON (fully opaque) -->
+    <item android:color="#FFEE9828" android:state_checked="true" />
+    <!-- Gray when OFF -->
+    <item android:color="#FFB0B0B0" android:state_checked="false" />
+</selector>

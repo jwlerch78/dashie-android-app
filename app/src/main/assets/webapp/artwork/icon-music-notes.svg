@@ -1,0 +1,13 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Beamed eighth notes (♫) -->
+<!-- Left note head (oval, tilted) -->
+<ellipse cx="6" cy="17.5" rx="3" ry="2.2" transform="rotate(-25 6 17.5)" fill="#000000"/>
+<!-- Right note head (oval, tilted, slightly higher) -->
+<ellipse cx="16" cy="15.5" rx="3" ry="2.2" transform="rotate(-25 16 15.5)" fill="#000000"/>
+<!-- Left stem (right edge of left note head up to beam) -->
+<rect x="8.2" y="4" width="1.8" height="13.5" fill="#000000"/>
+<!-- Right stem (right edge of right note head up to beam) -->
+<rect x="18.2" y="4" width="1.8" height="11.5" fill="#000000"/>
+<!-- Beam connecting stems at top -->
+<rect x="8.2" y="4" width="11.8" height="2.5" rx="0.5" fill="#000000"/>
+</svg>

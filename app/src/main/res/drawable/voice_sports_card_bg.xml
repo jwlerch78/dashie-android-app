@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Voice sports score card background: OPAQUE dark surface with rounded corners.
+     Opaque variant of calendar_event_card_bg (#33FFFFFF, 20% white) — the score card
+     has dense logos/records/scorers, so the washed-out translucent fill was hard to
+     read against the dark sidebar panel (#D9141414). Solid #424242 keeps the same dark
+     look but crisp. Card text is white/light (#FFFFFF / #DDDDDD / #9AA0A6). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FF424242" />
+    <corners android:radius="12dp" />
+</shape>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Primary button. On d-pad focus, an orange outline ring is drawn in a
+    3dp inset gap around the button edge. Fill stays solid orange on focus
+    so the ring is the sole focus indicator (no fill swap to a lighter
+    orange that previously made focus ambiguous next to secondary buttons).
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state - darker orange -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/dashie_orange_dark" />
+                    <corners android:radius="4dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Focused state (D-pad navigation): orange outline ring + orange fill -->
+    <item android:state_focused="true">
+        <layer-list>
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/dashie_orange" />
+                    <corners android:radius="4dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <stroke android:width="2dp" android:color="@color/dashie_orange" />
+                    <corners android:radius="7dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Default state - solid orange fill -->
+    <item>
+        <layer-list>
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/dashie_orange" />
+                    <corners android:radius="4dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

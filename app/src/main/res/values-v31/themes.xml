@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Main app theme - follows system/app light/dark mode -->
+    <!-- Must use DayNight for WebView prefers-color-scheme to work correctly -->
+    <style name="Theme.Dashie" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/dashie_orange</item>
+        <item name="colorPrimaryVariant">@color/dashie_orange_dark</item>
+        <item name="colorAccent">@color/dashie_orange</item>
+        <item name="android:colorAccent">@color/dashie_orange</item>
+        <item name="colorControlActivated">@color/dashie_orange</item>
+        <item name="android:colorControlActivated">@color/dashie_orange</item>
+        <item name="colorControlHighlight">@color/dashie_orange_light</item>
+        <item name="android:colorControlHighlight">@color/dashie_orange_light</item>
+        <!-- Allow content to extend into display cutout (notch/camera hole) -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <!-- Splash screen theme for Android 12+ (API 31+) -->
+    <!-- Uses square icon with logo centered - orange bg matches splash so circle mask is invisible -->
+    <style name="Theme.Dashie.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Fallback window background for pre-splash moments -->
+        <item name="android:windowBackground">@drawable/splash_background</item>
+
+        <!-- Allow content to extend into display cutout (notch/camera hole) -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <!-- Android 12+ Splash Screen API attributes -->
+        <item name="android:windowSplashScreenBackground">@color/orange</item>
+        <!-- Square icon with logo centered on orange - circle mask blends with background -->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon_android12</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/orange</item>
+
+        <!-- After splash ends, switch to main theme -->
+        <item name="postSplashScreenTheme">@style/Theme.Dashie</item>
+    </style>
+
+</resources>

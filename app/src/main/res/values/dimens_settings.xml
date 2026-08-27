@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings Modal Dimensions -->
+    <!-- Matching iOS-style overlay CSS dimensions -->
+
+    <!-- Modal container -->
+    <dimen name="settings_modal_max_width">600dp</dimen>
+    <dimen name="settings_modal_max_height">500dp</dimen>
+    <dimen name="settings_modal_corner_radius">16dp</dimen>
+
+    <!-- Nav bar -->
+    <dimen name="settings_nav_bar_height">44dp</dimen>
+    <dimen name="settings_nav_button_size">44dp</dimen>
+    <dimen name="settings_nav_title_size">17sp</dimen>
+
+    <!-- Menu items -->
+    <dimen name="settings_item_min_height">44dp</dimen>
+    <dimen name="settings_item_padding_horizontal">16dp</dimen>
+    <dimen name="settings_item_padding_vertical">10dp</dimen>
+
+    <!-- Section styling -->
+    <dimen name="settings_section_corner_radius">10dp</dimen>
+    <dimen name="settings_section_margin_horizontal">16dp</dimen>
+    <dimen name="settings_section_margin_vertical">8dp</dimen>
+
+    <!-- Section header -->
+    <dimen name="settings_header_text_size">13sp</dimen>
+    <dimen name="settings_header_padding_top">24dp</dimen>
+    <dimen name="settings_header_padding_bottom">8dp</dimen>
+    <dimen name="settings_header_padding_horizontal">32dp</dimen>
+
+    <!-- Item text -->
+    <dimen name="settings_label_text_size">17sp</dimen>
+    <dimen name="settings_sublabel_text_size">13sp</dimen>
+    <dimen name="settings_value_text_size">17sp</dimen>
+    <dimen name="settings_info_text_size">13sp</dimen>
+
+    <!-- Toggle switch -->
+    <dimen name="settings_toggle_width">51dp</dimen>
+    <dimen name="settings_toggle_height">31dp</dimen>
+
+    <!-- Chevron icon -->
+    <dimen name="settings_chevron_size">20dp</dimen>
+
+    <!-- Separator -->
+    <dimen name="settings_separator_height">1dp</dimen>
+    <dimen name="settings_separator_margin_start">16dp</dimen>
+</resources>

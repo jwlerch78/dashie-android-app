@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="15"
+    android:viewportHeight="15">
+    <!-- Float layout icon: small rectangle floating over horizontal lines -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1"
+        android:fillColor="#00000000"
+        android:pathData="M0,1.5h2M13,1.5h2M0,5.5h2M13,5.5h2M0,9.5h15M0,13.5h15M5.5,0.5h4a1,1 0,0 1,1 1v4a1,1 0,0 1,-1 1h-4a1,1 0,0 1,-1 -1v-4a1,1 0,0 1,1 -1z" />
+</vector>

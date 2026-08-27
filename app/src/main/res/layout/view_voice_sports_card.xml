@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sports score card for the voice sidebar.
+     [status/time]
+     [home logo] Home Name (record)        homeScore
+     [away logo] Away Name (record)        awayScore
+     Scorers: … (subtext, soccer) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/voice_sports_card_bg"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- Venue (stadium name) — above the status; hidden when absent -->
+    <TextView
+        android:id="@+id/sportsVenue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#9AA0A6"
+        android:textSize="11sp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginBottom="2dp"
+        android:visibility="gone" />
+
+    <!-- Status / time (Final, Top 7th, Sun 1:10 PM) -->
+    <TextView
+        android:id="@+id/sportsStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#9AA0A6"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Home team row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="4dp">
+
+        <ImageView
+            android:id="@+id/sportsHomeLogo"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/sportsHomeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/sportsHomeScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:minWidth="24dp"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Away team row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/sportsAwayLogo"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/sportsAwayName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/sportsAwayScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:minWidth="24dp"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Scorers subtext (soccer; gone otherwise) -->
+    <TextView
+        android:id="@+id/sportsScorers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#DDDDDD"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.3"
+        android:layout_marginTop="14dp"
+        android:visibility="gone" />
+</LinearLayout>

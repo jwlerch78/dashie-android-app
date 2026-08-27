@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settingsNavBar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/settings_nav_bar_height"
+    android:background="@color/settings_nav_bar_bg">
+
+    <!-- Back button (left side) -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="@dimen/settings_nav_button_size"
+        android:layout_height="@dimen/settings_nav_button_size"
+        android:layout_gravity="start|center_vertical"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back"
+        android:src="@drawable/ic_back_arrow"
+        android:tint="@color/settings_text_label"
+        android:visibility="gone"
+        android:focusable="true"
+        tools:visibility="visible" />
+
+    <!-- Title (center, truncated to avoid overlapping nav buttons) -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:gravity="center"
+        android:text="Settings"
+        android:textColor="@color/settings_text_label"
+        android:textSize="@dimen/settings_nav_title_size"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Done button (right side) -->
+    <TextView
+        android:id="@+id/btnClose"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/settings_nav_button_size"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:text="Done"
+        android:textColor="@color/settings_accent"
+        android:textSize="17sp"
+        android:focusable="true"
+        android:clickable="true" />
+
+</FrameLayout>

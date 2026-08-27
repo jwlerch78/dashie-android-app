@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hamburger popout menu: lock/unlock section with action items.
+     Matches JS hamburger popout: logo + menu items + divider + primary action.
+     ScrollView ensures usability on small screens (e.g. Echo Show 5). -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="286dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_sidebar_popout"
+    android:scrollbars="none"
+    android:fillViewport="true">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingTop="4dp"
+      android:paddingBottom="4dp">
+
+    <!-- Dashie logo header -->
+    <FrameLayout
+        android:id="@+id/popoutLogoWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingBottom="4dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+        <ImageView
+            android:id="@+id/popoutLogoImg"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/dashie_logo_orange"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/brand_name" />
+    </FrameLayout>
+
+    <!-- ── Unlocked section ── -->
+    <LinearLayout
+        android:id="@+id/popoutUnlockedSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Pin/Unpin -->
+        <LinearLayout
+            android:id="@+id/popoutItemPin"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:id="@+id/popoutIconPin"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_pin"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Pin" />
+            <TextView
+                android:id="@+id/popoutLabelPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pin Sidebar"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Connect to Mobile -->
+        <LinearLayout
+            android:id="@+id/popoutItemConnectMobile"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_phone_qr"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Connect to Mobile" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connect to Mobile"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Edit Layout (debug builds only, hidden by default) -->
+        <LinearLayout
+            android:id="@+id/popoutItemEditLayout"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_float_layout"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Edit Layout" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Layout"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Lock -->
+        <LinearLayout
+            android:id="@+id/popoutItemLock"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_lock"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Lock" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lock App"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Sleep -->
+        <LinearLayout
+            android:id="@+id/popoutItemSleep"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_sleep"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Sleep" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sleep"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Reload -->
+        <LinearLayout
+            android:id="@+id/popoutItemReload"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_reload"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Reload" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reload"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Exit -->
+        <LinearLayout
+            android:id="@+id/popoutItemExit"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_exit"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Exit" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exit"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_popout_divider" />
+
+        <!-- Control Center (primary action) -->
+        <LinearLayout
+            android:id="@+id/popoutItemControlCenter"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_control_center"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Control Center" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Control Center"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ── Locked section ── -->
+    <LinearLayout
+        android:id="@+id/popoutLockedSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Reload (locked) -->
+        <LinearLayout
+            android:id="@+id/popoutItemReloadLocked"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_reload"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Reload" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reload"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Sleep (locked) -->
+        <LinearLayout
+            android:id="@+id/popoutItemSleepLocked"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_sleep"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Sleep" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sleep"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_popout_divider" />
+
+        <!-- Unlock App (primary action) -->
+        <LinearLayout
+            android:id="@+id/popoutItemUnlock"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/bg_popout_item"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_lock_open"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="Unlock" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unlock App"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+  </LinearLayout>
+</ScrollView>

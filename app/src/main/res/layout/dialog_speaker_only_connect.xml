@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dialog for speaker-only Sendspin connection (MA discovery + manual URL fallback).
+  Layout mirrors dialog_auto_brightness_settings: fixed title at top, scrollable body
+  (including intro text so it shrinks on small screens), fixed button footer.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="20dp">
+
+    <!-- Title (fixed at top) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect to Music Assistant"
+        android:textSize="18sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Status line: updates between "Looking…" / "Found…" / "Didn't find…" -->
+            <TextView
+                android:id="@+id/speakerOnlyStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Looking for Music Assistant server on your network…"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Progress spinner (visible only while searching) -->
+            <ProgressBar
+                android:id="@+id/speakerOnlyProgress"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:indeterminate="true" />
+
+            <!-- URL entry label (hidden while searching) -->
+            <TextView
+                android:id="@+id/speakerOnlyUrlLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Music Assistant URL"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/speakerOnlyUrlField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary"
+                android:inputType="textUri"
+                android:hint="http://homeassistant.local:8095"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/speakerOnlyUrlHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enter your Music Assistant URL (same address you use to open MA in a browser). The Sendspin connection port will be derived automatically."
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:alpha="0.8"
+                android:layout_marginTop="4dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/speakerOnlyRetry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search again"
+                android:textSize="14sp"
+                android:textColor="@color/dashie_orange"
+                android:textStyle="bold"
+                android:paddingTop="12dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="8dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Button row (fixed at bottom) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="24dp">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonConnect"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Connect"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

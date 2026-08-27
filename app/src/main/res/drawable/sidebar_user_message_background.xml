@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Right-aligned user message bubble (matches JS .voice-overlay__user-message) -->
+<!-- White bg with dark text, rounded corners like a chat bubble -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#E6FFFFFF" />
+    <corners android:radius="12dp" />
+</shape>

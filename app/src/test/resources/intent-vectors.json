@@ -1,0 +1,1155 @@
+{
+  "_doc": [
+    "GOLDEN BEHAVIORAL VECTORS — the 9th drift-prevention mechanism (gate the BEHAVIOR, not just the shape).",
+    "",
+    "The 8 lint/codegen gates prove REPRESENTATIONAL parity (the Kotlin list == the JS list). They do",
+    "NOT prove BEHAVIORAL parity — that both runtimes DO the same thing with a value. The classify()/",
+    "parseDuration() LOGIC is hand-written per platform and legitimately diverges; nothing else asserts",
+    "whether a divergence is INTENDED or a latent bug (the 'half an hour'=90min bug lived in this layer).",
+    "",
+    "This corpus is the single source of truth for behavior. Both the JS test (Deno) and the Kotlin test",
+    "(Robolectric) load THIS file and assert against it. `expect` is either a single value (both platforms",
+    "must agree) OR { js, kotlin } (a DOCUMENTED divergence — every intended difference is written down",
+    "here and reviewed, instead of drifting incidentally). A logic change on either side that isn't",
+    "reflected here fails its test.",
+    "",
+    "Canonical: js/vendor/dashie-shared/intent-classifier/test-vectors/intent-vectors.json",
+    "Synced to Android test resources by scripts/gen-intent-vectors.mjs (--check = lint:vectors).",
+    "Runners: intent-vectors.test.js (Deno) · IntentVectorsTest.kt (Robolectric)."
+  ],
+  "cases": [
+    {
+      "fn": "parseDuration",
+      "input": "half an hour",
+      "expect": 1800,
+      "note": "THE historical bug: 'an hour' substring inside 'half an hour' once yielded 90min. Pinned to 1800 on BOTH — a golden vector would have caught the regression a data gate cannot."
+    },
+    {
+      "fn": "parseDuration",
+      "input": "half hour",
+      "expect": 1800
+    },
+    {
+      "fn": "parseDuration",
+      "input": "an hour",
+      "expect": 3600
+    },
+    {
+      "fn": "parseDuration",
+      "input": "one hour",
+      "expect": 3600
+    },
+    {
+      "fn": "parseDuration",
+      "input": "2 hours",
+      "expect": 7200
+    },
+    {
+      "fn": "parseDuration",
+      "input": "5 minutes",
+      "expect": 300
+    },
+    {
+      "fn": "parseDuration",
+      "input": "a minute and a half",
+      "expect": 90
+    },
+    {
+      "fn": "parseDuration",
+      "input": "30 seconds",
+      "expect": 30
+    },
+    {
+      "fn": "parseDuration",
+      "input": "1 hour 30 minutes",
+      "expect": 5400
+    },
+    {
+      "fn": "parseDuration",
+      "input": "nonsense",
+      "expect": null
+    },
+    {
+      "fn": "normalizeWordNumbers",
+      "input": "Set a FIVE minute timer",
+      "expect": "set a 5 minute timer",
+      "note": "pure word-number case — both agree"
+    },
+    {
+      "fn": "normalizeWordNumbers",
+      "input": "please pause the music",
+      "expect": {
+        "js": "please pause the music",
+        "kotlin": "pause the music"
+      },
+      "note": "SURFACED BY THIS CORPUS: Kotlin's normalizeWordNumbers strips polite prefixes; the same-named JS patterns.js function does NOT (JS strips upstream in IntentClassifier, a DIFFERENT function). Intended layer split, or should patterns.js also strip? Needs a decision — pinned as-is until then."
+    },
+    {
+      "fn": "normalizeWordNumbers",
+      "input": "set at 5 minute timer",
+      "expect": {
+        "js": "set at 5 minute timer",
+        "kotlin": "set a 5 minute timer"
+      },
+      "note": "SURFACED BY THIS CORPUS: Kotlin fixes the 'set at'->'set a' STT mishearing here; JS patterns.js does not. Same layer-split question as above."
+    },
+    {
+      "fn": "normalizeWordNumbers",
+      "input": "twenty five",
+      "expect": "25",
+      "note": "Both compound tens+ones. Was a real bug: Kotlin used to yield '20 5', so 'twenty five minutes' parsed as 5 min (parseDuration matched '5 minute'). Surfaced by this corpus, judged a bug, fixed in KotlinIntentPatterns.normalizeWordNumbers. Now both agree — this vector guards the fix."
+    },
+    {
+      "fn": "normalizeWordNumbers",
+      "input": "set a timer for twenty five minutes",
+      "expect": "set a timer for 25 minutes",
+      "note": "regression guard for the compound-number bug in a realistic timer utterance"
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "next song",
+      "expect": "media:next"
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "skip this",
+      "expect": "media:next",
+      "note": "Phase B codegen proof: 'skip this' was in the JS canonical but MISSING from the hand-written Kotlin list — generated data closed the drift."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "rewind",
+      "expect": "media:previous",
+      "note": "Phase B codegen proof: 'rewind' was missing from the hand-written Kotlin previous-list."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "pause the song",
+      "expect": "media:pause",
+      "note": "Phase B codegen proof: the 4 '…the song' pause phrasings were missing from the Kotlin list."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "play on spotify",
+      "expect": "media:play",
+      "note": "Phase B codegen proof: without the keyword, Kotlin's anchored PLAY_GENERIC regex used to classify this as play_search('on')."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "when do the hurricanes play next",
+      "expect": null,
+      "note": "COMMAND-POSITION guard (June 2026 over-match fix): 'play next' buried in a question must NOT be a skip. Anchored on both platforms."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "what time does spain play in the world cup",
+      "expect": null,
+      "note": "Anchored-play guard (2026-07-17): 'play' mid-sentence must not become a music search."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "play some jazz",
+      "expect": "media:play_search"
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "turn up spotify",
+      "expect": {
+        "js": "media:volume_up",
+        "kotlin": "volume:volume_up"
+      },
+      "note": "Phase C fold proof ('turn up spotify' came from the richer js/core list) + a DOCUMENTED structural divergence: JS routes music-volume through the media classifier; Kotlin has ONE volume classifier that unions the system+media lists. Same user outcome."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "skip",
+      "expect": null,
+      "note": "Bare ambiguous transport word with music NOT playing → no match (flexible matcher is music-playing-gated)."
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "skip",
+      "options": {
+        "musicPlaying": true
+      },
+      "expect": "media:next"
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "stop",
+      "options": {
+        "musicPlaying": true
+      },
+      "expect": "media:pause"
+    },
+    {
+      "fn": "mediaCommand",
+      "input": "next up on the timer",
+      "options": {
+        "musicPlaying": true
+      },
+      "expect": null,
+      "note": "Flexible exclude word ('timer') blocks the music-playing flexible matcher."
+    },
+    {
+      "fn": "hasSchedulingQualifier",
+      "input": "turn the string lights on in 5 minutes",
+      "expect": true,
+      "note": "Contract #30 (the scheduling guard that keeps the HA fast-path from executing a deferred command NOW). Relative delay via parseDuration."
+    },
+    {
+      "fn": "hasSchedulingQualifier",
+      "input": "turn the string lights on in five minutes",
+      "expect": true,
+      "note": "word-number relative delay"
+    },
+    {
+      "fn": "hasSchedulingQualifier",
+      "input": "turn off the porch light at 9:30",
+      "expect": true,
+      "note": "absolute time via the generated #30 regex"
+    },
+    {
+      "fn": "hasSchedulingQualifier",
+      "input": "turn off the lights tonight",
+      "expect": true
+    },
+    {
+      "fn": "hasSchedulingQualifier",
+      "input": "turn on the lights later",
+      "expect": true
+    },
+    {
+      "fn": "hasSchedulingQualifier",
+      "input": "turn on the string lights",
+      "expect": false
+    },
+    {
+      "fn": "hasSchedulingQualifier",
+      "input": "set the family room lights to 50",
+      "expect": false,
+      "note": "a bare number with no time unit must NOT read as a delay"
+    },
+    {
+      "fn": "hasSecondToolVerb",
+      "input": "turn off the lights and play some jazz",
+      "expect": true,
+      "note": "Contract #34 (the compound-turn guard — Assist would run the HA half and silently drop the music half). Generated from the same source both sides."
+    },
+    {
+      "fn": "hasSecondToolVerb",
+      "input": "turn off the lights and show me the front door camera",
+      "expect": true
+    },
+    {
+      "fn": "hasSecondToolVerb",
+      "input": "turn on the play room lights",
+      "expect": false,
+      "note": "'play room' exclusion — a real HA command must still fast-path"
+    },
+    {
+      "fn": "hasSecondToolVerb",
+      "input": "turn on the playroom lights",
+      "expect": false
+    },
+    {
+      "fn": "hasSecondToolVerb",
+      "input": "dim the family room",
+      "expect": false
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "10 minutes ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 600,
+      "note": "timeReferenceOffset = nowSec - parsed instant (zone-portable). Camera playback time parsing — canonical time-reference.js ↔ Kotlin TimeReference.kt (native-executor convergence 2026-07-19)."
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "ten minutes ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 600,
+      "note": "word numbers digitized by the runner before parsing, matching both call sites"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "an hour ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 3600
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "half an hour ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 1800
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "a couple of minutes ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 120
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "a few minutes ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 300
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "3 days ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 259200,
+      "note": "days handled in time-reference itself — parseDuration is the timer parser (h/m/s only)"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "a day ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 86400
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "just now",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 120
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "last night",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 46800,
+      "note": "yesterday 21:00 from 10:00 = 13h"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "this morning",
+      "options": {
+        "now": "2026-07-19T14:00:00"
+      },
+      "expect": 21600,
+      "note": "today 08:00 from 14:00 = 6h"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "tonight",
+      "options": {
+        "now": "2026-07-19T01:00:00"
+      },
+      "expect": 14400,
+      "note": "the 1am case: today 21:00 hasn't happened → rolls back to yesterday 21:00 (4h ago) — the evening the user is still in"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "earlier tonight",
+      "options": {
+        "now": "2026-07-19T22:30:00"
+      },
+      "expect": 5400,
+      "note": "longest-phrase-first ordering: must match 'earlier tonight', not bail on 'tonight'"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "at 3pm",
+      "options": {
+        "now": "2026-07-19T18:00:00"
+      },
+      "expect": 10800
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "around 9",
+      "options": {
+        "now": "2026-07-19T10:30:00"
+      },
+      "expect": 5400,
+      "note": "no meridiem → most recent past candidate wins: today 09:00, not yesterday 21:00"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "at 9 o'clock",
+      "options": {
+        "now": "2026-07-19T00:15:00"
+      },
+      "expect": 11700,
+      "note": "THE o'clock bug pin: o'clock is NOT a meridiem — at 12:15am this is yesterday 9pm (3h15m back), not 9am (15h back)"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "at 3:30 pm",
+      "options": {
+        "now": "2026-07-19T18:00:00"
+      },
+      "expect": 9000
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "at 15:45",
+      "options": {
+        "now": "2026-07-19T18:00:00"
+      },
+      "expect": 8100,
+      "note": "24h clock accepted"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "earlier",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": null,
+      "note": "too vague to resolve — the tool ASKS instead of guessing (ask-don't-guess contract)"
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "show me the pool camera",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": null
+    },
+    {
+      "fn": "timeReferenceOffset",
+      "input": "show me the pool camera from ten minutes ago",
+      "options": {
+        "now": "2026-07-19T10:00:00"
+      },
+      "expect": 600,
+      "note": "full-utterance extraction, the real call shape"
+    },
+    {
+      "fn": "templateWeather",
+      "input": "current",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "It's 72 degrees and partly cloudy in Riverside. 40% chance of rain today.",
+      "note": "Weather synthesis pair: weather-template.js ↔ WeatherTemplate.kt (contract #40; brain weather-synth.ts is the third sibling). Rounding, city, precip-carry all pinned."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "open-meteo",
+          "location": {
+            "city": "",
+            "state": ""
+          },
+          "current": {
+            "temperature": 68.0,
+            "condition": "clear",
+            "windSpeed": 3.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 75.0,
+              "low": 54.0,
+              "condition": "clear",
+              "precipProbability": 5
+            }
+          ]
+        }
+      },
+      "expect": "It's 68 degrees and clear.",
+      "note": "no timeframe → current; no city → no place; <20% precip → silent"
+    },
+    {
+      "fn": "templateWeather",
+      "input": "today",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "Today: partly cloudy, high 78, low 55, 40% chance of rain."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "tonight",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "Tonight: partly cloudy, low 55."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "weekend",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "This weekend: Sunday partly cloudy, high 78, 40% chance of rain; Saturday sunny, high 77.",
+      "note": "weekend = the first two Sat/Sun entries IN FORECAST ORDER — asked on a Sunday, today leads and next Saturday follows. Pinned as-is (documented behavior; revisit the UX separately if 'weekend' should mean the UPCOMING weekend when asked on one)."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "monday",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "Monday: sunny, high 81, low 60."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "friday",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "It's 72 degrees and partly cloudy in Riverside. 40% chance of rain today.",
+      "note": "weekday not in the window → falls back to current conditions"
+    },
+    {
+      "fn": "templateWeather",
+      "input": "current",
+      "options": {
+        "data": {
+          "found": false
+        }
+      },
+      "expect": "I couldn't get the weather right now."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "tomorrow",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "Tomorrow: sunny, high 81, low 60."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "tomorrow",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            }
+          ]
+        }
+      },
+      "expect": "It's 72 degrees and partly cloudy in Riverside. 40% chance of rain today."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "precip_timing",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ],
+          "hourly": [
+            {
+              "time": "2026-07-19T14:00",
+              "condition": "rainy",
+              "precipProb": 80
+            },
+            {
+              "time": "2026-07-19T15:00",
+              "condition": "rainy",
+              "precipProb": 70
+            },
+            {
+              "time": "2026-07-19T16:00",
+              "condition": "cloudy",
+              "precipProb": 10
+            }
+          ]
+        }
+      },
+      "expect": "The rain should let up around 4 PM."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "precip_timing",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ],
+          "hourly": [
+            {
+              "time": "2026-07-19T14:00",
+              "condition": "cloudy",
+              "precipProb": 10
+            },
+            {
+              "time": "2026-07-19T15:00",
+              "condition": "cloudy",
+              "precipProb": 15
+            },
+            {
+              "time": "2026-07-19T17:00",
+              "condition": "rainy",
+              "precipProb": 80
+            }
+          ]
+        }
+      },
+      "expect": "Rain looks likely around 5 PM."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "precip_timing",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ],
+          "hourly": [
+            {
+              "time": "2026-07-19T14:00",
+              "condition": "sunny",
+              "precipProb": 0
+            },
+            {
+              "time": "2026-07-19T15:00",
+              "condition": "sunny",
+              "precipProb": 5
+            }
+          ]
+        }
+      },
+      "expect": "No rain in the forecast for the next several hours."
+    },
+    {
+      "fn": "templateWeather",
+      "input": "precip_timing",
+      "options": {
+        "data": {
+          "found": true,
+          "source": "ha",
+          "location": {
+            "city": "Riverside",
+            "state": "CT"
+          },
+          "current": {
+            "temperature": 71.6,
+            "condition": "partlycloudy",
+            "windSpeed": 5.0
+          },
+          "daily": [
+            {
+              "date": "2026-07-19",
+              "dayName": "Sunday",
+              "high": 78.4,
+              "low": 55.2,
+              "condition": "partlycloudy",
+              "precipProbability": 40
+            },
+            {
+              "date": "2026-07-20",
+              "dayName": "Monday",
+              "high": 81.0,
+              "low": 60.0,
+              "condition": "sunny",
+              "precipProbability": 5
+            },
+            {
+              "date": "2026-07-25",
+              "dayName": "Saturday",
+              "high": 77.0,
+              "low": 59.0,
+              "condition": "sunny",
+              "precipProbability": 10
+            },
+            {
+              "date": "2026-07-26",
+              "dayName": "Sunday",
+              "high": 70.6,
+              "low": 58.0,
+              "condition": "rainy",
+              "precipProbability": 80
+            }
+          ]
+        }
+      },
+      "expect": "It's 72 degrees and partly cloudy in Riverside. 40% chance of rain today."
+    }
+  ]
+}

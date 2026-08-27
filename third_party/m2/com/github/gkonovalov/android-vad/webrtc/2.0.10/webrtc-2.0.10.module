@@ -1,0 +1,109 @@
+{
+  "formatVersion" : "1.1",
+  "component" : {
+    "group" : "com.github.gkonovalov",
+    "module" : "android-vad",
+    "version" : "2.0.10",
+    "attributes" : {
+      "org.gradle.status" : "release"
+    }
+  },
+  "createdBy" : {
+    "gradle" : {
+      "version" : "8.14.3"
+    }
+  },
+  "variants" : [ {
+    "name" : "releaseVariantReleaseApiPublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-api"
+    },
+    "dependencies" : [ {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.2.0"
+      }
+    } ],
+    "files" : [ {
+      "name" : "webrtc-2.0.10.aar",
+      "url" : "webrtc-2.0.10.aar",
+      "size" : 152978,
+      "sha512" : "6963f7a2f7385870e25139eb67eb072f89a662c3df8a38489e21a4c094ddfa64adae4a87c517c515e9f77d12509594f422f77249fa1361d7152c7721f96de2f2",
+      "sha256" : "9af5ed5185b97dd4832d9cf41e7f1d7d11367760d5011689b5e32b8fee073db4",
+      "sha1" : "8074d74f64e1e182d8d62a2539f35a2650b7fb38",
+      "md5" : "bad0ae417ce910c5e9e4be89acf272f5"
+    } ]
+  }, {
+    "name" : "releaseVariantReleaseRuntimePublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-runtime"
+    },
+    "dependencies" : [ {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-bom",
+      "version" : {
+        "requires" : "2.2.0"
+      },
+      "attributes" : {
+        "org.gradle.category" : "platform"
+      },
+      "endorseStrictVersions" : true
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.2.0"
+      }
+    } ],
+    "files" : [ {
+      "name" : "webrtc-2.0.10.aar",
+      "url" : "webrtc-2.0.10.aar",
+      "size" : 152978,
+      "sha512" : "6963f7a2f7385870e25139eb67eb072f89a662c3df8a38489e21a4c094ddfa64adae4a87c517c515e9f77d12509594f422f77249fa1361d7152c7721f96de2f2",
+      "sha256" : "9af5ed5185b97dd4832d9cf41e7f1d7d11367760d5011689b5e32b8fee073db4",
+      "sha1" : "8074d74f64e1e182d8d62a2539f35a2650b7fb38",
+      "md5" : "bad0ae417ce910c5e9e4be89acf272f5"
+    } ]
+  }, {
+    "name" : "releaseVariantReleaseSourcePublication",
+    "attributes" : {
+      "org.gradle.category" : "documentation",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.docstype" : "sources",
+      "org.gradle.usage" : "java-runtime"
+    },
+    "files" : [ {
+      "name" : "webrtc-2.0.10.jar",
+      "url" : "webrtc-2.0.10.jar",
+      "size" : 7259,
+      "sha512" : "9891ef6aee3d858b1787bbf86b6d69242f02ba1a52b50fd9254059e3a72c2a75afbc62acc27c83b3e1871df1a6def64450af592415c2b17bb2b39148f3f2aa4a",
+      "sha256" : "8d3ad8e5c720dd73f5ee40818d2c2e2e0d9543441472b10f4625139fd4bfd99d",
+      "sha1" : "31666bccb719c8c0ebacb993716b2afe4b68926a",
+      "md5" : "9d5312f501d6f95273246ebeed142eca"
+    } ]
+  }, {
+    "name" : "releaseVariantReleaseJavaDocPublication",
+    "attributes" : {
+      "org.gradle.category" : "documentation",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.docstype" : "javadoc",
+      "org.gradle.usage" : "java-runtime"
+    },
+    "files" : [ {
+      "name" : "webrtc-2.0.10.jar",
+      "url" : "webrtc-2.0.10.jar",
+      "size" : 305997,
+      "sha512" : "66ad118cac14139ad58b289a43f54dbc7a1f96d52d57820aa57d4a3b59552b8ded096b6fdcc95d5493196754a36cdd7c73caa2accd370c1037d4917882ab2e10",
+      "sha256" : "43a10b477ef0f1f74bcdac0c56d6d7d2ec946925c74064dbc37425902115c012",
+      "sha1" : "4a5c5f4957f047021bbf81d1459bdc0cd5a9935b",
+      "md5" : "06cae04fc9931146d3ca197cd65a3b46"
+    } ]
+  } ]
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Slider item with label, value text, and SeekBar -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/settings_item_padding_horizontal"
+    android:paddingEnd="@dimen/settings_item_padding_horizontal"
+    android:paddingTop="@dimen/settings_item_padding_vertical"
+    android:paddingBottom="@dimen/settings_item_padding_vertical"
+    android:focusable="true"
+    android:clickable="false">
+
+    <!-- Label row: label on left, value on right -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/settings_text_label"
+            android:textSize="@dimen/settings_label_text_size"
+            tools:text="Dashboard Zoom" />
+
+        <TextView
+            android:id="@+id/tvValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/settings_text_value"
+            android:textSize="@dimen/settings_value_text_size"
+            tools:text="100%" />
+    </LinearLayout>
+
+    <!-- SeekBar -->
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:progressTint="@color/dashie_orange"
+        android:thumbTint="@color/dashie_orange"
+        tools:max="100"
+        tools:progress="50" />
+
+</LinearLayout>

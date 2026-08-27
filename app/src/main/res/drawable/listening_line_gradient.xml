@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Orange voice listening indicator line. Linear gradient that fades to transparent at both
+     ends (the soft "arched" taper) with an opaque #FF9500 center. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:type="linear"
+        android:angle="0"
+        android:startColor="#00FF9500"
+        android:centerColor="#FF9500"
+        android:endColor="#00FF9500" />
+</shape>

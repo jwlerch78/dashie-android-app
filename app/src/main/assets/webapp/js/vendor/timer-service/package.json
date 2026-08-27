@@ -1,0 +1,34 @@
+{
+  "name": "@dashieapp/timer-service",
+  "version": "1.0.0",
+  "description": "Timer service for Dashie - supports up to 5 concurrent timers with full lifecycle control",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./src/index.js",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dashieapp/core-utils": "^1.0.0"
+  },
+  "keywords": [
+    "dashie",
+    "timer",
+    "smart-home",
+    "voice-assistant"
+  ],
+  "author": "Dashie",
+  "license": "MIT"
+}

@@ -1,0 +1,40 @@
+{
+  "name": "@dashieapp/core-utils",
+  "version": "1.0.0",
+  "description": "Core utilities shared across Dashie packages (logger, events, storage)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./logger": {
+      "import": "./src/logger.js"
+    },
+    "./events": {
+      "import": "./src/event-emitter.js"
+    },
+    "./storage": {
+      "import": "./src/storage.js"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./src/index.js",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "dashie",
+    "utilities",
+    "logger",
+    "events"
+  ],
+  "author": "Dashie",
+  "license": "MIT"
+}

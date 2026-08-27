@@ -1,0 +1,89 @@
+<resources>
+    <!-- app_name is set per flavor in build.gradle.kts -->
+
+    <!--
+      The PRODUCT name as it appears in prose. Deliberately NOT app_name, which carries
+      build-channel suffixes ("Dashie (Staging)", "Chickadee (Dev)") and reads wrong in a
+      sentence. Overridden once in src/chickadeeBrand/res/values/strings.xml.
+
+      ⚠️ Use this via a FORMAT argument (`getString(R.string.x, getString(R.string.brand_name))`)
+      rather than writing a second copy of the sentence per source set. A duplicated sentence
+      drifts the moment the copy is edited in one place — which is standing rule 1's whole point,
+      and is how "Use Dashie without Internet" survived the Chickadee split unnoticed until it
+      was photographed on a Fire tablet with wifi off.
+    -->
+    <string name="brand_name">Dashie</string>
+
+    <!--
+      The URL screensaver's default page. A BRAND fact, so it lives here and is overridden once
+      in src/chickadeeBrand — the same seam as brand_name, chosen over a per-source-set Kotlin
+      constant because `const val` in main/ cannot be overridden at all, and because a URL in a
+      resource is visible to lint:chickadee-surface's dashie-host leg on the built artifact.
+
+      ⚠️ dialog_screensaver_picker's input HINT points at this same string on purpose. When the
+      two were independent, the Chickadee build showed a dashieapp.com hint over a dashieapp.com
+      default; fixing only the hint would have made the UI lie about where the device actually
+      goes. One definition means the hint cannot drift from the behaviour.
+
+      Chickadee carries ?weather=1 per John (2026-08-02): full Dashie parity for the URL
+      screensaver. Note this is the URL for an OPT-IN mode — the default screensaver MODE is
+      "dim" in both editions, so nothing here loads unless a household chooses the URL mode.
+    -->
+    <string name="default_screensaver_url">https://dashieapp.com/screensaver</string>
+
+    <!-- WiFi gate (activity_wifi_setup_simple). %1$s is brand_name. -->
+    <string name="wifi_use_without_internet">Use %1$s without Internet</string>
+    <string name="wifi_cancel">Cancel</string>
+
+    <!--
+      Self-update surfaces (DashieUpdateController). %1$s is brand_name.
+
+      The title and body are FALLBACKS: the controller overwrites them from the release
+      metadata when `releaseTitle` / `releaseDescription` are present, and these show when they
+      are not. That is why they were user-visible despite looking like layout placeholders.
+    -->
+    <!--
+      Shared dialogs that name the product. All %1$s = brand_name, all set at runtime because
+      an Android layout cannot interpolate. One sentence each, shared by both editions.
+    -->
+    <string name="camera_permission_body">%1$s uses the camera for motion detection. Please give the app permission to use the camera if you would like to use this feature.</string>
+    <!--
+      ⚠️ The originals said "Dashie Kiosk settings" (touch) and "Dashie Lite settings" (TV) —
+      two different stale product names for the same screen. Dropping the qualifier fixes that
+      inconsistency and avoids minting "Chickadee Lite", which is not a thing. Copy change to
+      Dashie is deliberate and minimal: it removes a retired product name, nothing else.
+    -->
+    <string name="swipe_gesture_body">To return to the %1$s settings at any time, swipe right from the left edge of the screen.</string>
+    <string name="swipe_gesture_body_tv">To return to the %1$s settings at any time, press the BACK button on your remote.</string>
+    <string name="photo_upload_title">Add photos to %1$s</string>
+    <string name="addon_server_section">%1$s Addon Server</string>
+    <string name="diagnostics_share_subtitle">Help us improve %1$s by sharing diagnostic data</string>
+
+    <string name="update_available_banner">A %1$s update is available</string>
+    <string name="update_available_title">%1$s update available</string>
+    <string name="update_available_body">A new version of %1$s is ready to install.</string>
+    <string name="purchase_instructions">After purchasing, tap Check License to enable voice control.</string>
+
+    <!--
+      Exit confirmation. The body sentence existed as THREE hardcoded Kotlin copies
+      (MainActivity.showExitConfirmDialog, NativeDialogHost.showSimpleExitDialog, and a variant
+      in showSignInCloseFromBridge) — none of them scannable, because a string built in Kotlin
+      lives in the dex and `lint:chickadee-surface`'s prose leg skips `classes*.dex` on purpose.
+      That is why a Chickadee user was still offered to "exit Dashie" after two brand passes.
+      One definition each, taken as a format argument, brings them into the lint's scope as well
+      as rebranding them.
+    -->
+    <string name="exit_confirm_title">Exit %1$s?</string>
+    <string name="exit_confirm_body">Are you sure you want to exit %1$s?</string>
+    <string name="exit_or_return_body">Return to your Home Assistant dashboard, or exit %1$s?</string>
+
+    <!-- Device Admin strings -->
+    <!--
+      Read by the ANDROID SYSTEM (device-admin consent dialog), not by us — so it cannot take
+      brand_name as a runtime format argument the way every other branded string does. Reworded
+      to be brand-FREE rather than duplicated per source set: "this app" is accurate in both
+      editions, the system already shows the app's real name and icon beside it, and a
+      per-source-set copy of a sentence is the drift shape standing rule 1 exists to stop.
+    -->
+    <string name="device_admin_description">Allows this app to turn the screen on and off for kiosk mode operation.</string>
+</resources>

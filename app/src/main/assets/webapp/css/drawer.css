@@ -1,0 +1,623 @@
+/**
+ * Dashie Drawer Menu Styles
+ *
+ * Matches the native Android HaliteSidebarController design:
+ * - 280px panel width (matching 280dp native sidebar)
+ * - Dashie Orange (#FF9500) accent for sliders/toggles
+ * - ALL CAPS section headers with letter-spacing
+ * - 44px min-height settings rows
+ * - Bordered bottom action buttons
+ * - IP/version footer
+ *
+ * Z-index 700-701: above timers (600) and screensaver (500),
+ * below gallery (800) and alarm (1000).
+ */
+
+/* ==================== Backdrop ==================== */
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 700;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transition-normal, 0.25s ease),
+              visibility var(--transition-normal, 0.25s ease);
+}
+
+.drawer-backdrop--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ==================== Panel ==================== */
+
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background: var(--bg-secondary, #1C1C1E);
+  z-index: 701;
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  pointer-events: none;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+.drawer-panel--open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* ==================== Header ==================== */
+
+.drawer-header {
+  padding: 12px 16px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary, #2C2C2E);
+  border-bottom: 1px solid var(--border-color, #48484A);
+  flex-shrink: 0;
+}
+
+.drawer-header__logo {
+  width: 170px;
+  height: auto;
+}
+
+/* ==================== Sections Container ==================== */
+
+.drawer-sections {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0;
+  scrollbar-width: thin;
+}
+
+.drawer-sections::-webkit-scrollbar {
+  width: 4px;
+}
+
+.drawer-sections::-webkit-scrollbar-thumb {
+  background: var(--text-disabled, #636366);
+  border-radius: 2px;
+}
+
+/* ==================== Accordion Section ==================== */
+
+.drawer-section {
+  /* No bottom border on section — dividers placed explicitly */
+}
+
+.drawer-divider {
+  height: 1px;
+  margin: 4px 16px;
+  background: var(--border-color, #48484A);
+}
+
+.drawer-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 8px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.drawer-section__header:active {
+  background: var(--bg-tertiary, #2C2C2E);
+}
+
+.drawer-section__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-tertiary, #8E8E93);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.drawer-section__chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--text-disabled, #636366);
+  transition: transform var(--transition-normal, 0.25s ease);
+  flex-shrink: 0;
+  transform: rotate(0deg);
+}
+
+.drawer-section--expanded .drawer-section__chevron {
+  transform: rotate(90deg);
+}
+
+/* Action section — non-expandable, just a clickable header row */
+
+
+
+.drawer-section__content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.drawer-section--expanded .drawer-section__content {
+  max-height: 800px;
+}
+
+.drawer-section__body {
+  padding: 0 16px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ==================== Row (44px height, matching native) ==================== */
+
+.drawer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 0;
+}
+
+.drawer-row--clickable {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: var(--radius-sm, 6px);
+}
+
+.drawer-row--clickable:active {
+  background: var(--bg-tertiary, #2C2C2E);
+}
+
+.drawer-row__label {
+  font-size: 14px;
+  color: var(--text-primary, #ffffff);
+  flex-shrink: 0;
+}
+
+/* Stacked label + sublabel (e.g. Dashboard URL row) */
+.drawer-row__stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-row__sublabel {
+  font-size: 12px;
+  color: var(--text-secondary, #ABABAB);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drawer-row__chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--text-disabled, #636366);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.drawer-row__chevron svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Right-side group (e.g. "Auto" label + toggle) */
+.drawer-row__right-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.drawer-row__sublabel-inline {
+  font-size: 13px;
+  color: var(--text-secondary, #ABABAB);
+  margin-left: auto;
+}
+
+/* Action text (e.g. "Enable Control") - clickable, accent color */
+.drawer-row__action {
+  font-size: 13px;
+  color: var(--accent-orange, #FF9500);
+  margin-left: auto;
+  cursor: pointer;
+}
+
+/* ==================== Two-Column Layout ==================== */
+/* Left: icons (vertically centered), Right: slider + stepper */
+
+.drawer-two-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+}
+
+.drawer-two-col__icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+/* Side-by-side variant for audio mic + speaker */
+.drawer-two-col__icons--row {
+  flex-direction: row;
+  gap: 4px;
+}
+
+.drawer-two-col__controls {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-two-col__slider {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+  width: 100%;
+}
+
+.drawer-two-col__slider .drawer-slider {
+  width: 100%;
+}
+
+/* ==================== Stepper Row ==================== */
+/* Centered [−] value [+] */
+
+.drawer-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 0;
+}
+
+.drawer-stepper__value {
+  font-size: 14px;
+  color: var(--text-secondary, #ABABAB);
+  min-width: 40px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==================== Dark Mode Button ==================== */
+/* Clickable icon+label stacked vertically in two-col layout */
+
+.drawer-dark-mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm, 6px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.drawer-dark-mode-btn:active {
+  background: var(--bg-tertiary, #2C2C2E);
+}
+
+.drawer-dark-mode-btn__icon {
+  width: 28px;
+  height: 28px;
+  color: var(--text-secondary, #ABABAB);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawer-dark-mode-btn__icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.drawer-dark-mode-btn__label {
+  font-size: 11px;
+  color: var(--text-secondary, #ABABAB);
+  white-space: nowrap;
+}
+
+/* ==================== Slider ==================== */
+
+.drawer-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--slider-track-bg, #5A5A5C);
+  border-radius: 2px;
+  outline: none;
+}
+
+.drawer-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--dashie-orange, #FF9500);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.drawer-slider::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+}
+
+/* ==================== Icon Button (Mute, Mic, +/−) ==================== */
+
+.drawer-icon-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary, #ABABAB);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  padding: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.drawer-icon-btn:active {
+  background: var(--bg-tertiary, #2C2C2E);
+}
+
+.drawer-icon-btn--active {
+  color: var(--dashie-orange, #FF9500);
+}
+
+.drawer-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Larger icon variant for two-column layout */
+.drawer-icon-btn--lg {
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+}
+
+.drawer-icon-btn--lg svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* ==================== Toggle Switch ==================== */
+
+.drawer-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.drawer-toggle__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  margin: 0;
+}
+
+.drawer-toggle__track {
+  position: absolute;
+  inset: 0;
+  background: var(--slider-track-bg, #5A5A5C);
+  border-radius: 12px;
+  cursor: pointer;
+  pointer-events: none; /* Allow clicks to pass through to label/input */
+  transition: background var(--transition-fast, 0.15s ease);
+}
+
+.drawer-toggle__input:checked + .drawer-toggle__track {
+  background: var(--dashie-orange, #FF9500);
+}
+
+.drawer-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform var(--transition-fast, 0.15s ease);
+  pointer-events: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.drawer-toggle__input:checked ~ .drawer-toggle__thumb {
+  transform: translateX(20px);
+}
+
+/* ==================== Disabled State ==================== */
+
+.drawer-control--disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ==================== Locked State ==================== */
+/* When app is locked, sections/actions are hidden via JS */
+
+.drawer-unlock-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  font-size: 14px;
+  color: var(--text-primary, #ffffff);
+  border-top: 1px solid var(--border-color, #48484A);
+}
+
+.drawer-unlock-row:active {
+  background: var(--bg-tertiary, #2C2C2E);
+}
+
+.drawer-unlock-row svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ==================== Bottom Actions ==================== */
+
+.drawer-actions {
+  border-top: 1px solid var(--border-color, #48484A);
+  margin-top: 8px;
+  padding: 12px 16px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawer-actions__row {
+  display: flex;
+  gap: 12px;
+}
+
+.drawer-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  font-size: 13px;
+  color: var(--text-secondary, #ABABAB);
+  font-weight: 400;
+  background: transparent;
+  border: 1px solid var(--border-thick, #3A3A3C);
+  border-radius: var(--radius-sm, 6px);
+  font-family: inherit;
+  text-transform: none;
+  flex: 1;
+}
+
+.drawer-action-btn:active {
+  background: var(--border-thick, #3A3A3C);
+}
+
+.drawer-action-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Exit App — plain text link with icon */
+.drawer-action-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  font-size: 13px;
+  color: var(--text-tertiary, #8E8E93);
+  font-weight: 400;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  margin-bottom: 4px;
+}
+
+.drawer-action-text:active {
+  color: var(--text-secondary, #ABABAB);
+}
+
+.drawer-action-text svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ==================== Footer ==================== */
+
+.drawer-footer {
+  padding: 8px 16px 12px;
+  text-align: center;
+}
+
+.drawer-footer__version {
+  font-size: 11px;
+  color: var(--text-tertiary, #8E8E93);
+}
+
+/* ==================== License Status ==================== */
+
+.drawer-license-status {
+  font-size: 13px;
+  text-align: center;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.drawer-license-activate-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--dashie-orange, #FF9500);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--dashie-orange, #FF9500);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ==================== Responsive ==================== */
+
+@media (max-width: 360px) {
+  .drawer-panel {
+    width: 260px;
+  }
+  .drawer-header__logo {
+    width: 140px;
+  }
+}

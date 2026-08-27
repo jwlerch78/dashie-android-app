@@ -1,0 +1,7 @@
+# GitHub Sponsors. Puts the "Sponsor" button in this repo's header and in its sidebar.
+#
+# Measured 2026-08-18: the button ALREADY appears on jwlerch78's public repos purely from the
+# user-level Sponsors listing, with no FUNDING.yml anywhere in the org. This file is therefore
+# not what makes sponsoring work — it makes it explicit and repo-local, so the button does not
+# silently depend on an account-level setting that nobody can see from the repository.
+github: jwlerch78

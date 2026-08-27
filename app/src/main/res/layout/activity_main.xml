@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Custom WebView with Fire tablet keyboard fix. -->
+    <com.dashieapp.Dashie.webview.DashieWebView
+        android:id="@+id/dashboardWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- Native sidebar backdrop strip. Drawn on top of the WebView but
+         below the sidebar itself, painted with the dashboard's theme
+         color (blue / black) by NativeSidebarController. Visible only
+         when the sidebar is pinned. Provides the colored gap behind the
+         sidebar without relying on WebView/HTML transparency. -->
+    <View
+        android:id="@+id/sidebarBackgroundStrip"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!-- Widget Container — native Kotlin widgets (photos, etc.) that overlay the WebView
+         at the same visual layer as dashboard content. Positioned immediately after the
+         WebView so widgets sit just above it but below splash, sidebar, and overlays.
+         Uses AutoHideFrameLayout: GONE when empty so Chromium WebView's compositor
+         doesn't mark the underlying region as occluded (which freezes <video>
+         compositing layers on older Chromium versions). -->
+    <com.dashieapp.Dashie.ui.AutoHideFrameLayout
+        android:id="@+id/widgetContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clipChildren="false"
+        android:clipToPadding="false" />
+
+    <!-- Local splash/loading screen - shows immediately while WebView loads -->
+    <FrameLayout
+        android:id="@+id/splashOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/orange"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="400dp"
+            android:layout_height="400dp"
+            android:layout_gravity="center"
+            android:src="@drawable/splash_logo"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/brand_name" />
+
+    </FrameLayout>
+
+    <!-- Native Sidebar Strip (replaces JS dash-menu sidebar) -->
+    <include layout="@layout/sidebar_strip" />
+
+    <!-- Portrait-mode bottom bar. Shown in place of the sidebar when
+         widgets layout mode is active and the device is in portrait.
+         Toggled by PortraitLayoutManager. -->
+    <include layout="@layout/bottom_bar" />
+
+    <!-- Edit Mode Toolbar (replaces sidebar during layout editing) -->
+    <include layout="@layout/edit_toolbar" />
+
+    <!-- Overlay Container for timers and performance overlay -->
+    <!-- Positioned below screenDimOverlay so sleep/screen off renders on top -->
+    <!-- No WindowManager/SYSTEM_ALERT_WINDOW permission needed - just Activity views -->
+    <!-- Uses AutoHideFrameLayout: GONE when empty (no music player / timer /
+         perf overlay active) so Chromium WebView's compositor doesn't mark
+         the underlying region as occluded. See widgetContainer above. -->
+    <com.dashieapp.Dashie.ui.AutoHideFrameLayout
+        android:id="@+id/overlayContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clipChildren="false"
+        android:clipToPadding="false" />
+
+    <!-- Screen Dim Overlay (for Halite/Dashie Lite screensaver) -->
+    <!-- Supports three modes: dim (85% black), black (100% black), photos (slideshow) -->
+    <!-- Note: focusable=false so D-pad keys pass through to Activity.dispatchKeyEvent -->
+    <!-- clickable=true so touch events still wake the screen -->
+    <!-- Positioned after overlayContainer so sleep/screen off covers everything except voice/HA indicators -->
+    <FrameLayout
+        android:id="@+id/screenDimOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:elevation="200dp"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false">
+
+        <!-- Black background for dim/black modes -->
+        <View
+            android:id="@+id/screenDimBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+        <!-- Photo slideshow container (added dynamically by ScreenDimmer) -->
+        <FrameLayout
+            android:id="@+id/photoSlideshowContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <!-- Clock + date overlay for black/dim modes when showClock is enabled -->
+        <LinearLayout
+            android:id="@+id/screenDimClockContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/screenDimClock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:shadowColor="#FF000000"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="5" />
+
+            <TextView
+                android:id="@+id/screenDimDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#CCFFFFFF"
+                android:textSize="38sp"
+                android:shadowColor="#FF000000"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="5"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/screenDimWeather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#CCFFFFFF"
+                android:textSize="38sp"
+                android:shadowColor="#FF000000"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="5"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- Screensaver Overlay Panel — shows above screensaver for PiP feeds, music, timers -->
+    <!-- Touches on empty areas pass through to screenDimOverlay to wake the screensaver -->
+    <!-- elevation 210dp: must sit above screenDimOverlay (200dp). Android Z-compositing -->
+    <!-- wins over XML order, so a later sibling alone isn't enough. -->
+    <FrameLayout
+        android:id="@+id/screensaverOverlayPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="210dp"
+        android:visibility="gone"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <!-- Control Center Overlay (native, replaces JS control-center-overlay) -->
+    <include layout="@layout/overlay_control_center" />
+
+    <!-- Voice Indicator Overlay (for Halite/Dashie Lite voice control) -->
+    <include layout="@layout/voice_indicator_overlay" />
+
+    <!-- FB27: dismissible low-credit pill — bottom-left, to the RIGHT of the sidebar/hamburger.
+         Amber reauth-pill look. Tap the body → the credit chooser (same options as out-of-credits,
+         "Credits Low" title); tap the X → dismiss for this episode. Managed by CreditBoundaryUi;
+         shown while balance is low. elevation 190dp: BELOW the screensaver (dim 200 / panel 210dp)
+         so the screensaver covers it (John 2026-07-06), above the dashboard content. -->
+    <LinearLayout
+        android:id="@+id/creditLowPill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="96dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="6dp"
+        android:paddingVertical="7dp"
+        android:background="@drawable/credit_low_pill_bg"
+        android:elevation="190dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_weather_warning"
+            android:tint="#FFA800"
+            android:contentDescription="Low credits" />
+
+        <TextView
+            android:id="@+id/creditLowPillText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Credits low"
+            android:textColor="#FFA800"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/creditLowPillClose"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_close"
+            android:tint="#99FFFFFF"
+            android:clickable="true"
+            android:focusable="false"
+            android:contentDescription="Dismiss" />
+
+    </LinearLayout>
+
+    <!-- HA Disconnected Indicator (shows when Home Assistant is offline) -->
+    <!-- Positioned top-right, above screensaver but below alarm/voice overlays -->
+    <!-- elevation 220dp: above screenDimOverlay (200dp) and the screensaver -->
+    <!-- panel (210dp), below the voice overlay (230dp). -->
+    <!-- Uses the proper HA logo with nodes (icon_homeassistant_blue) -->
+    <!-- Padding added to prevent badge from being clipped -->
+    <FrameLayout
+        android:id="@+id/haDisconnectedIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="220dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="6dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:visibility="gone"
+        android:alpha="0">
+
+        <!-- Home Assistant icon (blue house with nodes) -->
+        <ImageView
+            android:id="@+id/haDisconnectedIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_homeassistant_blue"
+            android:contentDescription="Home Assistant Disconnected" />
+
+        <!-- Wifi-off badge (red circle with wifi-off icon) -->
+        <!-- 50% larger than before (12dp -> 18dp), positioned to overlap top-right -->
+        <FrameLayout
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="-6dp"
+            android:layout_marginEnd="-6dp"
+            android:background="@drawable/bg_wifi_off_badge">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_wifi_off"
+                android:tint="@android:color/white"
+                android:contentDescription="Connection Lost" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <!-- Floating back button for the inline HA login flow (D.29). On
+         non-Fire-tablet devices the HA OAuth page loads in the main WebView;
+         this native overlay gives touch users a way back. Shown only while
+         inline auth is active (MainHaLoginHandler toggles it) and hidden on
+         TV devices, which escape via the remote Back button instead (D.5).
+         Tapping it calls MainHaLoginHandler.cancelInlineAuth(). -->
+    <ImageView
+        android:id="@+id/inlineHaLoginBackButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:padding="9dp"
+        android:elevation="230dp"
+        android:background="@drawable/floating_button_background"
+        android:src="@drawable/ic_back_arrow"
+        android:tint="#FFFFFFFF"
+        android:scaleType="fitCenter"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="Back"
+        android:visibility="gone" />
+
+</FrameLayout>

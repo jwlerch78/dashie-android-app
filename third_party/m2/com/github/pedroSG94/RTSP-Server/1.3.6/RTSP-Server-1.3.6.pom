@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- do_not_remove: published-with-gradle-metadata -->
+<modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.pedroSG94</groupId>
+  <artifactId>RTSP-Server</artifactId>
+  <version>1.3.6</version>
+  <packaging>aar</packaging>
+  <name>pedroSG94/RTSP-Server</name>
+  <description>Plugin of rtmp-rtsp-stream-client-java to stream directly to RTSP player.</description>
+  <url>https://github.com/pedroSG94/RTSP-Server</url>
+  <inceptionYear>2019</inceptionYear>
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>https://api.github.com/licenses/apache-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>pedroSG94</id>
+      <name>Pedro Sánchez</name>
+      <email>pedrossgg1994@gmail.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git://github.com/pedroSG94/RTSP-Server.git</connection>
+    <developerConnection>scm:git://github.com/pedroSG94/RTSP-Server.git</developerConnection>
+    <url>git://github.com/pedroSG94/RTSP-Server.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib</artifactId>
+      <version>2.1.20</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-coroutines-android</artifactId>
+      <version>1.10.2</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.pedroSG94.RootEncoder</groupId>
+      <artifactId>library</artifactId>
+      <version>2.6.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.ktor</groupId>
+      <artifactId>ktor-network</artifactId>
+      <version>2.3.13</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.ktor</groupId>
+      <artifactId>ktor-network-tls</artifactId>
+      <version>2.3.13</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

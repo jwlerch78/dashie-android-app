@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Volume popout (TV): simple mute toggles instead of slider.
+     Fire TV / Echo Show remotes can't use sliders easily. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_sidebar_popout"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Mute Speaker toggle -->
+    <LinearLayout
+        android:id="@+id/tvVolumeBtnMute"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:background="@drawable/bg_popout_item"
+        android:clickable="true"
+        android:focusable="true">
+        <ImageView
+            android:id="@+id/tvVolumeMuteIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_volume_off"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="Mute" />
+        <TextView
+            android:id="@+id/tvVolumeMuteLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mute Speaker"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <!-- Mute Mic toggle -->
+    <LinearLayout
+        android:id="@+id/tvVolumeBtnMicMute"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:background="@drawable/bg_popout_item"
+        android:clickable="true"
+        android:focusable="true">
+        <ImageView
+            android:id="@+id/tvVolumeMicIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_mic_on"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="Microphone" />
+        <TextView
+            android:id="@+id/tvVolumeMicLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mute Microphone"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Base URL ensures CSS/JS assets load from virtual overlay URL even when
+       shell is served at HA origin for same-origin iframe access -->
+  <base href="http://dashie-kiosk-overlay.local:8099/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Kiosk</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/kiosk-shell.css">
+  <link rel="stylesheet" href="css/weather-overlay.css">
+  <link rel="stylesheet" href="css/onboarding.css">
+</head>
+<body>
+  <!-- HA content area (URL set by Kotlin via evaluateJavascript) -->
+  <iframe id="ha-content" allowfullscreen allow="fullscreen; autoplay; encrypted-media"></iframe>
+
+  <!-- Custom URL content area (hidden by default, shown when useCustomUrl is enabled) -->
+  <iframe id="custom-content" style="display:none" allowfullscreen allow="fullscreen; autoplay; encrypted-media"></iframe>
+
+  <!-- Headless services (timers, voice, AI) — JS runs, no visual rendering -->
+  <iframe id="dashie-overlay" src="kiosk-services.html" style="display:none" tabindex="-1"></iframe>
+
+  <script type="module" src="dist/kiosk-shell.bundle.js"></script>
+</body>
+</html>

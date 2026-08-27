@@ -1,0 +1,41 @@
+# gitleaks configuration for the public Dashie Android repository.
+#
+# This file exists so that `gitleaks detect` on a fresh clone comes back clean AND tells you
+# why — rather than reporting seven findings that a maintainer has to reassure you about in a
+# thread somewhere. If you are auditing this repository, the exemption below is the one thing
+# you should check for yourself, and everything you need to check it is in this file.
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "jwt"
+description = "JWT"
+regex = '''\bey[A-Za-z0-9_-]{17,}\.(?:ey[A-Za-z0-9_-]{17,})?\.[A-Za-z0-9_-]{10,}'''
+
+  # ── Supabase ANON keys. Public by design. ────────────────────────────────────────────────
+  #
+  # Two JWTs appear in this repository: the anon key for the staging Supabase project
+  # (ref cwglbtosingboqepsmjk) and for production (ref cseaywxcvnxcsypaqaid). They live in
+  # app/build.gradle.kts as BuildConfig fields and, inlined, in the kiosk overlay bundle.
+  #
+  # A Supabase anon key is the CLIENT identifier. It is designed to ship in every client, it
+  # is in every APK we have ever published, and it grants nothing on its own: row-level
+  # security and per-function authorisation are what decide access, and they are enforced
+  # server-side against the caller's session, not against this key.
+  #
+  # Decode either one and check the claim yourself — that is the point of listing them here:
+  #
+  #   echo '<the token>' | cut -d. -f2 | base64 -d
+  #   → {"iss":"supabase","ref":"...","role":"anon","iat":...,"exp":...}
+  #
+  # 🔴 The claim that matters is `"role":"anon"`. A `service_role` key would bypass RLS
+  # entirely and must NEVER appear in this repository or any client. This allowlist matches on
+  # the two specific project refs, so a service_role token — or a key for any other project —
+  # is NOT exempted and will fail the scan.
+  [rules.allowlist]
+  regexTarget = "match"
+  regexes = [
+    '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3Z2xidG9zaW5nYm9xZXBzbWprIiwicm9sZSI6ImFub24i[A-Za-z0-9_.-]+''',
+    '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzZWF5d3hjdm54Y3N5cGFxYWlkIiwicm9sZSI6ImFub24i[A-Za-z0-9_.-]+''',
+  ]

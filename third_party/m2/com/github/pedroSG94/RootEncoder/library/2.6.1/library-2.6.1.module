@@ -1,0 +1,143 @@
+{
+  "formatVersion" : "1.1",
+  "component" : {
+    "group" : "com.github.pedroSG94",
+    "module" : "RootEncoder",
+    "version" : "2.6.1",
+    "attributes" : {
+      "org.gradle.status" : "release"
+    }
+  },
+  "createdBy" : {
+    "gradle" : {
+      "version" : "8.10.1"
+    }
+  },
+  "variants" : [ {
+    "name" : "releaseVariantReleaseApiPublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-api"
+    },
+    "dependencies" : [ {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "encoder",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "rtmp",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "rtsp",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "srt",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "udp",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "common",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "library-2.6.1.aar",
+      "url" : "library-2.6.1.aar",
+      "size" : 287308,
+      "sha512" : "f6a05f3ba75b0ce598dbd684cd96a378c7b90ca605172d45d9439bba016e738101e260faf3da77b5dcb7bf8887db5d213c23dd8d2d2f085a882613b30010b1d9",
+      "sha256" : "b636fb576f613877c2c3585560f6d53f6e7f425a5e1aeee58e15d1d07af9fc98",
+      "sha1" : "969f49d257b690fb94e55df56cf90dcd6a386684",
+      "md5" : "2e1ab32d1b8b9dce70e3a3084ccbd417"
+    } ]
+  }, {
+    "name" : "releaseVariantReleaseRuntimePublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-runtime"
+    },
+    "dependencies" : [ {
+      "group" : "org.jetbrains.kotlinx",
+      "module" : "kotlinx-coroutines-android",
+      "version" : {
+        "requires" : "1.10.2"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "encoder",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "rtmp",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "rtsp",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "srt",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "udp",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "com.github.pedroSG94.RootEncoder",
+      "module" : "common",
+      "version" : {
+        "requires" : "2.6.1"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "library-2.6.1.aar",
+      "url" : "library-2.6.1.aar",
+      "size" : 287308,
+      "sha512" : "f6a05f3ba75b0ce598dbd684cd96a378c7b90ca605172d45d9439bba016e738101e260faf3da77b5dcb7bf8887db5d213c23dd8d2d2f085a882613b30010b1d9",
+      "sha256" : "b636fb576f613877c2c3585560f6d53f6e7f425a5e1aeee58e15d1d07af9fc98",
+      "sha1" : "969f49d257b690fb94e55df56cf90dcd6a386684",
+      "md5" : "2e1ab32d1b8b9dce70e3a3084ccbd417"
+    } ]
+  } ]
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/dialog_background"
+    android:paddingStart="16dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:gravity="center_vertical"
+    android:elevation="8dp">
+
+    <!-- Crash icon -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="⚠"
+        android:textSize="16sp"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Message -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Crash report available"
+        android:textSize="13sp"
+        android:textColor="@color/text_primary"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Dismiss Button -->
+    <Button
+        android:id="@+id/bannerDismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="70dp"
+        android:text="Dismiss"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:textAllCaps="false"
+        android:background="@drawable/button_border"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:layout_marginEnd="6dp"
+        android:nextFocusRight="@+id/bannerView" />
+
+    <!-- View/Submit Button -->
+    <Button
+        android:id="@+id/bannerView"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="70dp"
+        android:text="View"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:background="@drawable/button_primary"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:nextFocusLeft="@id/bannerDismiss" />
+
+</LinearLayout>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Calendar event card for voice sidebar.
+     Matches JS .calendar-event-display__card layout:
+     [Date Icon]  Event Title
+                  Time Range
+                  Location -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/calendar_event_card_bg"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp"
+    android:gravity="center_vertical">
+
+    <!-- Date icon badge (month/day/dayName stacked) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/calendar_date_icon_bg"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:minWidth="56dp">
+
+        <!-- Month (red, uppercase, small) -->
+        <TextView
+            android:id="@+id/calendarMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#DC3545"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.05" />
+
+        <!-- Day number (large bold) -->
+        <TextView
+            android:id="@+id/calendarDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#212529"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:lineSpacingMultiplier="1.0" />
+
+        <!-- Day name (gray, small, uppercase) -->
+        <TextView
+            android:id="@+id/calendarDayName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#6C757D"
+            android:textSize="8sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.03" />
+
+    </LinearLayout>
+
+    <!-- Event details (title, time, location) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <!-- Event title -->
+        <TextView
+            android:id="@+id/calendarTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="1.2" />
+
+        <!-- Time range -->
+        <TextView
+            android:id="@+id/calendarTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#CCCCCC"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp" />
+
+        <!-- Location (optional) -->
+        <TextView
+            android:id="@+id/calendarLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#9CA3AF"
+            android:textSize="11sp"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

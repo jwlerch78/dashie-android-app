@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Debug-only manifest entries. Merged into the final manifest ONLY for debug
+    build variants — never included in release builds shipped to the Play Store.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <!-- Debug: MWW WAV file test via adb broadcast.
+             Exported so adb shell can send the broadcast. Debug-only because
+             an exported receiver in production would let any app on the device
+             trigger arbitrary file reads. -->
+        <receiver
+            android:name="com.dashieapp.Dashie.wakeword.microwakeword.MicroWakeWordTestReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.dashieapp.MWW_TEST" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Debug: simulate a fatal uncaught exception via adb to verify the
+             crash auto-relaunch path (CrashRecovery). Exported so adb can
+             trigger it; debug-only so production can't be force-crashed by
+             another app on the device.
+             adb shell am broadcast -a com.dashieapp.TEST_CRASH \
+               -n com.dashieapp.Dashie/com.dashieapp.Dashie.halite.diagnostics.TestCrashReceiver -->
+        <receiver
+            android:name="com.dashieapp.Dashie.halite.diagnostics.TestCrashReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.dashieapp.TEST_CRASH" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

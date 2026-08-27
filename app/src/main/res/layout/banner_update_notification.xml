@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Update-available banner. Mirrors banner_crash_notification.xml but with
+     three actions: Update now / Update tonight / Dismiss. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/dialog_background"
+    android:paddingStart="16dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:gravity="center_vertical"
+    android:elevation="8dp">
+
+    <!-- Message — text set in DashieUpdateController, which formats @string/
+         update_available_banner with @string/brand_name. -->
+    <TextView
+        android:id="@+id/updateBannerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="@color/text_primary"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Dismiss -->
+    <Button
+        android:id="@+id/updateDismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="70dp"
+        android:text="Dismiss"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:textAllCaps="false"
+        android:background="@drawable/button_border"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:layout_marginEnd="6dp"
+        android:nextFocusRight="@+id/updateTonight" />
+
+    <!-- Update tonight -->
+    <Button
+        android:id="@+id/updateTonight"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="70dp"
+        android:text="Later"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:textAllCaps="false"
+        android:background="@drawable/button_border"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:layout_marginEnd="6dp"
+        android:nextFocusLeft="@id/updateDismiss"
+        android:nextFocusRight="@+id/updateNow" />
+
+    <!-- Update now -->
+    <Button
+        android:id="@+id/updateNow"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="80dp"
+        android:text="Install Now"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:background="@drawable/button_primary"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:nextFocusLeft="@id/updateTonight" />
+
+</LinearLayout>

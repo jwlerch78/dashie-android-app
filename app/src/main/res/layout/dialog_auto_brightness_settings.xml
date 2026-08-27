@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="20dp">
+
+    <!-- Title (fixed at top) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Auto Brightness Range"
+        android:textSize="18sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Scrollable content (intro text lives inside so it frees vertical space
+         on short screens like Lenovo Smart Clock 2 / ~329dp tall) -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Set the brightness range for automatic adjustment based on ambient light."
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Min brightness label and slider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="Min"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary" />
+
+                <SeekBar
+                    android:id="@+id/seekBarBrightnessMin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progress="10"
+                    android:progressTint="@color/dashie_orange"
+                    android:thumbTint="@color/dashie_orange" />
+
+                <TextView
+                    android:id="@+id/textBrightnessMinValue"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:text="10%"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="end" />
+
+            </LinearLayout>
+
+            <!-- Max brightness label and slider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="Max"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary" />
+
+                <SeekBar
+                    android:id="@+id/seekBarBrightnessMax"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressTint="@color/dashie_orange"
+                    android:thumbTint="@color/dashie_orange" />
+
+                <TextView
+                    android:id="@+id/textBrightnessMaxValue"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:text="100%"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="end" />
+
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/sidebar_divider"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Response Curve Section with Live Sensor Display -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Left side: Response Curve options -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Response Curve"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="How quickly brightness adjusts as light changes"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginBottom="8dp" />
+
+                    <RadioGroup
+                        android:id="@+id/radioGroupResponseCurve"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/radioLinear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Linear (default)"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:buttonTint="@color/dashie_orange"
+                            android:paddingStart="8dp" />
+
+                        <RadioButton
+                            android:id="@+id/radioAggressive"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Aggressive (faster brightening)"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:buttonTint="@color/dashie_orange"
+                            android:paddingStart="8dp" />
+
+                        <RadioButton
+                            android:id="@+id/radioGentle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Gentle (stays dimmer longer)"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:buttonTint="@color/dashie_orange"
+                            android:paddingStart="8dp" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <!-- Right side: Live Sensor Display Box -->
+                <LinearLayout
+                    android:id="@+id/liveSensorBox"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/sensor_box_background"
+                    android:padding="12dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center">
+
+                    <!-- Light sensor reading -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Light sensor"
+                        android:textSize="10sp"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/textLuxValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- lux"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/sidebar_divider"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Brightness output -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Brightness"
+                        android:textSize="10sp"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/textBrightnessOutput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--%"
+                        android:textSize="16sp"
+                        android:textColor="@color/dashie_orange"
+                        android:textStyle="bold" />
+
+                    <!-- Brightness bar -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/brightness_bar_background">
+
+                        <View
+                            android:id="@+id/brightnessBarFill"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/dashie_orange" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Button row (fixed at bottom) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="24dp">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="80dp"
+            android:text="Save"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

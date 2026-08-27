@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="24dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Your Free Trial"
+        android:textSize="20sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/dialogMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="To start your trial you'll need a Dashie Account."
+        android:textSize="17sp"
+        android:textColor="@color/text_secondary"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/dialogSubMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get 30 days of Calendar, Chores &amp; Rewards, AI, and all Dashie features free."
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:lineSpacingExtra="2dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Cancel Button -->
+        <android.widget.Button
+            android:id="@+id/buttonNegative"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:defaultFocusHighlightEnabled="false"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Create Account Button (orange) -->
+        <android.widget.Button
+            android:id="@+id/buttonPositive"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="Create Account"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary"
+            android:defaultFocusHighlightEnabled="false"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+    <!-- Already have an account link -->
+    <TextView
+        android:id="@+id/linkSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I already have an account"
+        android:textSize="14sp"
+        android:textColor="#FF8C00"
+        android:gravity="center"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- D.76: opt-out link — dismisses the CC trial-offer tile until next sign-in -->
+    <TextView
+        android:id="@+id/linkDismissTrial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I'm not interested in a trial right now"
+        android:textSize="14sp"
+        android:textColor="#FF8C00"
+        android:gravity="center"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

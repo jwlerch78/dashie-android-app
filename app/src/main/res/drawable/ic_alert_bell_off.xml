@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Alert bell with a diagonal slash to signal muted state. Bell path is
+         identical to ic_alert_bell.xml; additional path draws the slash line. -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M12,5C13.433,5 14.807,5.506 15.819,6.406C16.832,7.306 17.401,8.527 17.401,9.8C17.401,11.769 17.846,13.244 18.423,14.328C19.161,15.713 19.529,16.406 19.509,16.564C19.485,16.749 19.454,16.8 19.303,16.908C19.173,17 18.525,17 17.231,17H6.771C5.476,17 4.829,17 4.699,16.908C4.547,16.8 4.517,16.749 4.493,16.564C4.472,16.406 4.841,15.713 5.579,14.328C6.156,13.244 6.601,11.769 6.601,9.8C6.601,8.527 7.17,7.306 8.183,6.406C9.195,5.506 10.569,5 12,5ZM12,5V3M9.355,20C10.061,20.623 10.989,21.002 12.005,21.002C13.021,21.002 13.949,20.623 14.655,20" />
+    <!-- Diagonal strikethrough line (top-left to bottom-right) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M4,4 L20,20" />
+</vector>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true">
+
+    <!-- Signal Strength Icon -->
+    <ImageView
+        android:id="@+id/signalIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_wifi_signal_4"
+        android:contentDescription="Signal strength" />
+
+    <!-- Network Info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <TextView
+            android:id="@+id/networkName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Network Name"
+            android:textSize="16sp"
+            android:textColor="#424242"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/networkStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Secured"
+            android:textSize="13sp"
+            android:textColor="#9e9e9e"
+            android:layout_marginTop="2dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Lock Icon (secured networks) -->
+    <ImageView
+        android:id="@+id/lockIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_lock"
+        android:contentDescription="Secured network"
+        android:tint="#9e9e9e"
+        android:layout_marginStart="8dp" />
+
+    <!-- Connected Checkmark -->
+    <ImageView
+        android:id="@+id/connectedIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_check"
+        android:contentDescription="Connected"
+        android:tint="#4CAF50"
+        android:layout_marginStart="8dp"
+        android:visibility="gone" />
+
+</LinearLayout>

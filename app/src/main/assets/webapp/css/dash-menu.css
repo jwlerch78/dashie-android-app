@@ -1,0 +1,1159 @@
+/**
+ * Dash Menu Sidebar Styles
+ * Adapted from dashboard.css sidebar, control strip, hamburger menu,
+ * volume-slider, and brightness-slider patterns.
+ *
+ * Supports dark/light mode via prefers-color-scheme media query.
+ * Uses --dm-* namespace to avoid conflicts with variables.css.
+ */
+
+/* ============================================
+   CSS Custom Properties (dark theme defaults)
+   ============================================ */
+
+:root {
+  --dm-bg-primary: #1a1a1a;
+  --dm-bg-secondary: #252525;
+  --dm-bg-tertiary: #333;
+  --dm-text-primary: rgba(255, 255, 255, 0.9);
+  --dm-text-secondary: rgba(255, 255, 255, 0.5);
+  --dm-accent-primary: #4dabf7;
+  --dm-hover-bg: rgba(255, 255, 255, 0.08);
+  --dm-active-bg: rgba(255, 255, 255, 0.12);
+  --dm-selected-fill: rgba(255, 255, 255, 0.1);
+  --dm-sidebar-bg: rgba(0, 0, 0, 0.75);
+  --dm-sidebar-bg-pinned: #0D0D0E;
+  --dm-sidebar-shadow: 0 0 12px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.1);
+  --dm-popout-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  /* Dark theme: SVGs are light-colored, invert to white */
+  --dm-icon-filter: brightness(0) invert(1);
+}
+
+/* Light theme overrides */
+@media (prefers-color-scheme: light) {
+  :root {
+    --dm-bg-primary: #f5f5f5;
+    --dm-bg-secondary: #ffffff;
+    --dm-bg-tertiary: #e0e0e0;
+    --dm-text-primary: rgba(0, 0, 0, 0.87);
+    --dm-text-secondary: rgba(0, 0, 0, 0.54);
+    --dm-accent-primary: #1976d2;
+    --dm-hover-bg: rgba(0, 0, 0, 0.04);
+    --dm-active-bg: rgba(0, 0, 0, 0.08);
+    --dm-selected-fill: rgba(0, 0, 0, 0.06);
+    --dm-sidebar-bg: rgba(255, 255, 255, 0.85);
+    --dm-sidebar-bg-pinned: #F0F0F0;
+    --dm-sidebar-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    --dm-popout-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    /* Light theme: SVGs are light-colored, darken them */
+    --dm-icon-filter: brightness(0) invert(0);
+  }
+}
+
+/* Class-based theme overrides (for software toggle on Android 14+
+   where prefers-color-scheme is stuck) */
+:root.theme-dark {
+  --dm-bg-primary: #1a1a1a;
+  --dm-bg-secondary: #252525;
+  --dm-bg-tertiary: #333;
+  --dm-text-primary: rgba(255, 255, 255, 0.9);
+  --dm-text-secondary: rgba(255, 255, 255, 0.5);
+  --dm-accent-primary: #4dabf7;
+  --dm-hover-bg: rgba(255, 255, 255, 0.08);
+  --dm-active-bg: rgba(255, 255, 255, 0.12);
+  --dm-selected-fill: rgba(255, 255, 255, 0.1);
+  --dm-sidebar-bg: rgba(0, 0, 0, 0.75);
+  --dm-sidebar-bg-pinned: #0D0D0E;
+  --dm-sidebar-shadow: 0 0 12px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.1);
+  --dm-popout-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --dm-icon-filter: brightness(0) invert(1);
+}
+
+:root.theme-light {
+  --dm-bg-primary: #f5f5f5;
+  --dm-bg-secondary: #ffffff;
+  --dm-bg-tertiary: #e0e0e0;
+  --dm-text-primary: rgba(0, 0, 0, 0.87);
+  --dm-text-secondary: rgba(0, 0, 0, 0.54);
+  --dm-accent-primary: #1976d2;
+  --dm-hover-bg: rgba(0, 0, 0, 0.04);
+  --dm-active-bg: rgba(0, 0, 0, 0.08);
+  --dm-selected-fill: rgba(0, 0, 0, 0.06);
+  --dm-sidebar-bg: rgba(255, 255, 255, 0.85);
+  --dm-sidebar-bg-pinned: #F0F0F0;
+  --dm-sidebar-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  --dm-popout-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --dm-icon-filter: brightness(0) invert(0);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: transparent;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ============================================
+   Sidebar Strip (adapted from .dashboard-sidebar)
+   48px collapsed, dark glass background
+   ============================================ */
+
+.dashboard-sidebar {
+  position: fixed;
+  left: 0;
+  top: calc(8px / var(--shell-scale, 1));
+  width: 60px;
+  /* Height in CSS-pixel space (before transform). Transform scales it up visually.
+     Subtract 16px (8px top + 8px bottom) for floating gap. */
+  height: calc((100vh - 16px) / var(--shell-scale, 1));
+  /* Pinned: solid background; overlay mode overrides to semi-transparent */
+  background: var(--dm-sidebar-bg-pinned);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  overflow: visible;
+  /* Scale sidebar proportionally to viewport — uses transform instead of zoom
+     because Android WebView doesn't properly adjust touch coordinates for zoom. */
+  transform: scale(var(--shell-scale, 1));
+  transform-origin: top left;
+  /* Floating panel effect: all corners rounded, theme-aware 3D shadow */
+  border-radius: 10px;
+  box-shadow: var(--dm-sidebar-shadow);
+}
+
+/* Overlay (unpinned) mode: frosted glass background */
+body.sidebar-overlay .dashboard-sidebar {
+  background: var(--dm-sidebar-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ============================================
+   View Switcher Section (top area)
+   Adapted from .dashboard-view-switcher-container
+   ============================================ */
+
+.dashboard-view-switcher-container {
+  padding: 4px 4px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+/* ============================================
+   Control Strip (bottom area)
+   Adapted from .sidebar-control-strip
+   ============================================ */
+
+.sidebar-control-strip {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  padding: 0 0 16px 0;
+  gap: 8px;
+  background: transparent;
+}
+
+/* ============================================
+   Menu Items (unified button class)
+   Adapted from .dashboard-menu__item
+   ============================================ */
+
+.dashboard-menu__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  color: var(--dm-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  text-align: left;
+  white-space: nowrap;
+  height: calc(28px * var(--sidebar-boost, 1.15) * var(--menu-size, 1));
+  line-height: 1.2;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dashboard-menu__item:active {
+  background: var(--dm-active-bg);
+}
+
+/* Active view indicator (adapted from .dashboard-menu__item--active) */
+.dashboard-menu__item--active {
+  border-right-color: var(--dm-accent-primary);
+}
+
+/* Disabled state for locked items */
+.dashboard-menu__item--disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* ============================================
+   Menu Icons (adapted from .dashboard-menu__icon)
+   Uses <img> tags with artwork SVG paths
+   ============================================ */
+
+.dashboard-menu__icon {
+  width: calc(20px * var(--sidebar-boost, 1.15) * var(--menu-size, 1));
+  height: calc(20px * var(--sidebar-boost, 1.15) * var(--menu-size, 1));
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: var(--dm-icon-filter);
+  transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+/* View icons slightly larger (adapted from .dashboard-menu__item--view) */
+.dashboard-menu__item--view .dashboard-menu__icon {
+  width: calc(22px * var(--sidebar-boost, 1.15) * var(--menu-size, 1));
+  height: calc(22px * var(--sidebar-boost, 1.15) * var(--menu-size, 1));
+}
+
+/* Labels (present in DOM for structural parity, hidden since kiosk sidebar doesn't expand) */
+.dashboard-menu__label {
+  display: none;
+}
+
+/* Muted volume state */
+.dashboard-menu__item[data-audio-muted="true"] .dashboard-menu__icon {
+  opacity: 0.5;
+}
+
+/* ============================================
+   Popout Container (slides out to the right)
+   ============================================ */
+
+.dm-popout-container {
+  position: fixed;
+  left: calc(60px * var(--shell-scale, 1) + 8px);
+  top: 50%;
+  z-index: 20;
+  display: none;
+  transform: scale(calc(var(--shell-scale, 1) * var(--sidebar-boost, 1.15) * var(--menu-size, 1)));
+  transform-origin: top left;
+}
+
+.dm-popout-container--visible {
+  display: block;
+}
+
+/* ============================================
+   Backdrop (for dismissing popouts)
+   ============================================ */
+
+.dm-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  display: none;
+}
+
+.dm-backdrop--visible {
+  display: block;
+}
+
+/* ============================================
+   Overlay Backdrop (for dismissing revealed sidebar)
+   Covers viewport area right of the sidebar strip.
+   ============================================ */
+
+.dm-overlay-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 8;
+  background: rgba(0, 0, 0, 0.15);
+  display: none;
+}
+
+.dm-overlay-backdrop--visible {
+  display: block;
+}
+
+/* ============================================
+   Volume Slider Popup
+   Adapted from .volume-slider-* in dashboard.css
+   ============================================ */
+
+.volume-slider-popup {
+  background: var(--dm-bg-secondary);
+  border-radius: 12px;
+  box-shadow: var(--dm-popout-shadow);
+  padding: 16px 20px;
+  border: 1px solid var(--dm-bg-tertiary);
+}
+
+.volume-slider-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+}
+
+.volume-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.volume-slider-track-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+}
+
+.volume-slider-track {
+  position: relative;
+  height: 8px;
+  background: var(--dm-bg-tertiary);
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.volume-slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent-primary, #FF9500);
+  border-radius: 4px;
+  transition: width 0.1s ease;
+  pointer-events: none;
+}
+
+.volume-slider-input {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.volume-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--accent-primary, #FF9500);
+  border: 3px solid var(--dm-bg-secondary);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.volume-slider-input::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+.volume-slider-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.volume-slider-input:disabled::-webkit-slider-thumb {
+  background: var(--dm-text-secondary);
+  cursor: not-allowed;
+}
+
+/* Mute button — circle style matching mic button */
+.volume-slider-mute-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--dm-bg-tertiary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.volume-slider-mute-btn:active {
+  transform: scale(0.95);
+}
+
+.volume-slider-mute-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  transition: opacity 0.15s ease, filter 0.3s ease;
+  filter: var(--dm-icon-filter);
+}
+
+.volume-slider-mute-btn[data-muted="true"] .volume-slider-mute-icon {
+  opacity: 0.5;
+}
+
+/* Mic toggle button (gray circle, 3-state) */
+.volume-slider-mic-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--dm-bg-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s ease, transform 0.1s ease;
+  flex-shrink: 0;
+}
+
+.volume-slider-mic-btn:active {
+  transform: scale(0.95);
+}
+
+.volume-slider-mic-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--dm-text-primary);
+}
+
+/* Hide strikethrough line by default */
+.volume-slider-mic-btn .mic-strike-line {
+  display: none;
+}
+
+/* Show strikethrough when muted */
+.volume-slider-mic-btn[data-mic-state="muted"] .mic-strike-line {
+  display: block;
+}
+
+/* Dim icon when muted */
+.volume-slider-mic-btn[data-mic-state="muted"] .volume-slider-mic-icon {
+  opacity: 0.5;
+}
+
+/* Highlight when show-pill active */
+.volume-slider-mic-btn[data-mic-state="show-pill"] {
+  background: rgba(26, 115, 232, 0.15);
+}
+
+/* Controls row (- number +) */
+.volume-slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.volume-slider-level {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dm-text-primary);
+  min-width: 18px;
+  text-align: center;
+}
+
+.volume-slider-step-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: var(--accent-primary, #FF9500);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.volume-slider-step-btn:active {
+  transform: scale(0.95);
+}
+
+.volume-slider-step-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================
+   Brightness Slider Popup
+   Adapted from .brightness-slider-* in dashboard.css
+   ============================================ */
+
+.brightness-slider-popup {
+  background: var(--dm-bg-secondary);
+  border-radius: 12px;
+  box-shadow: var(--dm-popout-shadow);
+  padding: 16px 20px;
+  border: 1px solid var(--dm-bg-tertiary);
+}
+
+.brightness-slider-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+}
+
+.brightness-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brightness-slider-track-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+}
+
+.brightness-slider-track {
+  position: relative;
+  height: 8px;
+  background: var(--dm-bg-tertiary);
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.brightness-slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent-primary, #FF9500);
+  border-radius: 4px;
+  transition: width 0.1s ease;
+  pointer-events: none;
+}
+
+.brightness-slider-input {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.brightness-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--accent-primary, #FF9500);
+  border: 3px solid var(--dm-bg-secondary);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.brightness-slider-input::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+/* Sun icon button */
+.brightness-slider-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.brightness-slider-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: var(--dm-icon-filter);
+}
+
+/* Controls row (- number +) */
+.brightness-slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.brightness-slider-level {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dm-text-primary);
+  min-width: 18px;
+  text-align: center;
+}
+
+.brightness-slider-step-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: var(--accent-primary, #FF9500);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.brightness-slider-step-btn:active {
+  transform: scale(0.95);
+}
+
+.brightness-slider-step-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Theme toggle button styling (reused by kiosk brightness popout) */
+.brightness-slider-theme-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  padding: 8px 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: opacity 0.2s ease;
+}
+
+.brightness-slider-theme-btn:active {
+  opacity: 0.7;
+}
+
+.brightness-slider-theme-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: var(--dm-icon-filter);
+}
+
+.brightness-slider-theme-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.brightness-slider-theme-label {
+  font-size: 10px;
+  color: var(--dm-text-secondary);
+}
+
+.brightness-slider-theme-mode {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dm-text-primary);
+}
+
+/* ============================================
+   Hamburger Popout Menu
+   Adapted from .hamburger-popout-menu in dashboard.css
+   ============================================ */
+
+.hamburger-popout-menu {
+  background: var(--dm-bg-primary);
+  border: 1px solid var(--dm-bg-tertiary);
+  border-radius: 8px;
+  box-shadow: var(--dm-popout-shadow);
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+.hamburger-menu-item {
+  display: flex;
+  align-items: center;
+  gap: calc(12px * var(--popout-spacing-factor, 1));
+  padding: calc(10px * var(--popout-spacing-factor, 1)) calc(16px * var(--popout-spacing-factor, 1));
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--dm-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  text-align: left;
+  transition: background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hamburger-menu-item:active {
+  background-color: var(--dm-active-bg);
+}
+
+.hamburger-menu-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: var(--dm-icon-filter);
+}
+
+.hamburger-menu-label {
+  font-weight: 500;
+}
+
+/* Divider between standard items and primary action (Unlock App) */
+.hamburger-menu-divider {
+  height: 1px;
+  background: var(--dm-bg-tertiary);
+  margin: calc(4px * var(--popout-spacing-factor, 1)) 12px;
+}
+
+/* Primary action (bold, e.g. Unlock App) */
+.hamburger-menu-item--primary .hamburger-menu-label {
+  font-weight: 700;
+}
+
+/* Section header (e.g. "Quick Settings") */
+.hamburger-menu-header {
+  padding: calc(8px * var(--popout-spacing-factor, 1)) calc(16px * var(--popout-spacing-factor, 1)) calc(4px * var(--popout-spacing-factor, 1));
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dm-text-secondary);
+}
+
+/* Submenu items — show chevron ">" on the right, no icon on left */
+.hamburger-menu-item--submenu {
+  justify-content: space-between;
+}
+
+.hamburger-menu-item--submenu::after {
+  content: '\203A';
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--dm-text-secondary);
+  margin-left: auto;
+  padding-left: 12px;
+}
+
+/* Dashie logo in hamburger popout */
+/* Mark slot. The box used to be 100x44 — a 2.27:1 aspect that matches DASHIE's mark
+   (dashie-logo-orange.png is 2.29:1) and nothing else. Chickadee's is 3.00:1, so
+   `object-fit: contain` fitted it by WIDTH and rendered it 100x33 in a 44px-tall box:
+   24% shorter than Dashie's in the same slot, with its wordmark at ~12px. That is the
+   "tough to make out" John reported — a slot sized for one brand's proportions, not a
+   contrast or an art problem. The asset is already a horizontal lockup (bird left,
+   wordmark right), so the arrangement was never stacked.
+
+   Widening the box lets the wide mark fit by width and use the full 44px height, while
+   Dashie, being taller-proportioned, still fits by HEIGHT at 44px and renders essentially
+   unchanged. One box, both brands better served, no per-edition branching — which is the
+   property this slot should keep.
+
+   max-width is 171px because 44 x 3.88 = 170.8, and 3.88 is the trimmed mark's aspect
+   (854x220 — the lockup spec, see the Chickadee brand-assets README). Sized this way
+   Chickadee fits by height and fills the slot exactly. If that spec's aspect ever changes,
+   this number is its dependent — recompute, do not nudge.
+
+   ⚠️ RECOMPUTED 2026-08-04, doing exactly what the line above says. John's new art moved the
+   trimmed lockup from 867x241 (3.60) to 854x220 (3.88), so the old 158px was no longer
+   44 x aspect: the mark would have fitted by WIDTH and rendered ~41px tall in a 44px slot —
+   a silently under-filled box, which is the failure this comment exists to prevent. The two
+   theme inks share the 854x220 canvas by construction, so one number serves both. */
+.hamburger-menu-logo {
+  padding: 4px 4px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-menu-logo-img {
+  width: 100%;
+  max-width: 171px;
+  height: 44px;
+  object-fit: contain;
+  /* Was 0.85. Measured on the default #252525 surface, that cost Chickadee 8.08:1 → 6.24:1
+     and Dashie 6.90:1 → 5.36:1 — a legibility tax on the exact thing being reported.
+     ⚠️ This affects BOTH brands; if Dashie's mark is meant to stay subdued, restoring 0.85
+     for Dashie alone is the revert, not re-dimming both. */
+  opacity: 1;
+}
+
+/* Locked/unlocked menu sections — toggle visibility based on data-locked.
+   Use display:contents so items flow directly in parent flex column. */
+.hamburger-menu-section--unlocked {
+  display: contents;
+}
+
+.hamburger-menu-section--locked {
+  display: none;
+}
+
+.hamburger-popout-menu[data-locked="true"] .hamburger-menu-section--unlocked {
+  display: none;
+}
+
+.hamburger-popout-menu[data-locked="true"] .hamburger-menu-section--locked {
+  display: contents;
+}
+
+/* ============================================
+   D-Pad Focus Highlights
+   ============================================ */
+
+/* Suppress native browser/WebView focus outlines — we manage focus visually via JS classes */
+.dashboard-menu__item:focus,
+.dashboard-menu__item:focus-visible,
+.hamburger-menu-item:focus,
+.hamburger-menu-item:focus-visible {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none;
+}
+
+/* Prevent Android WebView from showing focus highlight on any sidebar element */
+.dashboard-sidebar *:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Sidebar item focus — orange to match settings modal selection */
+.dashboard-menu__item.dm-dpad-focus {
+  box-shadow: inset 0 0 0 2px #EE9828 !important;
+  background: rgba(238, 152, 40, 0.15) !important;
+}
+
+/* Hamburger popout item focus — orange to match settings modal selection */
+.hamburger-menu-item.dm-dpad-focus {
+  box-shadow: inset 0 0 0 2px #EE9828 !important;
+  background: rgba(238, 152, 40, 0.15) !important;
+}
+
+/* ============================================
+   Dark/Light Mode Toggle (TV devices)
+   ============================================ */
+
+.dm-theme-toggle-popout {
+  min-width: 180px;
+}
+
+.dm-theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--dm-text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.dm-theme-toggle-btn:active {
+  background: var(--dm-active-bg);
+}
+
+.dm-theme-toggle-icon {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.dm-theme-toggle-label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ============================================
+   Permission Dialog (ADB grant instructions)
+   ============================================ */
+
+.dm-permission-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dm-permission-dialog {
+  background: var(--dm-bg-primary, #1a1a1a);
+  border: 1px solid var(--dm-bg-tertiary, #333);
+  border-radius: 14px;
+  padding: 24px;
+  width: min(90vw, 440px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.dm-permission-title {
+  color: var(--dm-text-primary, rgba(255, 255, 255, 0.9));
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.dm-permission-body {
+  color: var(--dm-text-secondary, rgba(255, 255, 255, 0.5));
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.dm-permission-cmd {
+  padding: 0;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--dm-text-primary, rgba(255, 255, 255, 0.9));
+  word-break: break-all;
+  user-select: all;
+  -webkit-user-select: all;
+  margin-bottom: 12px;
+}
+
+.dm-permission-hint {
+  color: var(--dm-text-secondary, rgba(255, 255, 255, 0.5));
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.dm-permission-close-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: #EE9828;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dm-permission-close-btn:active {
+  opacity: 0.8;
+}
+
+/* ============================================
+   Camera Popout (Video Feeds panel)
+   ============================================ */
+
+.dm-camera-popout {
+  min-width: 240px;
+}
+
+.dm-camera-header {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dm-text-primary);
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.dm-camera-actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 14px;
+}
+
+.dm-camera-action-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.dm-camera-action-label {
+  font-size: 10px;
+  color: var(--dm-text-secondary, rgba(255, 255, 255, 0.5));
+  white-space: nowrap;
+  user-select: none;
+}
+
+.dm-camera-action-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--dm-bg-tertiary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+}
+
+.dm-camera-action-btn:active {
+  transform: scale(0.95);
+}
+
+.dm-camera-action-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: var(--dm-icon-filter);
+}
+
+/* Struck state: dimmed icon + diagonal strikethrough line (matches mic mute pattern) */
+.dm-camera-action-btn--struck .dm-camera-action-icon {
+  opacity: 0.4;
+}
+
+.dm-camera-action-btn--struck::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  width: 70%;
+  height: 2px;
+  background: var(--dm-text-primary);
+  transform: rotate(-45deg);
+  transform-origin: center;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* Sidebar camera button — paused state (dimmed + strikethrough) */
+.dashboard-menu__item[data-id="camera"][data-feeds-paused="true"] .dashboard-menu__icon {
+  opacity: 0.35;
+}
+
+.dashboard-menu__item[data-id="camera"][data-feeds-paused="true"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 22%;
+  width: 56%;
+  height: 2px;
+  background: var(--dm-text-primary);
+  transform: rotate(-45deg);
+  transform-origin: center;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* Stream list */
+.dm-camera-stream-list {
+  border-top: 1px solid var(--dm-bg-tertiary);
+  padding-top: 10px;
+}
+
+.dm-camera-stream-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+/* Toggle button (+/-) on the left */
+.dm-camera-stream-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: var(--dm-bg-tertiary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--dm-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.1s ease, color 0.15s ease;
+}
+
+.dm-camera-stream-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.dm-camera-stream-toggle-btn--active {
+  background: var(--accent-primary, #FF9500);
+  color: #fff;
+}
+
+.dm-camera-stream-name {
+  font-size: 13px;
+  color: var(--dm-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  transition: color 0.15s ease;
+}
+
+.dm-camera-stream-name--active {
+  color: var(--accent-primary, #FF9500);
+}
+
+.dm-camera-stream-item--offline .dm-camera-stream-name {
+  color: var(--dm-text-secondary);
+}
+
+.dm-offline-badge {
+  font-size: 10px;
+  color: var(--dm-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dm-camera-stream-empty {
+  font-size: 12px;
+  color: var(--dm-text-secondary);
+  text-align: center;
+  padding: 8px 0;
+}

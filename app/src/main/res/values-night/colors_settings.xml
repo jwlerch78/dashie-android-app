@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings Modal Colors (Dark Theme) -->
+    <!-- iOS-style colors matching the WebView overlay CSS -->
+
+    <!-- Container background (outside modal) -->
+    <color name="settings_backdrop">#80000000</color>
+
+    <!-- Modal container background -->
+    <color name="settings_container_bg">#1C1C1E</color>
+
+    <!-- Screen/page background -->
+    <color name="settings_screen_bg">#1C1C1E</color>
+
+    <!-- Cell/item background -->
+    <color name="settings_cell_bg">#2C2C2E</color>
+
+    <!-- Nav bar background -->
+    <color name="settings_nav_bar_bg">#1C1C1E</color>
+
+    <!-- Text colors -->
+    <color name="settings_text_label">#FFFFFF</color>
+    <color name="settings_text_value">#8E8E93</color>
+    <color name="settings_text_header">#8E8E93</color>
+    <color name="settings_text_info">#8E8E93</color>
+    <color name="settings_text_danger">#FF453A</color>
+
+    <!-- Border/separator -->
+    <color name="settings_border">#38383A</color>
+    <color name="settings_separator">#38383A</color>
+
+    <!-- Toggle track colors -->
+    <color name="settings_toggle_track_off">#39393D</color>
+    <color name="settings_toggle_track_on">@color/dashie_orange</color>
+    <color name="settings_toggle_thumb">#FFFFFF</color>
+
+    <!-- Focus highlight for D-pad navigation (50% opacity orange) -->
+    <color name="settings_focus_highlight">#80FF9500</color>
+
+    <!-- Accent color (shared with main theme) -->
+    <color name="settings_accent">@color/dashie_orange</color>
+</resources>

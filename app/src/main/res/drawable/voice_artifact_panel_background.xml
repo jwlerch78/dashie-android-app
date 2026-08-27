@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Background for the full-screen agenda artifact panel (right 1/3). A slightly
+     lighter/more-opaque fill than the conversation panel (sidebar_panel_background,
+     #D9141414) plus a 2dp left divider line, so the two columns read as distinct. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Left divider line (shows through the inset fill below). -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#40FFFFFF" />
+        </shape>
+    </item>
+    <!-- Panel fill, inset 2dp from the left so the divider line shows. -->
+    <item android:left="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#E61F1F1F" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <!-- CRITICAL: Tell WebView this page supports dark mode to prevent opaque background -->
+  <meta name="color-scheme" content="dark light">
+  <title>Kiosk Services</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      /* Support both color schemes to match parent document */
+      color-scheme: dark light;
+      /* CRITICAL: Multiple transparency declarations for maximum device compatibility.
+         Some devices/WebView versions need specific properties to achieve transparency:
+         - background: transparent works on most
+         - background-color: transparent is more explicit
+         - rgba(0,0,0,0) works better with dark mode
+         - !important ensures no CSS override issues */
+      background: transparent !important;
+      background-color: transparent !important;
+      -webkit-background-color: transparent;
+      /* Allow clicks to pass through to HA underneath */
+      pointer-events: none;
+    }
+
+    /* Force transparency on root element - some devices need this */
+    :root {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    /* Re-enable pointer events on interactive elements */
+    /* Note: Timer overlays are NOT included here - they stay pointer-events: none
+       so clicks pass through to HA dashboard. The .timer-card and .timer-mini
+       elements inside have pointer-events: auto in timer.css */
+    .alarm-overlay,
+    .screensaver,
+    .screensaver-thumbnail,
+    .screensaver-gallery,
+    .drawer-backdrop--open,
+    .drawer-panel--open {
+      pointer-events: auto;
+    }
+
+    /* Screensaver overlay - covers everything when active */
+    .screensaver {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .screensaver--active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .screensaver__background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    /* Dim mode: 85% opacity black overlay */
+    .screensaver--dim .screensaver__background {
+      opacity: 0.85;
+    }
+
+    /* Black mode: 100% opacity */
+    .screensaver--black .screensaver__background {
+      opacity: 1;
+    }
+
+    /* Photos mode: solid black background for photo display */
+    .screensaver--photos .screensaver__background {
+      opacity: 1;
+    }
+
+    /* URL mode: solid black background */
+    .screensaver--url .screensaver__background {
+      opacity: 1;
+    }
+
+    /* URL iframe container (for URL screensaver mode) */
+    .screensaver__url-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 1;
+    }
+
+    /* Photo slideshow container */
+    .screensaver__photos {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    .screensaver--photos .screensaver__photos {
+      display: block;
+    }
+
+    /* Background layer - blurred, zoomed version for portrait photos */
+    .screensaver__photo-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-orientation: from-image; /* Respect EXIF rotation */
+      filter: blur(25px);
+      transform: scale(1.1); /* Slightly larger to prevent blur edge artifacts */
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 0; /* Behind photos */
+    }
+
+    .screensaver__photo-bg--active {
+      opacity: 1;
+      z-index: 1; /* Active background on top of inactive backgrounds */
+    }
+
+    /* Foreground layer - actual photo (letterboxed/pillarboxed) */
+    .screensaver__photo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      image-orientation: from-image; /* Respect EXIF rotation */
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 1; /* Base z-index */
+      background: transparent; /* Transparent so blurred bg shows through for portrait */
+    }
+
+    .screensaver__photo--active {
+      opacity: 1;
+      z-index: 2; /* Active photo on top during crossfade */
+    }
+
+    /* Landscape photos need black background to cover old blurred bg during transition */
+    .screensaver__photo--landscape {
+      background: #000;
+    }
+
+    /* Clock overlay - position and size driven by CSS variables (set by screensaver.js) */
+    .screensaver__clock {
+      position: absolute;
+      top: var(--clock-top, 50%);
+      left: var(--clock-left, 50%);
+      right: var(--clock-right, auto);
+      bottom: var(--clock-bottom, auto);
+      transform: var(--clock-transform, translate(-50%, -50%));
+      z-index: 10; /* Above photos (z-index 2) but below metadata gradient */
+      color: white;
+      text-align: var(--clock-align, center);
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+      display: none;
+    }
+
+    .screensaver--show-clock .screensaver__clock {
+      display: block;
+    }
+
+    .screensaver__time {
+      font-size: var(--clock-font-size, 40px);
+      font-weight: 400;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .screensaver__ampm {
+      font-size: calc(var(--clock-font-size, 40px) * 0.43);
+      font-weight: 400;
+      opacity: 0.9;
+      margin-left: 6px;
+      vertical-align: super;
+    }
+
+    /* Photo metadata - date bottom left, location bottom right (matches Android: 32sp) */
+    .screensaver__metadata {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10; /* Above photos (z-index 2) */
+      padding: 8px 16px 12px 16px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+      display: none;
+    }
+
+    .screensaver--photos.screensaver--show-metadata .screensaver__metadata {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .screensaver__metadata-date,
+    .screensaver__metadata-location {
+      position: static;
+      color: white;
+      font-size: 20px;
+      font-weight: 400;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    .screensaver__metadata-date {
+      text-align: left;
+    }
+
+    .screensaver__metadata-location {
+      text-align: right;
+    }
+
+    /* Timer overlay containers - on top of screensaver */
+    .timer-overlay--normal {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 600;
+    }
+
+    .timer-overlay--minimized {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      z-index: 600;
+    }
+
+    /* Alarm overlay - highest z-index */
+    .alarm-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .alarm-overlay--active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .alarm-overlay__content {
+      background: var(--bg-secondary, #1a1a1a);
+      border-radius: 16px;
+      padding: 32px 48px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      animation: alarm-bounce 0.6s ease-in-out infinite;
+      max-width: 90%;
+    }
+
+    @keyframes alarm-bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .alarm-overlay__icon {
+      color: var(--warning, #f59e0b);
+      margin-bottom: 16px;
+      animation: alarm-icon-pulse 0.6s ease-in-out infinite;
+    }
+
+    @keyframes alarm-icon-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .alarm-overlay__label {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+      margin-bottom: 8px;
+    }
+
+    .alarm-overlay__description {
+      font-size: 16px;
+      color: var(--text-secondary, #b0b0b0);
+      margin-bottom: 24px;
+    }
+
+    .alarm-overlay__dismiss {
+      background: var(--accent-primary, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 48px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .alarm-overlay__dismiss:hover {
+      background: #2563eb;
+    }
+
+    .alarm-overlay__dismiss:active {
+      transform: scale(0.98);
+    }
+
+    /* ==================== Photo Thumbnail (shows after motion wake) ==================== */
+    .screensaver-thumbnail {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      width: 120px;
+      height: 120px;
+      z-index: 900; /* Above screensaver (500) but below alarm (1000) */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .screensaver-thumbnail--active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Ensure child elements receive click/touch events */
+    .screensaver-thumbnail--active * {
+      pointer-events: auto;
+    }
+
+    .screensaver-thumbnail__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Prevent image from blocking touch events */
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .screensaver-thumbnail__close {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 24px;
+      height: 24px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      /* Explicitly enable touch events */
+      touch-action: manipulation;
+    }
+
+    .screensaver-thumbnail__close:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    /* ==================== Gallery Mode (full-screen photo browser) ==================== */
+    .screensaver-gallery {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 800;
+      background: #000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .screensaver-gallery--active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .screensaver-gallery__close {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .screensaver-gallery__close:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .screensaver-gallery__photo-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(25px);
+      transform: scale(1.1);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .screensaver-gallery__photo-bg--active {
+      opacity: 1;
+    }
+
+    .screensaver-gallery__photo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
+
+    .screensaver-gallery__metadata {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 24px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .screensaver-gallery__date,
+    .screensaver-gallery__location {
+      color: white;
+      font-size: 18px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .timer-overlay--normal,
+      .timer-overlay--minimized {
+        right: 8px;
+      }
+      .timer-overlay--normal { top: 8px; }
+      .timer-overlay--minimized { bottom: 8px; }
+    }
+  </style>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/timer.css">
+  <link rel="stylesheet" href="css/drawer.css">
+  <!-- Import Map for Shared Packages (not needed when using bundle) -->
+  <!--
+  <script type="importmap">
+  {
+    "imports": {
+      "@dashieapp/core-utils": "./js/vendor/core-utils/src/index.js",
+      "@dashieapp/timer-service": "./js/vendor/timer-service/src/index.js"
+    }
+  }
+  </script>
+  -->
+</head>
+<body>
+  <!-- NO HA iframe here - this is an overlay that sits ON TOP of HA in the parent WebView -->
+
+  <!-- Screensaver overlay (covers HA when active) -->
+  <div class="screensaver" id="screensaver">
+    <div class="screensaver__background"></div>
+    <div class="screensaver__photos">
+      <!-- Background layers (blurred, for portrait photos) -->
+      <img class="screensaver__photo-bg" id="screensaverPhotoBg1" src="" alt="">
+      <img class="screensaver__photo-bg" id="screensaverPhotoBg2" src="" alt="">
+      <!-- Foreground layers (actual photo) -->
+      <img class="screensaver__photo" id="screensaverPhoto1" src="" alt="">
+      <img class="screensaver__photo" id="screensaverPhoto2" src="" alt="">
+    </div>
+    <div class="screensaver__metadata" id="screensaverMetadata">
+      <div class="screensaver__metadata-date" id="screensaverMetadataDate"></div>
+      <div class="screensaver__metadata-location" id="screensaverMetadataLocation"></div>
+    </div>
+    <div class="screensaver__clock">
+      <div class="screensaver__time">
+        <span id="screensaverTime">12:00</span>
+        <span class="screensaver__ampm" id="screensaverAmPm">am</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timer overlay containers (above screensaver) -->
+  <div class="timer-overlay--normal" id="timerNormal"></div>
+  <div class="timer-overlay--minimized" id="timerMinimized"></div>
+
+  <!-- Alarm overlay (hidden until triggered) -->
+  <div class="alarm-overlay" id="alarmOverlay">
+    <div class="alarm-overlay__content">
+      <div class="alarm-overlay__icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="13" r="8"/>
+          <path d="M12 9v4l2 2"/>
+          <path d="M5 3L2 6"/>
+          <path d="M22 6l-3-3"/>
+        </svg>
+      </div>
+      <div class="alarm-overlay__label" id="alarmLabel">Timer Complete!</div>
+      <div class="alarm-overlay__description" id="alarmDescription"></div>
+      <button class="alarm-overlay__dismiss" id="alarmDismiss">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- Performance timing: capture start time BEFORE module loading begins -->
+  <script>
+    window.__overlayPerfStart = performance.now();
+    window.__overlayPerfMarks = { htmlStart: window.__overlayPerfStart };
+    console.log('[Overlay Perf] HTML parsed, module loading starting at:', window.__overlayPerfStart.toFixed(0), 'ms');
+
+    // CRITICAL: Force transparency via JavaScript as fallback for devices where CSS fails.
+    // Some WebView versions/devices don't respect CSS background: transparent on iframes.
+    // This runs immediately to prevent any flash of white background.
+    (function() {
+      // Apply transparency via multiple methods
+      document.documentElement.style.background = 'transparent';
+      document.documentElement.style.backgroundColor = 'transparent';
+      document.documentElement.style.setProperty('background', 'transparent', 'important');
+      document.documentElement.style.setProperty('background-color', 'transparent', 'important');
+      document.body.style.background = 'transparent';
+      document.body.style.backgroundColor = 'transparent';
+      document.body.style.setProperty('background', 'transparent', 'important');
+      document.body.style.setProperty('background-color', 'transparent', 'important');
+      console.log('[Overlay] Transparency forced via JavaScript');
+
+      // Self-check: After a brief delay, log computed background for diagnostics
+      setTimeout(function() {
+        var htmlBg = window.getComputedStyle(document.documentElement).backgroundColor;
+        var bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Overlay] Transparency check: html=' + htmlBg + ', body=' + bodyBg);
+
+        // Log to Kotlin for crash reports/diagnostics
+        if (window.DashieKiosk && window.DashieKiosk.logEvent) {
+          window.DashieKiosk.logEvent('overlay_transparency_check', JSON.stringify({
+            htmlBg: htmlBg,
+            bodyBg: bodyBg
+          }));
+        }
+      }, 500);
+    })();
+  </script>
+  <!-- Use bundled version for performance (195KB minified vs 41 separate modules) -->
+  <script type="module" src="dist/kiosk-services.bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+{
+  "formatVersion" : "1.1",
+  "component" : {
+    "group" : "com.github.pedroSG94",
+    "module" : "RootEncoder",
+    "version" : "2.6.1",
+    "attributes" : {
+      "org.gradle.status" : "release"
+    }
+  },
+  "createdBy" : {
+    "gradle" : {
+      "version" : "8.10.1"
+    }
+  },
+  "variants" : [ {
+    "name" : "releaseVariantReleaseApiPublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-api"
+    },
+    "dependencies" : [ {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "common-2.6.1.aar",
+      "url" : "common-2.6.1.aar",
+      "size" : 86043,
+      "sha512" : "c83df820912e82eb689cb6542fe1a43822aade962a8a3e056cace4a0b87cf688fe1096783f4c3a6a73c03d01559aeda420e200ec9e6b38b6fd78f9314d7bf0f5",
+      "sha256" : "51d7ae5ea8b66259a6df66b844e3a819f402d2468998198bd427c4f0a35b9ec4",
+      "sha1" : "ab8cc4eda6fce63d602d5976a2ded814087c4248",
+      "md5" : "edf3c3c0c3da85e5bf72f818ba0da20f"
+    } ]
+  }, {
+    "name" : "releaseVariantReleaseRuntimePublication",
+    "attributes" : {
+      "org.gradle.category" : "library",
+      "org.gradle.dependency.bundling" : "external",
+      "org.gradle.libraryelements" : "aar",
+      "org.gradle.usage" : "java-runtime"
+    },
+    "dependencies" : [ {
+      "group" : "io.ktor",
+      "module" : "ktor-network",
+      "version" : {
+        "requires" : "2.3.13"
+      }
+    }, {
+      "group" : "io.ktor",
+      "module" : "ktor-network-tls",
+      "version" : {
+        "requires" : "2.3.13"
+      }
+    }, {
+      "group" : "androidx.annotation",
+      "module" : "annotation",
+      "version" : {
+        "requires" : "1.9.1"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlinx",
+      "module" : "kotlinx-coroutines-android",
+      "version" : {
+        "requires" : "1.10.2"
+      }
+    }, {
+      "group" : "org.jetbrains.kotlin",
+      "module" : "kotlin-stdlib",
+      "version" : {
+        "requires" : "2.1.20"
+      }
+    } ],
+    "files" : [ {
+      "name" : "common-2.6.1.aar",
+      "url" : "common-2.6.1.aar",
+      "size" : 86043,
+      "sha512" : "c83df820912e82eb689cb6542fe1a43822aade962a8a3e056cace4a0b87cf688fe1096783f4c3a6a73c03d01559aeda420e200ec9e6b38b6fd78f9314d7bf0f5",
+      "sha256" : "51d7ae5ea8b66259a6df66b844e3a819f402d2468998198bd427c4f0a35b9ec4",
+      "sha1" : "ab8cc4eda6fce63d602d5976a2ded814087c4248",
+      "md5" : "edf3c3c0c3da85e5bf72f818ba0da20f"
+    } ]
+  } ]
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiosk</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/timer.css">
+
+  <!-- Import Map for Shared Packages -->
+  <script type="importmap">
+  {
+    "imports": {
+      "@dashieapp/core-utils": "./js/vendor/core-utils/src/index.js",
+      "@dashieapp/timer-service": "./js/vendor/timer-service/src/index.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1 class="header__title" id="app-title"></h1>
+      <div class="header__status" id="connectionStatus">Connecting...</div>
+    </header>
+
+    <main class="main">
+      <!-- Timer Section -->
+      <section class="section section--timers">
+        <div class="section__header">
+          <h2 class="section__title">Timers</h2>
+          <button class="btn btn--primary" id="addTimerBtn">+ Add Timer</button>
+        </div>
+        <div class="timer-list" id="timerList">
+          <!-- Timer cards will be inserted here -->
+          <div class="timer-list__empty" id="timerEmpty">
+            <p>No active timers</p>
+            <p class="timer-list__hint">Say "Set a 5 minute timer" or tap the button above</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions (placeholder for future) -->
+      <section class="section section--actions">
+        <h2 class="section__title">Quick Actions</h2>
+        <div class="action-grid">
+          <button class="action-btn" data-action="timer-5">5 min timer</button>
+          <button class="action-btn" data-action="timer-10">10 min timer</button>
+          <button class="action-btn" data-action="timer-15">15 min timer</button>
+          <button class="action-btn" data-action="timer-30">30 min timer</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Add Timer Modal -->
+    <div class="modal" id="addTimerModal" hidden>
+      <div class="modal__backdrop"></div>
+      <div class="modal__content">
+        <h3 class="modal__title">Set Timer</h3>
+        <div class="timer-input">
+          <div class="timer-input__row">
+            <label>
+              <input type="number" id="timerMinutes" value="5" min="0" max="99">
+              <span>minutes</span>
+            </label>
+            <label>
+              <input type="number" id="timerSeconds" value="0" min="0" max="59">
+              <span>seconds</span>
+            </label>
+          </div>
+          <div class="timer-input__row">
+            <label>
+              <span>Description (optional)</span>
+              <input type="text" id="timerDescription" placeholder="e.g., pasta, laundry">
+            </label>
+          </div>
+        </div>
+        <div class="modal__actions">
+          <button class="btn btn--secondary" id="cancelTimerBtn">Cancel</button>
+          <button class="btn btn--primary" id="startTimerBtn">Start Timer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

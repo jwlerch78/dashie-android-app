@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Native bottom bar shown in portrait widgets mode in place of the
+     left sidebar. Mirrors sidebar_strip.xml in content (same buttons),
+     laid out horizontally. System controls (music/camera/volume/
+     brightness/hamburger) sit at the left; view-switcher buttons
+     (calendar/chores/rewards/location/home assistant) sit at the
+     right, per the portrait-mode design call. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomBarRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:visibility="gone"
+    android:clickable="false"
+    android:focusable="false">
+
+    <!-- The actual bar panel — fixed 69dp tall to match sidebar's
+         control-strip width. 8dp side margin matches the sidebar's
+         8dp top/bottom margin for visual symmetry. -->
+    <LinearLayout
+        android:id="@+id/bottomBarPanel"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_sidebar_strip"
+        android:elevation="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- ── System controls (left) — order: Hamburger / Brightness /
+             Volume / Camera / Music. Mirrors the sidebar's bottom-to-top
+             stacking when read from the start edge inward. ──────────── -->
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnHamburger"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:id="@+id/bottomBarIconHamburger"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_hamburger"
+                android:contentDescription="Menu" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnBrightness"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:id="@+id/bottomBarIconBrightness"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_brightness"
+                android:contentDescription="Brightness" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnVolume"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:id="@+id/bottomBarIconVolume"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_volume_up"
+                android:contentDescription="Volume" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnCamera"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bottomBarIconCamera"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_videocam"
+                android:contentDescription="Cameras" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnMusic"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bottomBarIconMusic"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_music"
+                android:contentDescription="Music" />
+        </FrameLayout>
+
+        <!-- Flex spacer pushes view-switcher buttons to the right. -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <!-- ── View switcher (right, right-justified) ─────────────── -->
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnViewCalendar"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bottomBarIconViewCalendar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sidebar_calendar"
+                android:contentDescription="Calendar" />
+            <View
+                android:id="@+id/bottomBarActiveIndicatorViewCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:background="@color/dashie_orange"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnViewChores"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bottomBarIconViewChores"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sidebar_tasks"
+                android:contentDescription="Chores" />
+            <View
+                android:id="@+id/bottomBarActiveIndicatorViewChores"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:background="@color/dashie_orange"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnViewRewards"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bottomBarIconViewRewards"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sidebar_star"
+                android:contentDescription="Rewards" />
+            <View
+                android:id="@+id/bottomBarActiveIndicatorViewRewards"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:background="@color/dashie_orange"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnViewLocation"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bottomBarIconViewLocation"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sidebar_location"
+                android:contentDescription="Location" />
+            <View
+                android:id="@+id/bottomBarActiveIndicatorViewLocation"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:background="@color/dashie_orange"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/bottomBarBtnViewHomeAssistant"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_sidebar_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/bottomBarIconViewHomeAssistant"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sidebar_home_assistant"
+                android:contentDescription="Home Assistant" />
+            <!-- Sign-in required warning. Mirrors sidebar_strip's badge. -->
+            <ImageView
+                android:id="@+id/bottomBarBadgeHaWarning"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_weather_warning"
+                app:tint="#FFA800"
+                android:contentDescription="Sign-in required"
+                android:visibility="gone" />
+            <View
+                android:id="@+id/bottomBarActiveIndicatorViewHomeAssistant"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:background="@color/dashie_orange"
+                android:visibility="gone" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

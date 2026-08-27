@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/radioOption"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:textSize="16sp"
+    android:textColor="@color/text_primary"
+    android:buttonTint="@color/dashie_orange"
+    android:background="?android:attr/selectableItemBackground" />

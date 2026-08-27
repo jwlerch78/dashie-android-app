@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Outlined orange pill button — matches the Cancel button on the JS
+  auth-pairing screen. Used by the photo upload pairing dialog.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFF4E5" />
+            <stroke android:width="2dp" android:color="#FF9500" />
+            <corners android:radius="32dp" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#FF9500" />
+            <stroke android:width="2dp" android:color="#FFFFFF" />
+            <corners android:radius="32dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke android:width="2dp" android:color="#FF9500" />
+            <corners android:radius="32dp" />
+        </shape>
+    </item>
+</selector>

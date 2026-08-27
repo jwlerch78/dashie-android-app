@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Volume popout (tablet): matches JS volume-slider-popup layout at ~1.5x scale.
+     Horizontal row: left column (slider + step controls) | mute circle | mic circle.
+     Wrapped in a HorizontalScrollView so small-portrait screens (e.g. Lenovo Smart
+     Clock 2 at 480x800) can still reach the right-side mute/mic buttons by swiping;
+     on wide screens the content fits without scrolling. -->
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_sidebar_popout"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="480dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center_vertical">
+
+        <!-- Left column: slider on top, step controls below -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Slider track -->
+            <SeekBar
+                android:id="@+id/volumeSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:progress="5"
+                android:progressTint="@color/dashie_orange"
+                android:thumbTint="@color/dashie_orange"
+                android:layout_marginBottom="14dp" />
+
+            <!-- Step controls: [-] [6] [+] centered -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- Minus button (orange filled circle, white icon) -->
+                <TextView
+                    android:id="@+id/volumeBtnMinus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="−"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center"
+                    android:background="@drawable/bg_popout_circle_btn_orange"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <!-- Level number -->
+                <TextView
+                    android:id="@+id/volumeLevel"
+                    android:layout_width="44dp"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center" />
+
+                <!-- Plus button (orange filled circle, white icon) -->
+                <TextView
+                    android:id="@+id/volumeBtnPlus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="+"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center"
+                    android:background="@drawable/bg_popout_circle_btn_orange"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Speaker mute toggle (56dp circle with visible bg) -->
+        <ImageView
+            android:id="@+id/volumeMuteBtn"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:padding="12dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_volume_up"
+            android:background="@drawable/bg_popout_circle_btn"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Mute Speaker" />
+
+        <!-- Mic mute toggle (56dp circle with visible bg) -->
+        <ImageView
+            android:id="@+id/volumeMicBtn"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:padding="12dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_mic_on"
+            android:background="@drawable/bg_popout_circle_btn"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Mute Microphone" />
+
+        <!-- Alerts mute toggle (56dp circle, matches mute/mic style).
+             Controls trigger-based video-feed alert sounds. Moved here from
+             the video-feed strip's control panel so the unified mute lives
+             alongside speaker / mic. -->
+        <ImageView
+            android:id="@+id/volumeAlertsBtn"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:padding="12dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_alert_bell"
+            android:background="@drawable/bg_popout_circle_btn"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Mute Alerts" />
+
+    </LinearLayout>
+
+</HorizontalScrollView>

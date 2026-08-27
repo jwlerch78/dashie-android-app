@@ -1,0 +1,47 @@
+# Vendored third-party binaries — sha256 manifest
+#
+# 🔴 `hash_source` IS A FIELD ON EVERY ROW, NOT A COMMENT, AND IT IS THE POINT OF THIS FILE.
+# It records where each expected hash was computed from: the gradle CACHE — the bytes every
+# tested APK, every device smoke and the green beta gate were built from — independently
+# cross-checked against a fresh jitpack fetch on 2026-08-17 (27/27 files identical).
+#
+# ⚠️ NEVER regenerate these hashes FROM third_party/m2/. A hash whose expected value is derived
+#    from the file it checks does not fail — it passes forever, and the check degenerates into a
+#    file proving it matches itself. To re-verify: re-fetch upstream and diff, or restore from a
+#    cache whose provenance you can state. A regenerator that repoints hash_source at the
+#    vendored tree is FALSIFYING this field, not updating it.
+#
+# .pom AND .module are attested too, not just the .aar: Gradle PREFERS Gradle Module Metadata
+# (.module) over the POM, and vendoring without it silently changed the resolved graph the first
+# time this was attempted (kotlin-stdlib-jdk7/jdk8 dropped out of both configurations). The
+# metadata is part of what determines the shipped classpath, so it is part of what is attested.
+#
+# Columns: coordinates | version | licence | licence_file | file | sha256 | hash_source
+
+com.github.gkonovalov.android-vad:webrtc | 2.0.10 | MIT | third_party/licenses/android-vad-2.0.10-LICENSE.md | webrtc-2.0.10.aar | 9af5ed5185b97dd4832d9cf41e7f1d7d11367760d5011689b5e32b8fee073db4 | gradle-cache(modules-2) verified-against upstream gkonovalov/android-vad@2.0.10
+com.github.gkonovalov.android-vad:webrtc | 2.0.10 | MIT | third_party/licenses/android-vad-2.0.10-LICENSE.md | webrtc-2.0.10.pom | 67b3657a75e1800f5a22e54ce208ebef5a9619a85d5e645f9d6e40df759847be | gradle-cache(modules-2) verified-against upstream gkonovalov/android-vad@2.0.10
+com.github.gkonovalov.android-vad:webrtc | 2.0.10 | MIT | third_party/licenses/android-vad-2.0.10-LICENSE.md | webrtc-2.0.10.module | 19105d8f70cb332b80594ac508cf0350f5f4de822aec907a1b1b9bf9ffa1dde0 | gradle-cache(modules-2) verified-against upstream gkonovalov/android-vad@2.0.10
+com.github.pedroSG94:RTSP-Server | 1.3.6 | Apache-2.0 | third_party/licenses/RTSP-Server-1.3.6-LICENSE.txt | RTSP-Server-1.3.6.aar | 054e12f9076ea8926a5bb77acc6983258571acec198df10e170ff7564284fea8 | gradle-cache(modules-2) verified-against upstream pedroSG94/RTSP-Server@1.3.6
+com.github.pedroSG94:RTSP-Server | 1.3.6 | Apache-2.0 | third_party/licenses/RTSP-Server-1.3.6-LICENSE.txt | RTSP-Server-1.3.6.pom | a9949ba5fdd4cc07fdcce709bbf5bdec4dcc7337a96e506595d2f80d898056a9 | gradle-cache(modules-2) verified-against upstream pedroSG94/RTSP-Server@1.3.6
+com.github.pedroSG94:RTSP-Server | 1.3.6 | Apache-2.0 | third_party/licenses/RTSP-Server-1.3.6-LICENSE.txt | RTSP-Server-1.3.6.module | 58e4ed880c4dd9c536c359cf55d43da01cfc0322fcd2895bca7769598b971a82 | gradle-cache(modules-2) verified-against upstream pedroSG94/RTSP-Server@1.3.6
+com.github.pedroSG94.RootEncoder:library | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | library-2.6.1.aar | b636fb576f613877c2c3585560f6d53f6e7f425a5e1aeee58e15d1d07af9fc98 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:library | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | library-2.6.1.pom | fe5e9594c2b695ac925400aa64eb9daf16e3ae741930f1972fd94ebae3e909ce | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:library | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | library-2.6.1.module | 2e16a2940aa4878dd896bbc992429d146dfbc2806960466c6ba8b2d882054b2b | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:common | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | common-2.6.1.aar | 51d7ae5ea8b66259a6df66b844e3a819f402d2468998198bd427c4f0a35b9ec4 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:common | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | common-2.6.1.pom | c33386f211912da10e574d56089ca8c1ee0dc15ba763d1b514f99f7c1661184d | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:common | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | common-2.6.1.module | 4b79151b80720cfa72200301ae024c59d0e684f774e0b7fa25d518980ebe0dd4 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:encoder | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | encoder-2.6.1.aar | 5195c68a6344505b15159c18756755c9f244d45b37b3968599d71b0ce2fbe1b7 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:encoder | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | encoder-2.6.1.pom | bab6602f00fbd6634df00928f21286224e55669271dca7226f49d8f58275f7e9 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:encoder | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | encoder-2.6.1.module | 2890d6d2de76352e5a514450d4e2db266b7fddaf2a490d1874ef962c8b7fc49b | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:rtmp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | rtmp-2.6.1.aar | e7cc1f691d38f30a8d7c9cbd7ab701811be9caf9d300fc3f2e348b44035b492d | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:rtmp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | rtmp-2.6.1.pom | 92b45b49ee199768b9481dd3c62b8fd5dcac81ce9b6d882a4e6bd0a51c4db99f | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:rtmp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | rtmp-2.6.1.module | 7ea50e9bb1c9b97c0cb006dda802f132f7ab220307168f06df44483d146b77b1 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:rtsp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | rtsp-2.6.1.aar | 81a77797f7333508726630ad096e3c31027500258c09a1a6ce70c7d7d742d2b3 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:rtsp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | rtsp-2.6.1.pom | a9973a83e3194743d0f18e34ffa75b451a26b2400bfa8e529f0838e2c9ade971 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:rtsp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | rtsp-2.6.1.module | 92af48fad438f1d0d161320a1f1f760f7f08af8f2da17f6dee2f8a20b179bbd5 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:srt | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | srt-2.6.1.aar | d16d3a4b23a0a069f9aada349209238bd6344cf377037c22a67336f819ed868a | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:srt | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | srt-2.6.1.pom | b82fc3c3d5b0d3f875bf8e7ef83452dee1bc413f2804e6a3decce516358ad529 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:srt | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | srt-2.6.1.module | 8121e87ed1b2d796a61da70f1a2db40ec914b4bc98278b948c35ccbbb30d7164 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:udp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | udp-2.6.1.aar | 11a804013bd0b0aa80b4aa382c610cc2e262cb1e64612fe3af882262b3775c73 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:udp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | udp-2.6.1.pom | 87fce1a724e4c596092d64942a094b493f9ef6f1a546152fdd5b23a3598e4299 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1
+com.github.pedroSG94.RootEncoder:udp | 2.6.1 | Apache-2.0 | third_party/licenses/RootEncoder-2.6.1-LICENSE.txt | udp-2.6.1.module | 9ffc25de66254ddb622baa8d7166354a313f971c7fd23ea8850b9a19f0228aa1 | gradle-cache(modules-2) verified-against upstream pedroSG94/RootEncoder@2.6.1

@@ -1,0 +1,216 @@
+/**
+ * Dashie Lite - Overlay Styles
+ *
+ * Styles specific to the transparent WebView overlay.
+ * Timer card base styles are in timer.css.
+ * This file handles:
+ * - Overlay container positioning
+ * - Alarm overlay (full-screen modal)
+ * - Overlay-specific timer card enhancements
+ * - Connection indicator (debug)
+ */
+
+/* ==================== Timer Overlay Containers ==================== */
+
+.timer-overlay--normal {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.timer-overlay--normal > * {
+  pointer-events: auto;
+}
+
+.timer-overlay--normal > * * {
+  pointer-events: auto;
+}
+
+.timer-overlay--minimized {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.timer-overlay--minimized > * {
+  pointer-events: auto;
+}
+
+.timer-overlay--minimized > * * {
+  pointer-events: auto;
+}
+
+/* ==================== Overlay-Specific Timer Enhancements ==================== */
+
+/* On transparent overlay, add subtle border for better visibility */
+.timer-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ==================== Alarm Overlay ==================== */
+
+.alarm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: auto;
+}
+
+.alarm-overlay--active {
+  opacity: 1;
+}
+
+.alarm-overlay__content {
+  background: var(--bg-secondary, #1a1a1a);
+  border-radius: 16px;
+  padding: 32px 48px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: alarm-bounce 0.6s ease-in-out infinite;
+  max-width: 90%;
+}
+
+@keyframes alarm-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.alarm-overlay__icon {
+  color: var(--warning, #f59e0b);
+  margin-bottom: 16px;
+  animation: alarm-icon-pulse 0.6s ease-in-out infinite;
+}
+
+@keyframes alarm-icon-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.alarm-overlay__label {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary, #ffffff);
+  margin-bottom: 8px;
+}
+
+.alarm-overlay__description {
+  font-size: 16px;
+  color: var(--text-secondary, #b0b0b0);
+  margin-bottom: 24px;
+}
+
+.alarm-overlay__dismiss {
+  background: var(--accent-primary, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 48px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.alarm-overlay__dismiss:hover {
+  background: #2563eb;
+}
+
+.alarm-overlay__dismiss:active {
+  transform: scale(0.98);
+}
+
+/* ==================== Connection Indicator (Debug) ==================== */
+
+.connection-indicator {
+  position: fixed;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  font-size: 10px;
+  color: #888;
+  z-index: 50;
+  pointer-events: auto;
+}
+
+/* Ensure hidden attribute works (display: flex overrides it otherwise) */
+.connection-indicator[hidden] {
+  display: none;
+}
+
+.connection-indicator__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #dc3545;
+}
+
+.connection-indicator__dot--connected {
+  background: #28a745;
+}
+
+.connection-indicator__text {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ==================== Responsive Adjustments ==================== */
+
+@media (max-width: 480px) {
+  .timer-overlay--normal,
+  .timer-overlay--minimized {
+    right: 8px;
+  }
+
+  .timer-overlay--normal {
+    top: 8px;
+  }
+
+  .timer-overlay--minimized {
+    bottom: 8px;
+  }
+
+  .alarm-overlay__content {
+    padding: 24px 32px;
+  }
+
+  .alarm-overlay__label {
+    font-size: 22px;
+  }
+
+  .alarm-overlay__dismiss {
+    padding: 12px 36px;
+    font-size: 16px;
+  }
+}

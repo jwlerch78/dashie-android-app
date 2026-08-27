@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Trial-expired modal content. Hosted in an AlertDialog so it captures
+  d-pad focus correctly and follows the same pattern as the voice-license
+  purchase + delete-account confirm dialogs. The dialog itself provides
+  the dim background via FLAG_DIM_BEHIND.
+
+  Four D-pad-navigable buttons (vertical column):
+    Subscribe Now (primary, focused by default)
+    Continue with Home Assistant Only (only when HA URL is configured)
+    Exit Dashie (closes the app)
+    Delete Account (destructive, red)
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_background"
+        android:padding="32dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textTrialTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trial Ended"
+            android:textSize="22sp"
+            android:textColor="#FFAA00"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/textTrialBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your Dashie trial has ended. Subscribe to keep using Dashie."
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="20dp" />
+
+        <android.widget.Button
+            android:id="@+id/buttonTrialSubscribe"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:text="Subscribe Now"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary"
+            android:defaultFocusHighlightEnabled="false"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Amazon-flavor alternate primary CTA: opens the mobile-management
+             QR dialog (no in-app payment direction, per Amazon IAP policy).
+             Hidden by default; TrialExpiredOverlayManager makes it visible
+             on amazon-like flavors. -->
+        <Button
+            android:id="@+id/buttonTrialManageAccount"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:text="Manage Dashie Account"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:background="@drawable/button_primary"
+            android:defaultFocusHighlightEnabled="false"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/buttonTrialHaOnly"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:text="Continue with Home Assistant Only"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/buttonTrialExit"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:text="Exit Dashie"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Amazon-flavor Sign Out button. Hidden by default; shown by
+             TrialExpiredOverlayManager on amazon-like flavors where
+             Subscribe/Manage/HA-Only/Delete are all hidden for IAP
+             compliance and the user needs a way to sign out and re-enter
+             with a different account. -->
+        <Button
+            android:id="@+id/buttonTrialSignOut"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:text="Sign Out"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Delete Account button is hidden across ALL flavors. The wall
+             tablet is shared physical hardware — anyone with line of sight
+             could tap Delete Account and wipe the household's account.
+             Account deletion must happen via the web console (which is
+             gated behind sign-in). Kept in the layout so the wireButtons()
+             code in TrialExpiredOverlayManager can still findViewById
+             without an NPE; the visibility="gone" + focus-chain filter
+             keep it off the d-pad path. -->
+        <Button
+            android:id="@+id/buttonTrialDelete"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:text="Delete Account"
+            android:textSize="14sp"
+            android:textColor="#D32F2F"
+            android:textAllCaps="false"
+            android:background="@drawable/button_border"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>

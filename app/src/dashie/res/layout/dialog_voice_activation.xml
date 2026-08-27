@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Voice Control for Home Assistant"
+        android:textSize="20sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/dialogMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Say &quot;Hey Dashie&quot; to control your smart home with voice commands."
+        android:textSize="15sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Email Input (optional) -->
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Email (optional)"
+        android:inputType="textEmailAddress"
+        android:textSize="14sp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
+        android:background="@drawable/edit_text_background"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Marketing Opt-in Checkbox -->
+    <CheckBox
+        android:id="@+id/checkboxOptIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Keep me updated about Dashie"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:checked="true"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Primary Button (Trial) -->
+    <Button
+        android:id="@+id/buttonPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Start 30-day free trial"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:background="@drawable/button_primary"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Secondary Button (Activate) -->
+    <Button
+        android:id="@+id/buttonSecondary"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Activate"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:textAllCaps="false"
+        android:background="@drawable/button_border"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Cancel Button -->
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Cancel"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:textAllCaps="false"
+        android:background="@drawable/button_border" />
+
+</LinearLayout>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  CR2 credit prompt-to-choose (FB25 v2).
+
+  Cloned from dialog_purchase_voice.xml / dialog_subscribe_dashie.xml — same
+  visual hierarchy so all three purchase-adjacent flows feel consistent.
+  Two in-place states driven by CreditBoundaryUi:
+    * Choice state (initial): message + [Not now | Add credits] + settings link.
+      The MVP stance is an explicit choice at $0 — add credits or deliberately
+      switch to local voice — never a silent downgrade.
+    * QR state ("Add credits" tapped): qrSection becomes visible (standard
+      QrCodeGenerator treatment into imageQrCode, like the license/subscribe
+      dialogs) and the focal button turns into "Done".
+  On the amazon flavor the Add-credits button and QR are never shown
+  (Appstore IAP compliance — no in-app path to web billing).
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_background"
+        android:padding="24dp"
+        android:gravity="center">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/dialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Credits"
+            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Message (balance line set programmatically) -->
+        <TextView
+            android:id="@+id/textCreditMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You're out of voice credits. Add credits to keep using Dashie voice, or switch to local voice."
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- QR section (revealed by the Add-credits CTA; never on amazon) -->
+        <LinearLayout
+            android:id="@+id/qrSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imageQrCode"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="Add Credits QR Code"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/textCreditsUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dashieapp.com/add-credits"
+                android:textSize="13sp"
+                android:textColor="@color/link_color"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textAfterPurchase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scan with your phone to add credits. Voice comes back automatically after purchase."
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:paddingHorizontal="8dp" />
+
+        </LinearLayout>
+
+        <!-- Buttons: 2x2 (brand-split T4).
+             Was a single 3-across row. The free alternatives to buying credits must
+             appear IN THIS VIEW — a purchase prompt with no visible alternative reads
+             as a paywall no matter what the docs say — which meant a fourth button, and
+             four across at 13sp truncates "Use your own keys" on a phone-sized dialog.
+             Two rows of two keeps every label at ~50% width.
+             Row 1 = the two free paths. Row 2 = defer, and the paid one (focal). -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <!-- Use local voice (switches in place when a local engine exists) -->
+            <Button
+                android:id="@+id/buttonLocalVoice"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Use local voice"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:textAllCaps="false"
+                android:background="@drawable/button_border"
+                android:layout_marginEnd="6dp" />
+
+            <!-- Use your own keys (BYOK → Console setup; keys are console-side only) -->
+            <Button
+                android:id="@+id/buttonOwnKeys"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Use your own keys"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:textAllCaps="false"
+                android:background="@drawable/button_border"
+                android:layout_marginStart="6dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <!-- Not now (secondary) -->
+            <Button
+                android:id="@+id/buttonNotNow"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Not now"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:textAllCaps="false"
+                android:background="@drawable/button_border"
+                android:layout_marginEnd="6dp" />
+
+            <!-- Add credits (focal; becomes Done in QR state; gone on amazon) -->
+            <Button
+                android:id="@+id/buttonAddCredits"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Add credits"
+                android:textSize="13sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:background="@drawable/button_primary"
+                android:layout_marginStart="6dp" />
+
+        </LinearLayout>
+
+        <!-- Don't-show-again link: suppress future prompts (falls back to the toast) until
+             credits go positive again. -->
+        <TextView
+            android:id="@+id/textDontShowAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't show this again"
+            android:textSize="12sp"
+            android:textColor="@color/link_color"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="6dp"
+            android:paddingHorizontal="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/link_focusable" />
+
+    </LinearLayout>
+
+</ScrollView>

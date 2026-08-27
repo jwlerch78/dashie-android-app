@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+    <!-- Three horizontal lines -->
+    <path
+        android:pathData="M4,6h18v2H4z"
+        android:fillColor="#FFFFFF"/>
+    <path
+        android:pathData="M4,12h18v2H4z"
+        android:fillColor="#FFFFFF"/>
+    <path
+        android:pathData="M4,18h12v2H4z"
+        android:fillColor="#FFFFFF"/>
+    <!-- Play triangle -->
+    <path
+        android:pathData="M21,18L28,23L21,28Z"
+        android:fillColor="#FFFFFF"/>
+</vector>

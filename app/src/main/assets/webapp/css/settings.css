@@ -1,0 +1,2006 @@
+/* css/modules/settings.css - iOS-Style Settings Modal (Legacy Match) */
+
+/* Settings Modal Backdrop */
+.settings-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+/* Settings modal appears over voice overlay when voice overlay is visible */
+body:has(.voice-overlay--visible) .settings-modal {
+  z-index: var(--z-modal-over-voice, 10500);
+}
+
+.settings-modal--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Settings Container - iOS Style */
+.settings-modal__container {
+  width: 80vw;
+  max-width: 690px;
+  height: 92vh;
+  max-height: 680px;
+  background: var(--settings-bg-container);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  transform: scale(0.9);
+  transition: transform var(--transition-fast);
+}
+
+.settings-modal--visible .settings-modal__container {
+  transform: scale(1);
+}
+
+/* iOS Navigation Bar */
+.settings-modal__nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  background: var(--settings-bg-nav);
+  border-bottom: 1px solid var(--settings-border-color);
+  padding: 0 16px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.settings-modal__nav-back,
+.settings-modal__nav-close {
+  background: none;
+  border: none;
+  color: #EE9828;
+  font-size: 17px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0;
+  min-width: 44px;
+  height: 44px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: none;
+}
+
+.settings-modal__nav-back:hover,
+.settings-modal__nav-close:hover {
+  transform: none;
+}
+
+.settings-modal__nav-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--settings-text-label);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Screen Stack Container */
+.settings-modal__content {
+  overflow: hidden;
+  position: relative;
+  height: calc(100% - 44px);
+  padding: 0;
+  flex: 1;
+}
+
+.settings-modal__screens {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Individual Screens */
+.settings-modal__screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--settings-bg-screen);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: none;
+}
+
+.settings-modal__screen--active {
+  display: block;
+}
+
+/* Screen Transitions */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOutLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+.settings-modal__screen--sliding-in-right {
+  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-modal__screen--sliding-in-left {
+  animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-modal__screen--sliding-out-left {
+  animation: slideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-modal__screen--sliding-out-right {
+  animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Settings List */
+.settings-modal__list {
+  padding: 20px 0;
+}
+
+.settings-modal__section {
+  margin: 0 16px 35px 16px;
+}
+
+.settings-modal__section-header {
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.08px;
+  padding: 0 0 6px 0;
+  color: var(--settings-text-header);
+}
+
+.settings-modal__section-title {
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.08px;
+  padding: 0 0 6px 0;
+  color: var(--settings-text-header);
+}
+
+/* Section note - explanatory text below settings items */
+.settings-modal__section-note {
+  font-size: 12px;
+  color: var(--settings-text-header);
+  padding: 8px 16px 4px 16px;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+
+/* iOS-Style Cells */
+.settings-modal__menu-item {
+  background: var(--settings-bg-cell);
+  min-height: 44px;
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--settings-border-color);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.settings-modal__menu-item:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.settings-modal__menu-item:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom: none;
+}
+
+.settings-modal__menu-item:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Focused state for D-pad navigation — uses box-shadow so :focus-visible suppression
+   doesn't interfere (outline:none !important from :focus-visible was killing the
+   outline:solid !important from --selected when both applied to the same element) */
+.settings-modal__menu-item--selected {
+  background: rgba(238, 152, 40, 0.15) !important;
+  box-shadow: inset 0 0 0 2px #EE9828 !important;
+  outline: none !important;
+}
+
+/* Suppress native browser/WebView focus ring — SettingsFocusManager manages focus visually */
+.settings-modal__menu-item:focus,
+.settings-modal__menu-item:focus-visible,
+.settings-modal__nav-back:focus,
+.settings-modal__nav-back:focus-visible,
+.settings-modal__nav-close:focus,
+.settings-modal__nav-close:focus-visible {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Disable D-pad focus highlighting on touch devices (tablets, phones) */
+@media (pointer: coarse) and (hover: none) {
+  .settings-modal__menu-item--selected,
+  .settings-modal__menu-item.focused,
+  [data-focusable].settings-modal__menu-item--selected {
+    outline: none !important;
+    background: var(--settings-bg-cell) !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Cell Content */
+.settings-modal__menu-label {
+  font-size: 17px;
+  color: var(--settings-text-label);
+  font-weight: 400;
+  flex: 1;
+}
+
+.settings-modal__menu-sublabel {
+  font-size: 15px;
+  color: var(--settings-text-value);
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+.settings-modal__cell-value {
+  font-size: 17px;
+  color: var(--settings-text-value);
+  font-weight: 400;
+  margin-right: 8px;
+}
+
+.settings-modal__menu-chevron {
+  font-size: 20px;
+  color: var(--settings-chevron-color);
+  font-weight: 300;
+}
+
+.settings-modal__cell-chevron {
+  font-size: 20px;
+  color: var(--settings-chevron-color);
+  font-weight: 300;
+}
+
+/* Cell icon for emoji */
+.settings-modal__cell-icon {
+  font-size: 20px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+/* Cell icon for images (e.g. Spotify logo) */
+.settings-modal__cell-icon-img {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Invert dark icons in dark mode (e.g. Home Assistant black icon) */
+.settings-modal__cell-icon-img--invert {
+  filter: none;
+}
+
+/* Dark theme variants */
+body.theme-dark .settings-modal__cell-icon-img--invert,
+body.theme-halloween-dark .settings-modal__cell-icon-img--invert,
+body.theme-christmas-dark .settings-modal__cell-icon-img--invert {
+  filter: invert(1);
+}
+
+/* ============================================================================
+   CHECKMARKS & INDICATORS
+   ============================================================================
+   IMPORTANT: All checkmarks, chevrons, and indicators MUST use CSS classes
+   defined here. NEVER use inline styles for colors as they break theming.
+
+   Available classes:
+   - .settings-modal__cell-checkmark: Standard checkmark (right-aligned)
+   - .settings-modal__cell-chevron: Navigation chevron (theme-aware)
+
+   Checkmarks use the orange color (#EE9828) which works in both themes.
+   ============================================================================ */
+
+.settings-modal__cell-checkmark {
+  font-size: 20px;
+  color: #EE9828;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: right;
+}
+
+/* State indicator dots (speaker playback state) */
+.settings-modal__state-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+  background-color: #808080;
+}
+.settings-modal__state-dot--playing { background-color: #34C759; }
+.settings-modal__state-dot--paused  { background-color: #FF9500; }
+
+/* Inline speaker badges (Default label, Set as default action) */
+.settings-modal__speaker-badge {
+  color: #EE9828;
+  font-size: 0.85em;
+  font-weight: 500;
+  margin-left: 4px;
+}
+.settings-modal__speaker-badge--action {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Selectable cells (for radio/checkbox style options) */
+.settings-modal__menu-item--selectable {
+  cursor: pointer;
+}
+
+/* Page Content (for blank pages) */
+.settings-modal__page-content {
+  padding: 20px 16px;
+}
+
+/* Empty State (for blank pages during development) */
+.settings-modal__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.settings-modal__empty-icon {
+  font-size: 48px;
+  opacity: 0.3;
+  margin-bottom: 16px;
+}
+
+.settings-modal__empty-text {
+  font-size: 17px;
+  color: var(--settings-text-value);
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.settings-modal__empty-text:first-of-type {
+  color: var(--settings-text-label);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Loading Spinner */
+.settings-modal__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--settings-border-color, rgba(255, 255, 255, 0.2));
+  border-top-color: var(--settings-accent-color, #007AFF);
+  border-radius: 50%;
+  animation: settings-spinner 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes settings-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Scrollbar styling for webkit browsers */
+.settings-modal__screen::-webkit-scrollbar {
+  width: 8px;
+}
+
+.settings-modal__screen::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.settings-modal__screen::-webkit-scrollbar-thumb {
+  background: var(--settings-scrollbar);
+  border-radius: 4px;
+}
+
+.settings-modal__screen::-webkit-scrollbar-thumb:hover {
+  background: var(--settings-scrollbar-hover);
+}
+
+/* Toggle Switch */
+.settings-modal__toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.settings-modal__toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-modal__toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--settings-toggle-bg);
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.settings-modal__toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--settings-toggle-knob);
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.settings-modal__toggle-switch input:checked + .settings-modal__toggle-slider {
+  background-color: #EE9828;
+}
+
+.settings-modal__toggle-switch input:checked + .settings-modal__toggle-slider:before {
+  transform: translateX(18px);
+}
+
+/* Toggle cell styling */
+.settings-modal__menu-item--toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+}
+
+.settings-modal__menu-item--toggle .settings-modal__menu-label {
+  flex: 1;
+}
+
+.settings-modal__menu-item--toggle .settings-modal__toggle-switch {
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+/* Text Input Rows */
+.settings-modal__input-row {
+  background: var(--settings-bg-cell);
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--settings-border-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.settings-modal__input-row:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.settings-modal__input-row:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom: none;
+}
+
+.settings-modal__input-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--settings-text-label);
+  margin-bottom: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.settings-modal__text-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 17px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--settings-bg-input);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease;
+  color: var(--settings-text-label);
+}
+
+.settings-modal__text-input:focus {
+  border-color: #EE9828;
+  box-shadow: 0 0 0 3px rgba(238, 152, 40, 0.1);
+}
+
+.settings-modal__text-input:disabled {
+  background: var(--settings-bg-disabled);
+  color: var(--settings-text-value);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.settings-modal__text-input::placeholder {
+  color: var(--settings-text-value);
+  opacity: 0.5;
+}
+
+.settings-modal__helper-text {
+  font-size: 12px;
+  color: var(--settings-text-value);
+  margin-top: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Button-style menu item */
+.settings-modal__menu-item--button {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.settings-modal__menu-item--button:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.settings-modal__menu-item--button:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile-specific overrides */
+@media (max-width: 599px) {
+  .settings-modal__container {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  /* Account for iOS notch/status bar on mobile */
+  .settings-modal__nav-bar {
+    padding-top: max(12px, calc(env(safe-area-inset-top, 0px) + 8px));
+    min-height: calc(44px + env(safe-area-inset-top, 0px));
+  }
+
+  /* Also add safe-area padding at the bottom for home indicator */
+  .settings-modal__screen {
+    padding-bottom: max(20px, calc(env(safe-area-inset-bottom, 0px) + 20px));
+  }
+}
+
+/* ===== ACCOUNT SETTINGS PAGE ===== */
+
+.settings-account-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-account-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.settings-account-photo-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--settings-toggle-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--settings-text-value);
+}
+
+.settings-account-details {
+  flex: 1;
+}
+
+.settings-account-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--settings-text-label);
+  margin-bottom: 2px;
+}
+
+.settings-account-email {
+  font-size: 13px;
+  color: var(--settings-text-value);
+}
+
+/* Info rows for subscription, etc. */
+.settings-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--settings-border-color);
+}
+
+.settings-info-row:last-child {
+  border-bottom: none;
+}
+
+.settings-info-label {
+  font-size: 15px;
+  color: var(--settings-text-label);
+}
+
+.settings-info-value {
+  font-size: 15px;
+  color: var(--settings-text-value);
+}
+
+/* Status indicators */
+.settings-info-value.coming-soon {
+  color: var(--settings-text-value);
+  font-style: italic;
+}
+
+.settings-info-value.status-ok {
+  color: #34C759;
+  font-weight: 500;
+}
+
+.settings-info-value.status-error {
+  color: #FF3B30;
+  font-weight: 500;
+}
+
+.settings-info-value.monospace {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 13px;
+}
+
+.settings-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-button--danger {
+  background: #C53030;
+  color: white;
+}
+
+.settings-button--danger:hover {
+  background: #9B2C2C;
+}
+
+.settings-button--danger:active {
+  background: #742A2A;
+}
+
+.settings-button--danger:disabled {
+  background: #CBD5E0;
+  color: #A0AEC0;
+  cursor: not-allowed;
+}
+
+/* Danger menu item (for destructive actions like Erase All Data) */
+.settings-modal__menu-item--danger .settings-modal__menu-label {
+  color: #FF3B30;
+  font-weight: 500;
+}
+
+.settings-modal__menu-item--danger:hover,
+.settings-modal__menu-item--danger:focus {
+  background: rgba(255, 59, 48, 0.05);
+}
+
+.settings-modal__menu-item--danger:active {
+  background: rgba(255, 59, 48, 0.1);
+}
+
+/* Disabled menu item (for sleep/wake time when timer is off) */
+.settings-modal__menu-item--disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.settings-modal__menu-item--disabled .settings-modal__menu-label,
+.settings-modal__menu-item--disabled .settings-modal__cell-value,
+.settings-modal__menu-item--disabled .settings-modal__cell-chevron {
+  color: var(--settings-chevron-color);
+}
+
+/* Lock icon for voice locked by personality */
+.settings-modal__cell-lock {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* Permission status indicators */
+.settings-modal__status--granted {
+  color: var(--color-success, #34c759);
+}
+
+.settings-modal__status--needed {
+  color: var(--color-warning, #ff9500);
+}
+
+/* Wake Word Sample Recording Page */
+.wake-word-instructions {
+  color: var(--settings-text-color);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.wake-word-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wake-word-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--settings-border-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.wake-word-progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.wake-word-progress-text {
+  color: var(--settings-text-color);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ============================================================================
+   CALENDAR TAGS STYLES
+   ============================================================================ */
+
+/* Tag pills in calendar categorization screen */
+.calendar-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--accent-color, #4285f4);
+  color: white;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.calendar-tag-remove {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 2px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.calendar-tag-remove:hover {
+  opacity: 1;
+}
+
+.calendar-tags-empty {
+  color: var(--settings-text-value);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Tag input field */
+.calendar-tag-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--settings-border-color);
+  border-radius: 6px;
+  background: var(--settings-bg-input, var(--settings-bg-cell));
+  color: var(--settings-text-primary, var(--settings-text-label));
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.calendar-tag-input:focus {
+  outline: none;
+  border-color: var(--accent-color, #4285f4);
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+.calendar-tag-input::placeholder {
+  color: var(--settings-text-value);
+  opacity: 0.7;
+}
+
+/* Add button */
+.calendar-tag-add-btn {
+  padding: 8px 16px;
+  background: var(--accent-color, #4285f4);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.calendar-tag-add-btn:hover {
+  background: var(--accent-color-hover, #3367d6);
+}
+
+.calendar-tag-add-btn:active {
+  background: var(--accent-color-active, #2850a7);
+}
+
+/* Tag indicator pills (shown in calendar list) */
+.calendar-indicator-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.calendar-indicator-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  background: var(--settings-border-color);
+  color: var(--settings-text-value);
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* Tags shown under calendar name in list */
+.calendar-item-tags {
+  font-size: 12px;
+  color: var(--settings-text-value);
+  margin-top: 0;
+  line-height: 1.2;
+}
+
+/* ============================================================================
+   Personality Editor Modal
+   ============================================================================ */
+
+/* Overlay */
+.personality-editor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001; /* Above settings modal */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.personality-editor-overlay--visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Modal */
+.personality-editor-modal {
+  background: var(--settings-bg-container, #1c1c1e);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: personality-editor-slide-up 0.3s ease;
+}
+
+@keyframes personality-editor-slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.personality-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--settings-border-color);
+  flex-shrink: 0;
+}
+
+.personality-editor-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--settings-text-label);
+  margin: 0;
+}
+
+.personality-editor-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--settings-text-value);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.personality-editor-close:hover {
+  background: var(--settings-bg-nav);
+  color: var(--settings-text-label);
+}
+
+/* Content */
+.personality-editor-content {
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  position: relative;
+}
+
+/* Field */
+.personality-editor-field {
+  margin-bottom: 20px;
+}
+
+.personality-editor-field:last-child {
+  margin-bottom: 0;
+}
+
+.personality-editor-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--settings-text-header);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.personality-editor-hint {
+  font-size: 12px;
+  color: var(--settings-text-value);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* Input */
+.personality-editor-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--settings-bg-input);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--settings-text-label);
+  box-sizing: border-box;
+}
+
+.personality-editor-input:focus {
+  outline: none;
+  border-color: #EE9828;
+}
+
+.personality-editor-input::placeholder {
+  color: var(--settings-text-value);
+  opacity: 0.6;
+}
+
+/* Textarea */
+.personality-editor-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--settings-bg-input);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--settings-text-label);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box;
+}
+
+.personality-editor-textarea:focus {
+  outline: none;
+  border-color: #EE9828;
+}
+
+.personality-editor-textarea::placeholder {
+  color: var(--settings-text-value);
+  opacity: 0.5;
+}
+
+/* Select */
+.personality-editor-select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--settings-bg-input);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--settings-text-label);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.personality-editor-select:focus {
+  outline: none;
+  border-color: #EE9828;
+}
+
+/* Start with existing personality button */
+.personality-editor-start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--settings-bg-cell);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--settings-text-label);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.personality-editor-start-btn:hover {
+  background: var(--settings-bg-nav);
+}
+
+.personality-editor-start-btn .chevron {
+  color: var(--settings-chevron-color);
+}
+
+/* Personality submenu for selecting base */
+.personality-editor-submenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--settings-bg-container);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.personality-editor-submenu--visible {
+  transform: translateX(0);
+}
+
+.personality-editor-submenu-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--settings-border-color);
+  gap: 12px;
+}
+
+.personality-editor-submenu-back {
+  background: none;
+  border: none;
+  color: #EE9828;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.personality-editor-submenu-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--settings-text-label);
+  margin: 0;
+}
+
+.personality-editor-submenu-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.personality-editor-submenu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--settings-bg-cell);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.personality-editor-submenu-item:hover {
+  background: var(--settings-bg-nav);
+}
+
+.personality-editor-submenu-item-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--settings-text-label);
+}
+
+.personality-editor-submenu-item-desc {
+  font-size: 13px;
+  color: var(--settings-text-value);
+  margin-top: 2px;
+}
+
+/* Radio Group */
+.personality-editor-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.personality-editor-radio {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--settings-bg-cell);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.personality-editor-radio:hover {
+  background: var(--settings-bg-nav);
+}
+
+.personality-editor-radio:has(input:checked) {
+  border-color: #EE9828;
+  background: rgba(238, 152, 40, 0.1);
+}
+
+.personality-editor-radio input {
+  display: none;
+}
+
+.personality-editor-radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--settings-border-color);
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+  position: relative;
+  margin-top: 2px;
+}
+
+.personality-editor-radio:has(input:checked) .personality-editor-radio-custom {
+  border-color: #EE9828;
+}
+
+.personality-editor-radio:has(input:checked) .personality-editor-radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: #EE9828;
+  border-radius: 50%;
+}
+
+.personality-editor-radio-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.personality-editor-radio-label strong {
+  color: var(--settings-text-label);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.personality-editor-radio-desc {
+  color: var(--settings-text-value);
+  font-size: 13px;
+}
+
+/* Error */
+.personality-editor-error {
+  padding: 12px 14px;
+  background: rgba(255, 59, 48, 0.15);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  border-radius: 8px;
+  color: #ff3b30;
+  font-size: 14px;
+  margin-top: 16px;
+}
+
+/* Footer */
+.personality-editor-footer {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-top: 1px solid var(--settings-border-color);
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.personality-editor-footer-spacer {
+  flex: 1;
+}
+
+/* Buttons */
+.personality-editor-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.personality-editor-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.personality-editor-btn--primary {
+  background: #EE9828;
+  color: white;
+}
+
+.personality-editor-btn--primary:hover:not(:disabled) {
+  background: #D4861F;
+}
+
+.personality-editor-btn--secondary {
+  background: var(--settings-bg-cell);
+  color: var(--settings-text-label);
+  border: 1px solid var(--settings-border-color);
+}
+
+.personality-editor-btn--secondary:hover:not(:disabled) {
+  background: var(--settings-bg-nav);
+}
+
+.personality-editor-btn--danger {
+  background: rgba(255, 59, 48, 0.15);
+  color: #ff3b30;
+  border: 1px solid rgba(255, 59, 48, 0.3);
+}
+
+.personality-editor-btn--danger:hover:not(:disabled) {
+  background: rgba(255, 59, 48, 0.25);
+}
+
+/* Voice Row - Select + Preview Button */
+.personality-editor-voice-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.personality-editor-voice-row .personality-editor-select {
+  flex: 1;
+}
+
+.personality-editor-preview-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--settings-bg-cell);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  color: var(--settings-text-label);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.personality-editor-preview-btn:hover:not(:disabled) {
+  background: var(--settings-bg-nav);
+  border-color: #EE9828;
+}
+
+.personality-editor-preview-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.personality-editor-preview-btn .preview-icon {
+  font-size: 12px;
+  color: #EE9828;
+}
+
+.personality-editor-preview-btn.loading .preview-icon {
+  animation: spin 1s linear infinite;
+}
+
+.personality-editor-preview-btn.loading .preview-text {
+  display: none;
+}
+
+.personality-editor-preview-btn.loading::after {
+  content: 'Loading...';
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Copy & Customize Button for Templates */
+.personality-editor-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  margin-top: 16px;
+  background: rgba(238, 152, 40, 0.1);
+  border: 1px dashed #EE9828;
+  border-radius: 10px;
+  color: #EE9828;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.personality-editor-copy-btn:hover {
+  background: rgba(238, 152, 40, 0.2);
+}
+
+/* Template View (Read-only fields) */
+.personality-editor-readonly-field {
+  padding: 12px 14px;
+  background: var(--settings-bg-nav);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  color: var(--settings-text-value);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.personality-editor-readonly-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--settings-bg-nav);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 8px;
+  min-height: 44px;
+}
+
+.personality-editor-readonly-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--settings-bg-cell);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 16px;
+  font-size: 13px;
+  color: var(--settings-text-label);
+}
+
+/* Create New Personality Button in Selection Screen */
+.personality-create-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  margin-top: 16px;
+  background: rgba(238, 152, 40, 0.1);
+  border: 1px dashed #EE9828;
+  border-radius: 10px;
+  color: #EE9828;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.personality-create-btn:hover {
+  background: rgba(238, 152, 40, 0.2);
+}
+
+.personality-create-btn:active {
+  background: rgba(238, 152, 40, 0.3);
+}
+
+/* Edit button for custom personalities */
+.settings-modal__edit-btn {
+  padding: 4px 12px;
+  background: var(--settings-bg-cell);
+  border: 1px solid var(--settings-border-color);
+  border-radius: 6px;
+  color: #EE9828;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 8px;
+}
+
+.settings-modal__edit-btn:hover {
+  background: rgba(238, 152, 40, 0.15);
+  border-color: #EE9828;
+}
+
+.settings-modal__edit-btn:active {
+  background: rgba(238, 152, 40, 0.25);
+}
+
+/* ============================================================================
+   MOBILE-FRIENDLY SETTINGS STYLES
+   Makes Settings look consistent with MobileDashboard pages on smaller screens
+   ============================================================================ */
+
+@media (max-width: 599px) {
+  /* Use mobile color variables for backgrounds - match mobile dashboard modal */
+  .settings-modal__screen {
+    background: var(--mobile-bg-primary, #FCFCFF);
+  }
+
+  /* Nav bar styling for mobile - match mobile page headers */
+  /* IMPORTANT: Preserve safe-area-inset-top for iOS notch/status bar */
+  .settings-modal__nav-bar {
+    height: auto;
+    min-height: calc(56px + env(safe-area-inset-top, 0px));
+    padding: max(16px, calc(env(safe-area-inset-top, 0px) + 8px)) 20px 16px 20px;
+    background: var(--mobile-bg-primary, var(--settings-bg-nav));
+    border-bottom: 1px solid var(--mobile-border-color, var(--settings-border-color));
+  }
+
+  .settings-modal__nav-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #757575;
+    margin: 0;
+    text-align: center;
+  }
+
+  .settings-modal__nav-back,
+  .settings-modal__nav-close {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--mobile-accent-color, #EE9828);
+    min-width: auto;
+    height: auto;
+    padding: 8px 0;
+  }
+
+  /* Adjust content area for taller nav bar */
+  .settings-modal__content {
+    height: calc(100% - 56px);
+  }
+
+  /* Section styling - match mobile page card style */
+  .settings-modal__section {
+    margin: 0 16px 20px 16px;
+    background: var(--mobile-bg-primary, var(--settings-bg-cell));
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* Section header - match mobile style */
+  .settings-modal__section-header {
+    padding: 16px 16px 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--mobile-text-secondary, var(--settings-text-header));
+    background: transparent;
+  }
+
+  .settings-modal__section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--mobile-text-secondary, var(--settings-text-header));
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Section content - better padding on mobile */
+  .settings-modal__section-content {
+    padding: 0 16px 16px 16px;
+  }
+
+  /* Root menu - match mobile dashboard menu style (separated rounded items) */
+  .settings-modal__screen[data-screen="main"] .settings-modal__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 16px;
+  }
+
+  .settings-modal__screen[data-screen="main"] .settings-modal__menu-item {
+    min-height: 50px;
+    padding: 16px 20px;
+    background: var(--mobile-bg-secondary, #FFFFFF);
+    border: none;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .settings-modal__screen[data-screen="main"] .settings-modal__menu-item:active {
+    background: var(--mobile-bg-active, #E8E8EA);
+    transform: translateX(2px);
+  }
+
+  .settings-modal__screen[data-screen="main"] .settings-modal__menu-label {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--mobile-text-primary, #424242);
+  }
+
+  .settings-modal__screen[data-screen="main"] .settings-modal__menu-chevron {
+    font-size: 24px;
+    color: var(--mobile-text-tertiary, #8E8E93);
+  }
+
+  /* Sub-pages menu items - grouped style with connected rows */
+  .settings-modal__menu-item {
+    min-height: 50px;
+    padding: 14px 16px;
+    background: var(--mobile-bg-primary, var(--settings-bg-cell));
+    border-bottom: 1px solid var(--mobile-border-color, var(--settings-border-color));
+  }
+
+  .settings-modal__menu-item:first-child {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .settings-modal__menu-item:last-child {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom: none;
+  }
+
+  /* Info rows - match mobile profile page styling */
+  .settings-info-row {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--mobile-border-color, var(--settings-border-color));
+  }
+
+  .settings-info-label {
+    font-size: 15px;
+    color: var(--mobile-text-primary, var(--settings-text-label));
+  }
+
+  .settings-info-value {
+    font-size: 15px;
+    color: var(--mobile-text-secondary, var(--settings-text-value));
+  }
+
+  .settings-info-value.monospace {
+    font-size: 13px;
+  }
+
+  /* List padding adjustment */
+  .settings-modal__list {
+    padding: 16px 0;
+  }
+
+  /* Disable D-pad focus highlighting on mobile (orange outline) */
+  .settings-modal__menu-item--selected,
+  .settings-modal__menu-item.focused,
+  .settings-modal__menu-item:focus,
+  [data-focusable].settings-modal__menu-item--selected {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Main menu items keep their white background when selected */
+  .settings-modal__screen[data-screen="main"] .settings-modal__menu-item--selected,
+  .settings-modal__screen[data-screen="main"] .settings-modal__menu-item.focused {
+    background: var(--mobile-bg-secondary, #FFFFFF) !important;
+  }
+
+  /* Sub-page menu items keep their background when selected */
+  .settings-modal__screen:not([data-screen="main"]) .settings-modal__menu-item--selected,
+  .settings-modal__screen:not([data-screen="main"]) .settings-modal__menu-item.focused {
+    background: var(--mobile-bg-primary, var(--settings-bg-cell)) !important;
+  }
+}
+
+/* ============================================================================
+   CALENDAR MEMBER SELECTOR (Avatar Circles)
+   Works on both mobile and desktop
+   ============================================================================ */
+
+.calendar-member-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+}
+
+.calendar-member-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px;
+}
+
+.calendar-member-circle__avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  transition: transform 0.2s;
+}
+
+.calendar-member-circle:hover .calendar-member-circle__avatar {
+  transform: scale(1.1);
+}
+
+.calendar-member-circle.selected .calendar-member-circle__avatar {
+  box-shadow: 0 0 0 3px #007AFF;
+}
+
+.calendar-member-circle__check {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #007AFF;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border: 2px solid white;
+}
+
+.calendar-member-circle__name {
+  font-size: 11px;
+  color: var(--settings-text-value, #666);
+  text-align: center;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Device info footer (kiosk settings root menu) */
+.settings-modal__device-footer {
+  margin-top: -25px;
+  padding: 8px 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--settings-text-value, #888);
+  opacity: 0.7;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   CONTROL CENTER OVERLAY — pre-rendered standalone overlay for instant open.
+   Same dimensions as .settings-modal__container for visual consistency.
+   ========================================================================== */
+
+.cc-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: var(--z-modal);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.cc-overlay__container {
+    width: 80vw;
+    max-width: 690px;
+    height: 92vh;
+    max-height: 680px;
+    background: var(--settings-bg-container);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.cc-overlay__content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ==========================================================================
+   CONTROL CENTER — compact 2-column layout with status indicators.
+   Scoped via .cc-* classes so it doesn't affect other settings pages.
+   ========================================================================== */
+
+.cc-page {
+  padding: 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ── 2-column grid ─────────────────────────────────────────────── */
+
+.cc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+}
+
+/* Column placement for flat grid items (no wrapper divs) */
+.cc-grid [data-cc-col="0"] { grid-column: 1; }
+.cc-grid [data-cc-col="1"] { grid-column: 2; }
+
+/* ── Section headers ───────────────────────────────────────────── */
+
+.cc-section-header {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--settings-text-header, #9E9E9E);
+  padding: 6px 4px 4px;
+  line-height: 1;
+}
+
+.cc-section-header--spaced {
+  margin-top: 18px;
+}
+
+/* ── Card (shared base for feature + nav cards) ────────────────── */
+
+.cc-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 10px !important;
+  margin-bottom: 2px;
+  border-radius: 8px !important;
+  border-bottom: none !important;
+}
+
+.cc-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.cc-card-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--settings-text-label, #212121);
+  line-height: 1.25;
+}
+
+.cc-card-summary {
+  font-size: 13px;
+  color: var(--settings-text-value, #757575);
+  line-height: 1.25;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Status dot (green / gray / yellow) ────────────────────────── */
+
+.cc-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cc-dot--on {
+  background-color: #34C759;
+  box-shadow: 0 0 4px rgba(52, 199, 89, 0.4);
+}
+
+.cc-dot--off {
+  background-color: #8E8E93;
+}
+
+.cc-dot--warn {
+  background-color: #FF9F0A;
+  box-shadow: 0 0 4px rgba(255, 159, 10, 0.4);
+}
+
+.cc-dot--error {
+  background-color: #FF3B30;
+  box-shadow: 0 0 4px rgba(255, 59, 48, 0.4);
+}
+
+/* ── Chevron ───────────────────────────────────────────────────── */
+
+.cc-chevron {
+  font-size: 17px;
+  color: var(--settings-chevron-color, #C7C7CC);
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+/* ── Bottom container (All Settings + footer, pushed to bottom) ── */
+
+.cc-bottom {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ── Device info footer ──────────────────────────────────────── */
+
+.cc-footer {
+  padding: 6px 4px 2px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--settings-text-value, #888);
+  opacity: 0.6;
+  line-height: 1.6;
+}
+
+/* ── Bottom buttons row ──────────────────────────────────────── */
+
+.cc-bottom-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.cc-bottom-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  min-height: 50px;
+  background: transparent;
+  border: 1px solid var(--settings-border-color, #444);
+  border-radius: 8px;
+  color: var(--settings-text-label, #ccc);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.cc-bottom-btn:hover,
+.cc-bottom-btn:focus {
+  opacity: 1;
+  border-color: var(--settings-text-value, #888);
+}
+
+.cc-bottom-btn-label {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.cc-bottom-btn-subtitle {
+  font-size: 12px;
+  color: var(--settings-text-value, #888);
+  line-height: 1.3;
+  margin-top: 1px;
+}
+
+/* ── Voice trial/license annotations ─────────────────────────── */
+
+.cc-trial-note {
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.cc-trial-note--orange {
+  color: #FF9F0A;
+}
+
+.cc-trial-note--gray {
+  color: #8E8E93;
+}
+
+/* ── Orange action items (Advanced page) ─────────────────────── */
+
+.settings-modal__menu-item--action-orange .settings-modal__menu-label {
+  color: #EE9828;
+}

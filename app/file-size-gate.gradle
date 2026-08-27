@@ -1,0 +1,91 @@
+// file-size-gate.gradle — fails the build when a Kotlin source file exceeds its line budget.
+//
+// Why: the repo's file-size rules kept regressing (e.g. VideoFeedOverlayManager grew
+// 1,138 → 2,912 lines in 3 months) because nothing enforced them. This gate makes growth
+// a deliberate act instead of an accident.
+//
+// Rules:
+//   - New files: hard budget of DEFAULT_BUDGET lines.
+//   - Existing oversized files are grandfathered in file-size-baseline.txt at their size
+//     when the baseline was generated, plus BASELINE_SLACK lines of headroom.
+//   - To raise a budget deliberately (rare!): shrink the file instead, or if truly
+//     justified run `./gradlew updateFileSizeBaseline` and commit the diff — the diff
+//     makes the growth visible in review.
+//
+// See .reference/build-plans/20260612_ANDROID_CODEBASE_REVIEW.md (dashieapp_staging repo)
+// for the decomposition plan that should shrink the baseline over time.
+
+def DEFAULT_BUDGET = 800
+def BASELINE_SLACK = 100
+def baselineFile = file('file-size-baseline.txt')
+def srcDir = file('src/main/java')
+
+def loadBaseline = {
+    def map = [:]
+    if (baselineFile.exists()) {
+        baselineFile.eachLine { line ->
+            def trimmed = line.trim()
+            if (trimmed && !trimmed.startsWith('#')) {
+                def parts = trimmed.split(/\s+/, 2)
+                if (parts.length == 2) map[parts[1]] = parts[0] as int
+            }
+        }
+    }
+    map
+}
+
+def countLines = { File f ->
+    def n = 0
+    f.eachLine { n++ }
+    n
+}
+
+tasks.register('checkFileSizes') {
+    group = 'verification'
+    description = "Fails if any Kotlin file exceeds its line budget (default ${DEFAULT_BUDGET}; grandfathered files listed in file-size-baseline.txt)"
+    doLast {
+        def baseline = loadBaseline()
+        def violations = []
+        fileTree(srcDir) { include '**/*.kt' }.each { f ->
+            def lines = countLines(f)
+            def rel = srcDir.toPath().relativize(f.toPath()).toString()
+            def limit = baseline.containsKey(rel) ? baseline[rel] + BASELINE_SLACK : DEFAULT_BUDGET
+            if (lines > limit) {
+                violations << "  ${rel}: ${lines} lines (budget ${limit})"
+            }
+        }
+        if (!violations.isEmpty()) {
+            throw new GradleException(
+                "File size budget exceeded (${violations.size()} file(s)):\n" +
+                violations.join('\n') + '\n\n' +
+                "Fix: split the file by responsibility (the Android codebase review build-plan\n" +
+                "has per-file decomposition suggestions). If the growth is\n" +
+                "truly deliberate, run ./gradlew updateFileSizeBaseline and commit the diff."
+            )
+        }
+    }
+}
+
+tasks.register('updateFileSizeBaseline') {
+    group = 'verification'
+    description = 'Regenerates file-size-baseline.txt from current file sizes (only files over the default budget)'
+    doLast {
+        def entries = []
+        fileTree(srcDir) { include '**/*.kt' }.each { f ->
+            def lines = countLines(f)
+            if (lines > DEFAULT_BUDGET) {
+                def rel = srcDir.toPath().relativize(f.toPath()).toString()
+                entries << [lines, rel]
+            }
+        }
+        entries.sort { a, b -> b[0] <=> a[0] }
+        baselineFile.text =
+            "# Grandfathered oversized Kotlin files: '<allowed-lines> <path relative to src/main/java>'.\n" +
+            "# Enforced by file-size-gate.gradle (limit = allowed-lines + ${BASELINE_SLACK} slack; new files: ${DEFAULT_BUDGET}).\n" +
+            "# Shrink this list over time — never grow it without review.\n" +
+            entries.collect { "${it[0]} ${it[1]}" }.join('\n') + '\n'
+        println "Wrote ${entries.size()} baseline entries to ${baselineFile.name}"
+    }
+}
+
+tasks.named('preBuild').configure { dependsOn 'checkFileSizes' }

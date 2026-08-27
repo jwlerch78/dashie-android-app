@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Chickadee brand strings. Overrides main/ for the chickadee* flavors only.
+
+  ONE definition of the product name — do not scatter it. Every user-facing sentence that
+  names the product should take this as a FORMAT ARGUMENT rather than being duplicated here;
+  a per-source-set copy of a sentence drifts the moment the copy is edited on one side, and
+  the compiler cannot see it. Same reasoning as `colors.xml` redirecting `orange` instead of
+  copying five theme files.
+-->
+<resources>
+    <string name="brand_name">Chickadee</string>
+
+    <!--
+      Product decision 2026-08-21: the chickadee domain registration was dropped, so the
+      brand-specific screensaver URL override (previously the chickadee-domain parity page with
+      `?weather=1`, per the 2026-08-02 prefill ruling) was removed rather than left pointing at a
+      dead host. Chickadee flavors now inherit main/'s default_screensaver_url.
+
+      ⚠️ That is NOT behavioural parity with the old override, and an earlier version of this
+      comment claimed it was. Corrected 2026-08-22 after measuring the page:
+        - main/'s URL is https://dashieapp.com/screensaver, with NO query parameter.
+        - That page calls loadWeather() unconditionally on DOMContentLoaded and again every
+          600 s, and loadWeather() fetches https://ipapi.co/json/ (the household's public IP to
+          a third party) before open-meteo.
+        - The page has NO query-parameter handling at all, so the old `?weather=1` was inert on
+          it. The 2026-08-02 design — weather OFF by default, opted in per-device by that
+          parameter — has no implementation here.
+      So a device on this flavor that selects the URL mode gets an unconditional IP lookup on a
+      10-minute timer. Long-standing behaviour for the Dashie brand and a known disclosure item;
+      newly inherited here. Whether this flavor wants its own weather-off page is deferred while
+      the brand is frozen — do not read this comment as saying the question was settled.
+
+      The URL is only the PREFILL for an OPT-IN mode: the default screensaver MODE stays "dim"
+      in both editions, so a household that never picks the URL mode never loads it.
+    -->
+
+</resources>

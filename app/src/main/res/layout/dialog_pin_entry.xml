@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- iOS-style PIN entry dialog with 4 digit boxes -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter PIN"
+        android:textSize="18sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Subtitle/instructions -->
+    <TextView
+        android:id="@+id/dialogSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your 4-digit PIN"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 4 PIN digit boxes -->
+    <LinearLayout
+        android:id="@+id/pinContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/pinDigit1"
+            android:layout_width="48dp"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:background="@drawable/pin_digit_box"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/pinDigit2"
+            android:layout_width="48dp"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:background="@drawable/pin_digit_box"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/pinDigit3"
+            android:layout_width="48dp"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:background="@drawable/pin_digit_box"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/pinDigit4"
+            android:layout_width="48dp"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:background="@drawable/pin_digit_box" />
+
+    </LinearLayout>
+
+    <!-- Error message (hidden by default) -->
+    <TextView
+        android:id="@+id/textError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Incorrect PIN"
+        android:textSize="13sp"
+        android:textColor="@color/error_red"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Hidden EditText for keyboard input -->
+    <!-- Note: Using match_parent width with 1dp height instead of 1dp x 1dp -->
+    <!-- Some devices (Lenovo tablets) won't show keyboard for tiny/invisible views -->
+    <EditText
+        android:id="@+id/hiddenPinInput"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:inputType="number"
+        android:digits="0123456789"
+        android:maxLength="4"
+        android:importantForAutofill="no"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/transparent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:cursorVisible="false" />
+
+    <!-- Forgot PIN link (only shown for unlock, not setup) -->
+    <TextView
+        android:id="@+id/textForgotPin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot PIN?"
+        android:textSize="13sp"
+        android:textColor="@color/link_color"
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:visibility="gone" />
+
+    <!-- Cancel button -->
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="80dp"
+        android:text="Cancel"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:textAllCaps="false"
+        android:background="@drawable/button_border"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

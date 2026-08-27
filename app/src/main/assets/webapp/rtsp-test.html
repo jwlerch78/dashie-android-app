@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTSP Test - Native Camera Card</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        h1 { margin-bottom: 20px; font-size: 24px; }
+        .status {
+            background: #2a2a2a;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #333;
+        }
+        .status-item:last-child { border-bottom: none; }
+        .status-value { color: #4CAF50; }
+        .status-value.error { color: #f44336; }
+
+        .camera-test {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .camera-placeholder {
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            position: relative;
+        }
+        .camera-placeholder.active {
+            background: transparent;
+        }
+        .camera-placeholder .label {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .camera-placeholder .label.connected { color: #4CAF50; }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #ff6b00;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background: #e55f00; }
+        button:disabled {
+            background: #444;
+            cursor: not-allowed;
+        }
+        button.secondary {
+            background: #333;
+        }
+        button.secondary:hover { background: #444; }
+
+        .log {
+            background: #0a0a0a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-entry { padding: 2px 0; color: #888; }
+        .log-entry.info { color: #4CAF50; }
+        .log-entry.error { color: #f44336; }
+        .log-entry.warn { color: #ff9800; }
+    </style>
+</head>
+<body>
+    <h1>RTSP Native Playback Test</h1>
+
+    <div class="status" id="status">
+        <div class="status-item">
+            <span>DashieNative Bridge:</span>
+            <span class="status-value" id="bridgeStatus">Checking...</span>
+        </div>
+        <div class="status-item">
+            <span>Native RTSP Support:</span>
+            <span class="status-value" id="rtspStatus">Checking...</span>
+        </div>
+        <div class="status-item">
+            <span>Active Streams:</span>
+            <span class="status-value" id="streamCount">0</span>
+        </div>
+    </div>
+
+    <div class="camera-test">
+        <div class="camera-placeholder" id="cameraPlaceholder">
+            <span id="placeholderText">Click "Start RTSP" to test native playback</span>
+            <span class="label" id="cameraLabel" style="display:none;">RTSP</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="startBtn" disabled>Start RTSP</button>
+        <button id="stopBtn" class="secondary" disabled>Stop RTSP</button>
+        <button id="refreshBtn" class="secondary">Refresh Status</button>
+    </div>
+
+    <div class="log" id="log"></div>
+
+    <script>
+        const RTSP_URL = 'rtsp://192.168.1.50:8554';
+        const STREAM_ID = 'test-camera-1';
+
+        const bridgeStatus = document.getElementById('bridgeStatus');
+        const rtspStatus = document.getElementById('rtspStatus');
+        const streamCount = document.getElementById('streamCount');
+        const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+        const placeholderText = document.getElementById('placeholderText');
+        const cameraLabel = document.getElementById('cameraLabel');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const logEl = document.getElementById('log');
+
+        let isStreaming = false;
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logEl.insertBefore(entry, logEl.firstChild);
+            console.log(`[RTSP Test] ${message}`);
+        }
+
+        function checkBridge() {
+            const hasBridge = typeof window.DashieNative !== 'undefined';
+            bridgeStatus.textContent = hasBridge ? 'Available' : 'Not Found';
+            bridgeStatus.classList.toggle('error', !hasBridge);
+
+            if (hasBridge) {
+                log('DashieNative bridge found');
+
+                // Check RTSP support
+                try {
+                    const supported = window.DashieNative.isNativeRtspSupported();
+                    rtspStatus.textContent = supported ? 'Supported' : 'Not Available';
+                    rtspStatus.classList.toggle('error', !supported);
+
+                    if (supported) {
+                        log('Native RTSP playback is supported');
+                        startBtn.disabled = false;
+                    } else {
+                        log('Native RTSP not available (manager not initialized)', 'warn');
+                    }
+                } catch (e) {
+                    rtspStatus.textContent = 'Error: ' + e.message;
+                    rtspStatus.classList.add('error');
+                    log('Error checking RTSP support: ' + e.message, 'error');
+                }
+
+                // Get player info
+                try {
+                    const info = JSON.parse(window.DashieNative.getRtspPlayerInfo());
+                    streamCount.textContent = info.activeStreams || 0;
+                    log('Player info: ' + JSON.stringify(info));
+                } catch (e) {
+                    log('Error getting player info: ' + e.message, 'error');
+                }
+            } else {
+                bridgeStatus.textContent = 'Not Found';
+                bridgeStatus.classList.add('error');
+                rtspStatus.textContent = 'N/A';
+                rtspStatus.classList.add('error');
+                log('DashieNative bridge not found - not running inside a kiosk tablet WebView?', 'error');
+            }
+        }
+
+        function startStream() {
+            if (!window.DashieNative) {
+                log('Cannot start - bridge not available', 'error');
+                return;
+            }
+
+            const rect = cameraPlaceholder.getBoundingClientRect();
+            // Get device pixel ratio for coordinate scaling
+            const dpr = window.devicePixelRatio || 1;
+
+            // Calculate coordinates - clamp to visible area
+            const x = Math.max(0, Math.round(rect.left * dpr));
+            const y = Math.max(0, Math.round(rect.top * dpr));
+            const w = Math.round(rect.width * dpr);
+            const h = Math.round(rect.height * dpr);
+
+            log(`Starting RTSP stream: ${RTSP_URL}`);
+            log(`CSS rect: x=${Math.round(rect.left)}, y=${Math.round(rect.top)}, w=${Math.round(rect.width)}, h=${Math.round(rect.height)}`);
+            log(`Device pixels (dpr=${dpr}): x=${x}, y=${y}, w=${w}, h=${h}`);
+
+            try {
+                window.DashieNative.startRtspStream(
+                    STREAM_ID,
+                    RTSP_URL,
+                    x,
+                    y,
+                    w,
+                    h
+                );
+
+                isStreaming = true;
+                cameraPlaceholder.classList.add('active');
+                placeholderText.textContent = 'Native video overlay active';
+                cameraLabel.style.display = 'block';
+                cameraLabel.classList.add('connected');
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+
+                log('Stream started successfully', 'info');
+                updateStreamCount();
+            } catch (e) {
+                log('Error starting stream: ' + e.message, 'error');
+            }
+        }
+
+        function stopStream() {
+            if (!window.DashieNative) return;
+
+            log('Stopping RTSP stream: ' + STREAM_ID);
+
+            try {
+                window.DashieNative.stopRtspStream(STREAM_ID);
+
+                isStreaming = false;
+                cameraPlaceholder.classList.remove('active');
+                placeholderText.textContent = 'Click "Start RTSP" to test native playback';
+                cameraLabel.style.display = 'none';
+                cameraLabel.classList.remove('connected');
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+
+                log('Stream stopped', 'info');
+                updateStreamCount();
+            } catch (e) {
+                log('Error stopping stream: ' + e.message, 'error');
+            }
+        }
+
+        function updateStreamCount() {
+            if (!window.DashieNative) return;
+            try {
+                const count = window.DashieNative.getActiveRtspStreamCount();
+                streamCount.textContent = count;
+            } catch (e) {
+                log('Error getting stream count: ' + e.message, 'error');
+            }
+        }
+
+        // Update position on scroll/resize
+        function updatePosition() {
+            if (!isStreaming || !window.DashieNative) return;
+
+            const rect = cameraPlaceholder.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+
+            const x = Math.max(0, Math.round(rect.left * dpr));
+            const y = Math.max(0, Math.round(rect.top * dpr));
+            const w = Math.round(rect.width * dpr);
+            const h = Math.round(rect.height * dpr);
+
+            try {
+                window.DashieNative.updateRtspStreamPosition(
+                    STREAM_ID,
+                    x,
+                    y,
+                    w,
+                    h
+                );
+            } catch (e) {
+                log('Error updating position: ' + e.message, 'error');
+            }
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startStream);
+        stopBtn.addEventListener('click', stopStream);
+        refreshBtn.addEventListener('click', () => {
+            log('Refreshing status...');
+            checkBridge();
+        });
+
+        window.addEventListener('scroll', updatePosition);
+        window.addEventListener('resize', updatePosition);
+
+        // Initialize
+        log('RTSP Test page loaded');
+        log('Test URL: ' + RTSP_URL);
+        checkBridge();
+    </script>
+</body>
+</html>

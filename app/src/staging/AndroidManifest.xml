@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Staging-flavor-only manifest additions.
+
+    Self-update (sideloaded APK install) is enabled on the staging flavor as a
+    testbed. REQUEST_INSTALL_PACKAGES and the install-result receiver are
+    flavor-scoped here so store builds (prod → Play / Amazon) never carry them
+    and draw no review scrutiny.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <application>
+
+        <!-- Receives the PackageInstaller commit status for sideload APK installs -->
+        <receiver
+            android:name=".halite.update.ApkInstallResultReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dashieapp.Dashie.halite.update.INSTALL_STATUS" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

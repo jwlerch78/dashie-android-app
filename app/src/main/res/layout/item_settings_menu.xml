@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Standard menu item with label, optional value, and chevron -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/settings_item_min_height"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/settings_item_padding_horizontal"
+    android:paddingEnd="@dimen/settings_item_padding_horizontal"
+    android:paddingTop="@dimen/settings_item_padding_vertical"
+    android:paddingBottom="@dimen/settings_item_padding_vertical"
+    android:focusable="true"
+    android:clickable="true">
+
+    <!-- Optional circular avatar (hidden by default, shown when avatarUrl is set) -->
+    <ImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:contentDescription="Member avatar" />
+
+    <!-- Optional color dot (hidden by default, shown for family members etc.) -->
+    <View
+        android:id="@+id/vColorDot"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        android:background="@drawable/bg_cc_dot_on" />
+
+    <!-- Label and sublabel (left side) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/settings_text_label"
+            android:textSize="@dimen/settings_label_text_size"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Account" />
+
+        <TextView
+            android:id="@+id/tvSublabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/settings_text_value"
+            android:textSize="@dimen/settings_sublabel_text_size"
+            android:visibility="gone"
+            tools:text="Sublabel text"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <!-- Value (right side, before chevron). 0dp + weight so a LONG value (e.g. a full local-model
+         id like "qwen3:30b-a3b-instruct-2507-q4_K_M") ELLIPSIZES in its share instead of growing
+         unbounded — which previously starved the weight=1 label (title vanished off the start) and
+         shoved the chevron off the end (AI Model row, found on-device 2026-07-20). maxLines=1 +
+         ellipsize=end make the truncation actually happen (a wrap_content view never truncates).
+         gravity=end keeps short values right-aligned before the chevron, as before. A GONE value
+         (label-only rows) takes no space, so the label still fills the row. -->
+    <TextView
+        android:id="@+id/tvValue"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:textColor="@color/settings_text_value"
+        android:textSize="@dimen/settings_value_text_size"
+        android:visibility="gone"
+        tools:text="Value"
+        tools:visibility="visible" />
+
+    <!-- Chevron indicator -->
+    <ImageView
+        android:id="@+id/ivChevron"
+        android:layout_width="@dimen/settings_chevron_size"
+        android:layout_height="@dimen/settings_chevron_size"
+        android:src="@drawable/ic_chevron_right"
+        android:contentDescription="Navigate" />
+
+</LinearLayout>

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.dashieapp.Dashie">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Required for continuous microphone access (wake word detection) without auto-revoke -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <!-- Required to maintain camera access (RTSP/motion wake) when app is backgrounded by screensaver -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <!-- Activated at runtime only when a Device Admin is registered (DPC-class) — matches the
+         gate pattern Fully Kiosk uses. Enables FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED so
+         background camera capture survives Pixel/Android 16 power-management revocation. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
+    <!-- Required for Snapcast audio playback service (multi-room speaker) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- System dark mode control - requires ADB grant for Home Assistant theme sync -->
+    <!-- adb shell pm grant <package> android.permission.WRITE_SECURE_SETTINGS -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Device reboot permission - only works on rooted devices or system apps -->
+    <uses-permission android:name="android.permission.REBOOT"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Usage stats access - lets us identify which app stole foreground when MainActivity onPause
+         fires (e.g. Fire TV Ambient Experience overlaying our app at idle). User must grant via
+         Settings > Apps > Special access > Usage data access (or via ADB on Fire TV). -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Battery optimization exemption for keeping dashboard connection alive -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- Exact alarm permission for precise scheduled refreshes (Android 12+) -->
+    <!-- Without this, alarms may drift 5-15 minutes due to battery optimization batching -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- WiFi permissions for network setup -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- Required for SSDP multicast discovery -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <!-- Required on API 33+ for NsdManager (mDNS) service discovery without location.
+         Used for Sendspin server discovery in speaker-only mode. -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="tiramisu" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Storage permissions for photo screensaver -->
+    <!-- For Android 13+ (API 33+), use granular permissions -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- For Android 10-12, use legacy storage permission -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!-- Required to read GPS location from photo EXIF data on Android 10+ -->
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
+    <!-- Package visibility (Android 11+). Declares which apps/intents we need to
+         see via PackageManager. Replaces the broader QUERY_ALL_PACKAGES permission
+         which is restricted by Play Store policy. -->
+    <queries>
+        <!-- TTS engines -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+        <package android:name="com.svox.pico" />
+        <package android:name="com.ivona.tts.oem" />
+        <package android:name="com.google.android.tts" />
+
+        <!-- Launcher apps (for screensaver app picker — phones/tablets/Fire tablets) -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+
+        <!-- Home apps (for Settings → Advanced → "Open Device Launcher"): lets us
+             enumerate the stock launcher when Dashie is the default home app.
+             Without this, queryIntentActivities(CATEGORY_HOME) only sees Dashie
+             itself and the escape hatch falls back to the home-role picker. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.HOME" />
+        </intent>
+
+        <!-- Leanback launcher apps (Fire TV / Android TV screensaver picker) -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+        </intent>
+    </queries>
+
+    <!-- Camera is optional - for motion detection -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="false" />
+
+    <!-- TV compatibility / universal device support.
+         Every feature below is required="false" so the app stays available on
+         phones, tablets, AND Google TV / Android TV. leanback is supported but
+         NOT required — required="true" would restrict the app to TV devices
+         only and exclude all phones/tablets on the Play Store.
+         microphone/location/telephony are declared explicitly so that Play
+         Store does not implicitly require them (via RECORD_AUDIO /
+         ACCESS_*_LOCATION permissions) and silently exclude TV devices that
+         lack that hardware. -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <!-- NOTE: The faketouch=required=false declaration was REMOVED in
+         vc 169. It was added in vc 163 to try to register the app as
+         touch-supporting on the Amazon Appstore, but Amazon's
+         compatibility detector interpreted the combination of
+         touchscreen=false + faketouch=false as "neither required,"
+         which excluded ~13 Fire Tablet models from supported devices
+         (the "Reduced Device Support" flag on vc 163). Removing the
+         line restores tablet compatibility; Fire TV support continues
+         to work via leanback=required=false. -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <!-- Optional: optimize for TV screens -->
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:allowBackup="false"
+        android:largeHeap="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Dashie"
+        android:banner="@drawable/banner"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true"> <!-- Required for Fire TV submission -->
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Dashie.Splash"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="false"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|smallestScreenSize|uiMode">
+
+            <!-- Standard Android launcher -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- TV / Leanback launcher -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+
+            <!-- HOME launcher - allows app to be set as default home screen -->
+            <!-- When set as home, app auto-launches on boot without any workarounds -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Custom URL scheme: dashie://open?url=<encoded_url> -->
+            <!-- Allows HA buttons to open URLs in Dashie Kiosk instead of external browser -->
+            <!-- Usage in HA: tap_action: url with url_path: dashie://open?url=http%3A%2F%2F... -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="dashie" />
+            </intent-filter>
+
+            <!-- HTTP/HTTPS URL handler - appears in browser chooser for web URLs -->
+            <!-- User can choose to open any URL in Dashie Kiosk (navigates WebView) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+
+        </activity>
+
+        <!-- D.83 — HaUrlSetupActivity + HaUrlBuilderActivity removed.
+             The legacy kiosk-only first-run setup shell is replaced by
+             SettingsActivity → SettingsHaUrlFragment (deep-link
+             "home_assistant_url"). -->
+
+<!-- Dashie Kiosk Native Login Activity (Fire tablet keyboard workaround) -->
+        <activity
+            android:name=".halite.HaLoginActivity"
+            android:exported="false"
+            android:label="Home Assistant Login"
+            android:theme="@style/Theme.Dashie"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!-- Music Assistant Login Activity (WebView-based JWT auth) -->
+        <activity
+            android:name=".halite.music.MaLoginActivity"
+            android:exported="false"
+            android:label="Music Assistant Login"
+            android:theme="@style/Theme.Dashie" />
+
+        <!-- Immich Login Activity (email/password form) -->
+        <activity
+            android:name=".halite.screensaver.ImmichLoginActivity"
+            android:exported="false"
+            android:label="Immich Login"
+            android:theme="@style/Theme.Dashie" />
+
+        <!-- WebView-based HA Login (standard OAuth flow for non-Fire devices) -->
+        <activity
+            android:name=".halite.HaWebLoginActivity"
+            android:exported="false"
+            android:label="Home Assistant Login"
+            android:theme="@style/Theme.Dashie" />
+
+        <!-- WiFi Setup Activity (for initial network configuration) -->
+        <activity
+            android:name=".wifi.WifiSetupActivity"
+            android:exported="false"
+            android:label="WiFi Setup"
+            android:theme="@style/Theme.Dashie" />
+
+        <!-- Dev-only RT Audio Test (realtime conversation-mode spike).
+             Launched only from the staging/local "RT Audio Test (dev)" settings
+             entry. Not a shipping surface. -->
+        <activity
+            android:name=".devtools.RtAudioTestActivity"
+            android:exported="false"
+            android:label="RT Audio Test"
+            android:theme="@style/Theme.Dashie" />
+
+        <!-- Dev-only continuous mic capture (harvest real mic-path VoIP audio).
+             Not a shipping surface. -->
+        <activity
+            android:name=".devtools.ContinuousCaptureActivity"
+            android:exported="false"
+            android:label="Continuous Audio Capture"
+            android:theme="@style/Theme.Dashie" />
+
+        <!-- Native Settings Activity (iOS-style modal).
+             configChanges matches MainActivity so rotation doesn't recreate the
+             Activity — users reported the settings menu disappearing when rotating
+             portrait↔landscape, caused by the default destroy-and-recreate behavior
+             not restoring the active fragment stack cleanly. -->
+        <activity
+            android:name=".halite.settings.SettingsActivity"
+            android:exported="false"
+            android:label="Settings"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|smallestScreenSize|uiMode"
+            android:theme="@style/Theme.Dashie.Settings" />
+
+        <!-- Boot Receiver for Start on Boot feature -->
+        <!-- Also handles USER_PRESENT to re-launch when device wakes from sleep -->
+        <!-- Includes QUICKBOOT actions for Fire tablets and other devices -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <!-- Fire tablet / HTC / other OEM quick boot actions -->
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Fully Kiosk API Service - REST API for Home Assistant integration -->
+        <!-- Uses specialUse type because this is a long-running REST API server for HA integration -->
+        <!-- dataSync type has timeout limits on Android 16+ that kill the service -->
+        <!-- microphone type required for continuous wake word detection without permission auto-revoke -->
+        <service
+            android:name=".api.DashieApiService"
+            android:exported="false"
+            android:foregroundServiceType="camera|microphone|specialUse|systemExempted">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Dashie Kiosk REST API server for Home Assistant kiosk control - enables remote device management, screen control, and integration with HA automations" />
+        </service>
+
+        <!-- Sendspin Audio Service - multi-room speaker for Music Assistant groups -->
+        <!-- mediaPlayback type keeps audio stream alive when app is backgrounded -->
+        <service
+            android:name=".halite.music.sendspin.SendspinPlayerService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <!-- Keep-alive foreground service - elevates process priority on aggressive OEM ROMs -->
+        <service
+            android:name=".halite.DashieKeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Always-on home dashboard that must maintain WebSocket connections to Home Assistant" />
+        </service>
+
+        <!-- Device Admin Receiver - required for screen off functionality -->
+        <!-- Allows Dashie Kiosk to turn off the screen hardware using lockNow() -->
+        <receiver
+            android:name=".halite.DashieDeviceAdminReceiver"
+            android:exported="true"
+            android:description="@string/device_admin_description"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Daily Refresh Receiver - handles AlarmManager-based scheduled refreshes -->
+        <!-- Uses setExactAndAllowWhileIdle() for reliable execution during Doze mode -->
+        <receiver
+            android:name=".halite.DailyRefreshReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dashieapp.Dashie.halite.ACTION_DAILY_REFRESH" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Update Install Receiver - fires the "Update Tonight" deferred install -->
+        <!-- AlarmManager-based, fixed 2 AM, independent of daily-refresh/sleep config -->
+        <receiver
+            android:name=".halite.update.UpdateInstallReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dashieapp.Dashie.halite.ACTION_INSTALL_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Stealth Reload Receiver - handles AlarmManager-based refresh during screensaver -->
+        <!-- Replaces Handler-based timer which doesn't fire during Doze mode -->
+        <receiver
+            android:name=".halite.StealthReloadReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dashieapp.Dashie.halite.ACTION_STEALTH_RELOAD" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Sleep/Wake Receiver - handles AlarmManager-based scheduled sleep/wake times -->
+        <!-- Ensures wake time is honored even when WebView JavaScript is inactive -->
+        <receiver
+            android:name=".halite.SleepWakeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dashieapp.Dashie.halite.ACTION_SCHEDULED_SLEEP" />
+                <action android:name="com.dashieapp.Dashie.halite.ACTION_SCHEDULED_WAKE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Scheduled Action Receiver - fires AlarmManager alarms for reminders -->
+        <!-- See .reference/build-plans/20260627_SCHEDULED_ACTIONS_PHASE1.md -->
+        <receiver
+            android:name=".halite.schedule.ScheduledActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.dashieapp.Dashie.halite.ACTION_SCHEDULED_ACTION" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
